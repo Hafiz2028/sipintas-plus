@@ -274,7 +274,7 @@
                 class="sidebar fixed top-0 bottom-0 z-50 h-full min-h-screen w-[260px] shadow-[5px_0_25px_0_rgba(94,92,154,0.1)] transition-all duration-300">
                 <div class="h-full bg-white dark:bg-[#0e1726]">
                     <div class="flex items-center justify-between px-4 py-3">
-                        <a href="{{ route('home-admin') }}" class="main-logo flex shrink-0 items-center">
+                        <a href="{{ route('admin.home') }}" class="main-logo flex shrink-0 items-center">
                             <img class="ml-[5px] w-8 flex-none" src="/back/image/logo/logo.png" alt="image">
                             <span
                                 class="align-middle text-2xl font-semibold ltr:ml-1.5 rtl:mr-1.5 dark:text-white-light lg:inline">SIPINTAS
@@ -297,8 +297,8 @@
                     <ul class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold"
                         x-data="{ activeDropdown: 'datatables' }">
                         <li class="menu nav-item">
-                            <a href="{{ route('home-admin') }}"
-                                class="nav-link {{ Route::is('home-admin') ? 'active' : '' }} group">
+                            <a href="{{ route('admin.home') }}"
+                                class="nav-link {{ Route::is('admin.home') ? 'active' : '' }} group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -351,7 +351,8 @@
                             </a>
                         </li>
                         <li class="menu nav-item">
-                            <button type="button" class="nav-link group {{ Route::is('user-admin') || Route::is('fasilitas') || Route::is('kategori') ? 'active' : '' }}"
+                            <button type="button"
+                                class="nav-link group {{ Route::is('user-admin') || Route::is('fasilitas') || Route::is('kategori') ? 'active' : '' }}"
                                 :class="{ 'active': activeDropdown === 'dashboard' }"
                                 @click="activeDropdown === 'dashboard' ? activeDropdown = null : activeDropdown = 'dashboard'">
                                 <div class="flex items-center">
@@ -386,13 +387,16 @@
                             <ul x-cloak="" x-show="activeDropdown === 'dashboard'" x-collapse=""
                                 class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('user-admin') }}" class="{{ Route::is('user-admin') ? 'active' : '' }}">Pengguna</a>
+                                    <a href="{{ route('user-admin') }}"
+                                        class="{{ Route::is('user-admin') ? 'active' : '' }}">Pengguna</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('fasilitas') }}" class="{{ Route::is('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                                    <a href="{{ route('fasilitas') }}"
+                                        class="{{ Route::is('fasilitas') ? 'active' : '' }}">Fasilitas</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('kategori') }}" class="{{ Route::is('kategori') ? 'active' : '' }}">Kategori Fasilitas</a>
+                                    <a href="{{ route('kategori') }}"
+                                        class="{{ Route::is('kategori') ? 'active' : '' }}">Kategori Fasilitas</a>
                                 </li>
                             </ul>
                         </li>
@@ -410,7 +414,7 @@
                     <div class="relative flex w-full items-center bg-white px-5 py-2.5 dark:bg-[#0e1726]">
                         <!-- Mobile Navbar -->
                         <div class="horizontal-logo flex items-center justify-between ltr:mr-2 rtl:ml-2 lg:hidden">
-                            <a href="{{ route('home-admin') }}" class="main-logo flex shrink-0 items-center">
+                            <a href="{{ route('admin.home') }}" class="main-logo flex shrink-0 items-center">
                                 <img class="inline w-8 ltr:-ml-1 rtl:-mr-1" src="/back/image/logo/logo.png"
                                     alt="image">
                                 <span
@@ -643,10 +647,10 @@
                                             </div>
                                             <div class="truncate ltr:pl-4 rtl:pr-4">
                                                 <h4 class="text-base">
-                                                    Admin
+                                                    {{ $user->name }}
                                                 </h4>
                                                 <a class="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
-                                                    href="javascript:;">emailadmin@gmail.com</a>
+                                                    href="javascript:;">{{ $user->nip }}</a>
                                             </div>
                                         </div>
                                     </li>
@@ -677,7 +681,7 @@
                                             Setting</a>
                                     </li>
                                     <li class="border-t border-white-light dark:border-white-light/10">
-                                        <a href="{{ route('login') }}" class="!py-3 text-danger" @click="toggle">
+                                        <a href="{{ route('logout') }}" class="!py-3 text-danger" @click="toggle">
                                             <svg class="h-4.5 w-4.5 rotate-90 ltr:mr-2 rtl:ml-2" width="18"
                                                 height="18" viewbox="0 0 24 24" fill="none"
                                                 xmlns="http://www.w3.org/2000/svg">
@@ -701,7 +705,7 @@
                     <ul
                         class="horizontal-menu hidden border-t border-[#ebedf2] bg-white py-1.5 px-6 font-semibold text-black rtl:space-x-reverse dark:border-[#191e3a] dark:bg-[#0e1726] dark:text-white-dark lg:space-x-1.5 xl:space-x-8">
                         <li class="menu nav-item">
-                            <a href="{{ route('home-admin') }}" class="nav-link active group">
+                            <a href="{{ route('admin.home') }}" class="nav-link active group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -824,4 +828,5 @@
     <script src="/back/assets/js/fullcalendar.min.js"></script>
     @stack('scripts')
 </body>
+
 </html>

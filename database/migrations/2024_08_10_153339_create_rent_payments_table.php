@@ -11,8 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('kasubags', function (Blueprint $table) {
-            $table->id();
+        Schema::create('rent_payments', function (Blueprint $table) {
+            $table->unsignedInteger('id')->autoIncrement();
+            $table->unsignedInteger('rent_id');
+            $table->string('bukti_pembayaran');
+            $table->foreign('rent_id')->references('id')->on('rents')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -22,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('kasubags');
+        Schema::dropIfExists('rent_payments');
     }
 };

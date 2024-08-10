@@ -57,8 +57,8 @@
                         </div>
                         <div class="ltr:xl:-skew-x-[14deg] rtl:xl:skew-x-[14deg]">
                             <div class="hidden w-full max-w-[530px] lg:block pl-10">
-                                <a href="{{ route('home') }}"><img src="back/assets/images/auth/buya.png" alt="Cover Image"
-                                        class="w-full"></a>
+                                <a href="{{ route('home') }}"><img src="back/assets/images/auth/buya.png"
+                                        alt="Cover Image" class="w-full"></a>
                             </div>
                         </div>
                     </div>
@@ -68,14 +68,25 @@
                             <div class="mb-10">
                                 <h1 class="text-3xl font-extrabold uppercase !leading-snug text-success md:text-4xl">
                                     masuk</h1>
-                                <p class="text-base font-bold leading-normal text-white-dark">Masukkan NIK dan Password
+                                <p class="text-base font-bold leading-normal text-white-dark">Masukkan NIP dan Password
                                 </p>
                             </div>
-                            <form class="space-y-5 dark:text-white" @submit.prevent="window.location='adminIndex.html'">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $item)
+                                            <li>{{ $item }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                            <form class="space-y-5 dark:text-white" action="{{ route('login-handler') }}" method="POST">
+                                {{-- @submit.prevent="window.location='adminIndex.html'" --}}
+                                @csrf
                                 <div>
-                                    <label for="nik">NIK</label>
+                                    <label for="nip">NIP</label>
                                     <div class="relative text-white-dark">
-                                        <input id="Text" type="text" placeholder="Masukkan NIK"
+                                        <input id="Text" type="text" value="{{ old('nip') }}" name="nip" placeholder="Masukkan NIP"
                                             class="form-input ps-10 placeholder:text-white-dark">
                                         <span class="absolute start-4 top-1/2 -translate-y-1/2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -92,7 +103,7 @@
                                     <label for="Password">Password</label>
                                     <div class="relative text-white-dark">
                                         <input id="Password" type="password" placeholder="Masukkan Password"
-                                            class="form-input ps-10 placeholder:text-white-dark">
+                                            class="form-input ps-10 placeholder:text-white-dark" name="password">
                                         <span class="absolute start-4 top-1/2 -translate-y-1/2">
                                             <svg width="18" height="18" viewbox="0 0 18 18" fill="none">
                                                 <path opacity="0.5"
