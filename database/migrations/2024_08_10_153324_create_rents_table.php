@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-
+ 
 return new class extends Migration
 {
     /**
@@ -14,10 +14,13 @@ return new class extends Migration
         Schema::create('rents', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('facility_id');
-            $table->date('tanggal');
+            $table->unsignedInteger('user_id');
             $table->string('surat');
             $table->enum('status',['proses','diterima','ditolak'])->default('proses');
+            $table->dateTime('start');
+            $table->dateTime('end');
             $table->foreign('facility_id')->references('id')->on('facilities')->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });
     }

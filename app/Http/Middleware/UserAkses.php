@@ -16,11 +16,14 @@ class UserAkses
      */
     public function handle(Request $request, Closure $next, $role): Response
     {
+        if ($request->route()->getName() === 'landing') {
+            return $next($request);
+        }
         if (!Auth::check()) {
-            return redirect()->route('login');
+            return redirect()->route('landing');
         }
         if (auth()->user()->role !== $role) {
-            return redirect()->back()->with('error','Anda Tidak bisa akses Halaman Ini.');
+            return redirect()->back()->with('error', 'Anda Tidak bisa akses Halaman Ini.');
         }
         return $next($request);
     }

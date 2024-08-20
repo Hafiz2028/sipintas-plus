@@ -4,12 +4,15 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>SIPINTAS PLUS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/back/image/logo/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
-    <link href="css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    {{-- <link href="css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"> --}}
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" type="text/css" media="screen" href="/back/assets/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="/back/assets/css/highlight.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="/back/assets/css/style.css">
@@ -315,8 +318,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('peminjaman') }}"
-                                class="nav-link {{ Route::is('peminjaman') ? 'active' : '' }} group">
+                            <a href="{{ route('admin.rent.index') }}"
+                                class="nav-link {{ Route::is('admin.rent.index') ? 'active' : '' }} group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -333,8 +336,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route('disposisi') }}"
-                                class="nav-link {{ Route::is('disposisi') ? 'active' : '' }} group">
+                            <a href="{{ route('admin.disposisi.index') }}"
+                                class="nav-link {{ Route::is('admin.disposisi.index') ? 'active' : '' }} group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -352,7 +355,7 @@
                         </li>
                         <li class="menu nav-item">
                             <button type="button"
-                                class="nav-link group {{ Route::is('user-admin') || Route::is('fasilitas') || Route::is('kategori') ? 'active' : '' }}"
+                                class="nav-link group {{ Route::is('admin.user.index') || Route::is('admin.fasilitas.index') || Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}"
                                 :class="{ 'active': activeDropdown === 'dashboard' }"
                                 @click="activeDropdown === 'dashboard' ? activeDropdown = null : activeDropdown = 'dashboard'">
                                 <div class="flex items-center">
@@ -387,16 +390,16 @@
                             <ul x-cloak="" x-show="activeDropdown === 'dashboard'" x-collapse=""
                                 class="sub-menu text-gray-500">
                                 <li>
-                                    <a href="{{ route('user-admin') }}"
-                                        class="{{ Route::is('user-admin') ? 'active' : '' }}">Pengguna</a>
+                                    <a href="{{ route('admin.user.index') }}"
+                                        class="{{ Route::is('admin.user.index') ? 'active' : '' }}">Pengguna</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('fasilitas') }}"
-                                        class="{{ Route::is('fasilitas') ? 'active' : '' }}">Fasilitas</a>
+                                    <a href="{{ route('admin.fasilitas.index') }}"
+                                        class="{{ Route::is('admin.fasilitas.index') ? 'active' : '' }}">Fasilitas</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('kategori') }}"
-                                        class="{{ Route::is('kategori') ? 'active' : '' }}">Kategori Fasilitas</a>
+                                    <a href="{{ route('admin.tipe-fasilitas.index') }}"
+                                        class="{{ Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}">Kategori Fasilitas</a>
                                 </li>
                             </ul>
                         </li>
@@ -647,10 +650,10 @@
                                             </div>
                                             <div class="truncate ltr:pl-4 rtl:pr-4">
                                                 <h4 class="text-base">
-                                                    {{ $user->name }}
+                                                    {{ auth()->user()->name }}
                                                 </h4>
                                                 <a class="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white"
-                                                    href="javascript:;">{{ $user->nip }}</a>
+                                                    href="javascript:;">{{ auth()->user()->nip }}</a>
                                             </div>
                                         </div>
                                     </li>
@@ -722,7 +725,7 @@
                             </a>
                         </li>
                         <li class="menu nav-item">
-                            <a href="{{ route('peminjaman') }}" class="nav-link group">
+                            <a href="{{ route('admin.rent.index') }}" class="nav-link group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -739,7 +742,7 @@
                             </a>
                         </li>
                         <li class="menu nav-item">
-                            <a href="{{ route('disposisi') }}" class="nav-link group">
+                            <a href="{{ route('admin.disposisi.index') }}" class="nav-link group">
                                 <div class="flex items-center">
                                     <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
                                         viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -785,13 +788,13 @@
                             </a>
                             <ul class="sub-menu">
                                 <li>
-                                    <a href="{{ route('user-admin') }}">Pengguna</a>
+                                    <a href="{{ route('admin.user.index') }}">Pengguna</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('fasilitas') }}">Fasilitas</a>
+                                    <a href="{{ route('admin.fasilitas.index') }}">Fasilitas</a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('kategori') }}">Kategori Fasilitas</a>
+                                    <a href="{{ route('admin.tipe-fasilitas.index') }}">Kategori Fasilitas</a>
                                 </li>
                             </ul>
                         </li>

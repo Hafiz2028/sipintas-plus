@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Dashboard Template</title>
+    <title>Login</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/x-icon" href="/back/image/logo/logo.png">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,6 +13,9 @@
     <link rel="stylesheet" type="text/css" media="screen" href="back/assets/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" type="text/css" media="screen" href="back/assets/css/style.css">
     <link defer="" rel="stylesheet" type="text/css" media="screen" href="back/assets/css/animate.css">
+    <!-- Add Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
     <script src="back/assets/js/perfect-scrollbar.min.js"></script>
     <script defer="" src="back/assets/js/popper.min.js"></script>
     <script defer="" src="back/assets/js/tippy-bundle.umd.min.js"></script>
@@ -57,8 +60,13 @@
                         </div>
                         <div class="ltr:xl:-skew-x-[14deg] rtl:xl:skew-x-[14deg]">
                             <div class="hidden w-full max-w-[530px] lg:block pl-10">
-                                <a href="{{ route('home') }}"><img src="back/assets/images/auth/buya.png"
-                                        alt="Cover Image" class="w-full"></a>
+                                @if (!Auth::check())
+                                    <a href="{{ route('landing') }}"><img src="back/assets/images/auth/buya.png"
+                                            alt="Cover Image" class="w-full"></a>
+                                @else
+                                    <a href="{{ route('homepage') }}"><img src="back/assets/images/auth/buya.png"
+                                            alt="Cover Image" class="w-full"></a>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -71,22 +79,16 @@
                                 <p class="text-base font-bold leading-normal text-white-dark">Masukkan NIP dan Password
                                 </p>
                             </div>
-                            @if ($errors->any())
-                                <div class="alert alert-danger">
-                                    <ul>
-                                        @foreach ($errors->all() as $item)
-                                            <li>{{ $item }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-                            @endif
-                            <form class="space-y-5 dark:text-white" action="{{ route('login-handler') }}" method="POST">
+                            <form class="space-y-5 dark:text-white" action="{{ route('login-handler') }}"
+                                method="POST">
                                 {{-- @submit.prevent="window.location='adminIndex.html'" --}}
                                 @csrf
+                                <x-alert.form-alert />
                                 <div>
                                     <label for="nip">NIP</label>
                                     <div class="relative text-white-dark">
-                                        <input id="Text" type="text" value="{{ old('nip') }}" name="nip" placeholder="Masukkan NIP"
+                                        <input id="Text" type="text" value="{{ old('nip') }}" name="nip"
+                                            placeholder="Masukkan NIP"
                                             class="form-input ps-10 placeholder:text-white-dark">
                                         <span class="absolute start-4 top-1/2 -translate-y-1/2">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -146,6 +148,8 @@
         </div>
         <!-- end main content section -->
     </div>
+    <!-- Add Bootstrap JavaScript Bundle -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
     <script src="back/assets/js/alpine-collaspe.min.js"></script>
     <script src="back/assets/js/alpine-persist.min.js"></script>

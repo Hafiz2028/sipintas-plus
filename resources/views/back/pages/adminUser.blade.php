@@ -1,6 +1,6 @@
 ﻿@extends('back.layout.admin-layout')
 @section('content')
-    <div x-data="contacts">
+    <div x-data="users">
         <ul class="flex space-x-2 rtl:space-x-reverse">
             <li>
                 <a href="javascript:;" class="text-primary hover:underline">Data Master</a>
@@ -28,14 +28,14 @@
                             Tambah Pengguna
                         </button>
                         <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60"
-                            :class="addContactModal && '!block'">
+                            :class="addUserModal && '!block'">
                             <div class="flex min-h-screen items-center justify-center px-4"
-                                @click.self="addContactModal = false">
-                                <div x-show="addContactModal" x-transition="" x-transition.duration.300=""
+                                @click.self="addUserModal = false">
+                                <div x-show="addUserModal" x-transition="" x-transition.duration.300=""
                                     class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
                                     <button type="button"
                                         class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4"
-                                        @click="addContactModal = false">
+                                        @click="addUserModal = false">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
                                             viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                             stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
@@ -44,37 +44,67 @@
                                         </svg>
                                     </button>
                                     <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]"
-                                        x-text="params.id ? 'Edit Contact' : 'Tambah Pengguna'"></h3>
+                                        x-text="params.id ? 'Edit Pengguna' : 'Tambah Pengguna'"></h3>
                                     <div class="p-5">
                                         <form @submit.prevent="saveUser">
                                             <div class="mb-5">
-                                                <label for="name">Name</label>
+                                                <label for="name">Nama</label>
                                                 <input id="name" type="text" placeholder="Enter Name"
                                                     class="form-input" x-model="params.name">
                                             </div>
                                             <div class="mb-5">
-                                                <label for="email">Email</label>
-                                                <input id="email" type="email" placeholder="Enter Email"
-                                                    class="form-input" x-model="params.email">
+                                                <label for="nip">NIP</label>
+                                                <input id="nip" type="text" placeholder="Enter NIP"
+                                                    class="form-input" x-model="params.nip">
                                             </div>
                                             <div class="mb-5">
-                                                <label for="number">Phone Number</label>
-                                                <input id="number" type="text" placeholder="Enter Phone Number"
-                                                    class="form-input" x-model="params.phone">
+                                                <label for="no_hp">Nomor Hp</label>
+                                                <input id="no_hp" type="text" placeholder="Enter Phone Number"
+                                                    class="form-input" x-model="params.no_hp">
                                             </div>
                                             <div class="mb-5">
-                                                <label for="occupation">Occupation</label>
-                                                <input id="occupation" type="text" placeholder="Enter Occupation"
-                                                    class="form-input" x-model="params.role">
+                                                <label for="opd">OPD</label>
+                                                <input id="opd" type="text" placeholder="Enter OPD"
+                                                    class="form-input" x-model="params.opd">
                                             </div>
                                             <div class="mb-5">
-                                                <label for="address">Address</label>
-                                                <textarea id="address" rows="3" placeholder="Enter Address" class="form-textarea min-h-[130px] resize-none"
-                                                    x-model="params.location"></textarea>
+                                                <label for="role">Role Pengguna</label>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="admin" x-model="params.role">
+                                                        <span class="ml-2">Admin</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="kabag" x-model="params.role">
+                                                        <span class="ml-2">Kepala Bagian</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="peminjam" x-model="params.role">
+                                                        <span class="ml-2">Peminjam</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="mb-5">
+                                                <label for="password">Password</label>
+                                                <input id="password" type="password" placeholder="Enter Password"
+                                                    class="form-input" x-model="params.password">
+                                            </div>
+                                            <div class="mb-5">
+                                                <label for="password_confirmation">Konfirmasi Password</label>
+                                                <input id="password_confirmation" type="password"
+                                                    placeholder="Enter Password Confirmation" class="form-input"
+                                                    x-model="params.password_confirmation">
                                             </div>
                                             <div class="mt-8 flex items-center justify-end">
                                                 <button type="button" class="btn btn-outline-danger"
-                                                    @click="addContactModal = false">
+                                                    @click="addUserModal = false">
                                                     Cancel
                                                 </button>
                                                 <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4"
@@ -91,7 +121,7 @@
                 </div>
                 <div class="relative">
                     <input type="text" placeholder="Cari Pengguna" class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
-                        x-model="searchUser" @keyup="searchContacts">
+                        x-model="searchUser" @keyup="searchUsers">
                     <div
                         class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
                         <svg class="mx-auto" width="16" height="16" viewbox="0 0 24 24" fill="none"
@@ -112,27 +142,29 @@
                         <thead>
                             <tr>
                                 <th>Nama</th>
-                                <th>NIK</th>
+                                <th>NIP</th>
                                 <th>OPD</th>
+                                <th>Role</th>
                                 <th>Nomor Hp</th>
                                 <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template x-for="contact in filterdContactsList" :key="contact.id">
+                            <template x-for="user in filterdUsersList" :key="user.id">
                                 <tr>
-                                    <td x-text="contact.name" class="whitespace-nowrap"></td>></td>
-                                    <td x-text="contact.email"></td>
-                                    <td x-text="contact.location" class="whitespace-nowrap"></td>
-                                    <td x-text="contact.phone" class="whitespace-nowrap"></td>
+                                    <td x-text="user.name" class="whitespace-nowrap"></td>></td>
+                                    <td x-text="user.nip"></td>
+                                    <td x-text="user.opd" class="whitespace-nowrap"></td>
+                                    <td x-text="user.role" class="whitespace-nowrap"></td>
+                                    <td x-text="user.no_hp" class="whitespace-nowrap"></td>
                                     <td>
                                         <div class="flex items-center justify-center gap-4">
                                             <button type="button" class="btn btn-sm btn-outline-primary"
-                                                @click="editUser(contact)">
+                                                @click="editUser(user)">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-sm btn-outline-danger"
-                                                @click="deleteUser(contact)">
+                                                @click="deleteUser(user)">
                                                 Delete
                                             </button>
                                         </div>
@@ -302,179 +334,41 @@
                 ],
             }));
 
-            Alpine.data('contacts', () => ({
+            Alpine.data('users', () => ({
                 defaultParams: {
                     id: null,
                     name: '',
-                    email: '',
+                    nip: '',
+                    no_hp: '',
+                    opd: '',
+                    password: '',
                     role: '',
-                    phone: '',
-                    location: '',
                 },
                 displayType: 'list',
-                addContactModal: false,
+                addUserModal: false,
                 params: {
                     id: null,
                     name: '',
-                    email: '',
+                    nip: '',
+                    no_hp: '',
+                    opd: '',
+                    password: '',
                     role: '',
-                    phone: '',
-                    location: '',
                 },
-                filterdContactsList: [],
+                filterdUsersList: [],
                 searchUser: '',
-                contactList: [{
-                        id: 1,
-                        path: 'profile-35.png',
-                        name: 'Soeng Souy',
-                        role: 'Web Developer',
-                        email: 'soengsouy@mail.com',
-                        location: 'Boston, USA',
-                        phone: '+1 202 555 0197',
-                        posts: 25,
-                        followers: '5K',
-                        following: 500,
-                    },
-                    {
-                        id: 2,
-                        path: 'profile-35.png',
-                        name: 'StarCode Kh',
-                        role: 'Web Designer',
-                        email: 'starcodekh@mail.com',
-                        location: 'Sydney, Australia',
-                        phone: '+1 202 555 0170',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 3,
-                        path: 'profile-35.png',
-                        name: 'Lila Perry',
-                        role: 'UX/UI Designer',
-                        email: 'lila@mail.com',
-                        location: 'Miami, USA',
-                        phone: '+1 202 555 0105',
-                        posts: 20,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 4,
-                        path: 'profile-35.png',
-                        name: 'Andy King',
-                        role: 'Project Lead',
-                        email: 'andy@mail.com',
-                        location: 'Tokyo, Japan',
-                        phone: '+1 202 555 0194',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 300,
-                    },
-                    {
-                        id: 5,
-                        path: 'profile-35.png',
-                        name: 'Jesse Cory',
-                        role: 'Web Developer',
-                        email: 'jesse@mail.com',
-                        location: 'Edinburgh, UK',
-                        phone: '+1 202 555 0161',
-                        posts: 30,
-                        followers: '20K',
-                        following: 350,
-                    },
-                    {
-                        id: 6,
-                        path: 'profile-35.png',
-                        name: 'Xavier',
-                        role: 'UX/UI Designer',
-                        email: 'xavier@mail.com',
-                        location: 'Phnom Penh',
-                        phone: '+1 202 555 0155',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 7,
-                        path: 'profile-35.png',
-                        name: 'Susan',
-                        role: 'Project Manager',
-                        email: 'susan@mail.com',
-                        location: 'Miami, USA',
-                        phone: '+1 202 555 0118',
-                        posts: 40,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 8,
-                        path: 'profile-35.png',
-                        name: 'Raci Lopez',
-                        role: 'Web Developer',
-                        email: 'traci@mail.com',
-                        location: 'Edinburgh, UK',
-                        phone: '+1 202 555 0135',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 9,
-                        path: 'profile-35.png',
-                        name: 'Steven Mendoza',
-                        role: 'HR',
-                        email: 'sokol@verizon.net',
-                        location: 'Monrovia, US',
-                        phone: '+1 202 555 0100',
-                        posts: 40,
-                        followers: '21.8K',
-                        following: 300,
-                    },
-                    {
-                        id: 10,
-                        path: 'profile-35.png',
-                        name: 'James Cantrell',
-                        role: 'Web Developer',
-                        email: 'sravani@comcast.net',
-                        location: 'Michigan, US',
-                        phone: '+1 202 555 0134',
-                        posts: 100,
-                        followers: '28K',
-                        following: 520,
-                    },
-                    {
-                        id: 11,
-                        path: 'profile-35.png',
-                        name: 'Reginald Brown',
-                        role: 'Web Designer',
-                        email: 'drhyde@gmail.com',
-                        location: 'Entrimo, Spain',
-                        phone: '+1 202 555 0153',
-                        posts: 35,
-                        followers: '25K',
-                        following: 500,
-                    },
-                    {
-                        id: 12,
-                        path: 'profile-35.png',
-                        name: 'Stacey Smith',
-                        role: 'Chief technology officer',
-                        email: 'maikelnai@optonline.net',
-                        location: 'Lublin, Poland',
-                        phone: '+1 202 555 0115',
-                        posts: 21,
-                        followers: '5K',
-                        following: 200,
-                    },
-                ],
+                userList: @json($users) || [],
 
                 init() {
-                    this.searchContacts();
+                    this.searchUsers();
                 },
 
-                searchContacts() {
-                    this.filterdContactsList = this.contactList.filter((d) => d.name.toLowerCase()
+                searchUsers() {
+                    if (!Array.isArray(this.userList)) {
+                        console.error('userList is not an array:', this.userList);
+                        return;
+                    }
+                    this.filterdUsersList = this.userList.filter((d) => d.name.toLowerCase()
                         .includes(this.searchUser.toLowerCase()));
                 },
 
@@ -484,67 +378,107 @@
                         this.params = JSON.parse(JSON.stringify(user));
                     }
 
-                    this.addContactModal = true;
+                    this.addUserModal = true;
                 },
 
-                saveUser() {
+                async saveUser() {
+                    console.log('Data being sent:', this.params);
                     if (!this.params.name) {
-                        this.showMessage('Name is required.', 'error');
+                        this.showMessage('Nama pengguna harus diisi.', 'error');
                         return true;
                     }
-                    if (!this.params.email) {
-                        this.showMessage('Email is required.', 'error');
+                    if (!this.params.nip) {
+                        this.showMessage('NIP pengguna harus diisi.', 'error');
                         return true;
                     }
-                    if (!this.params.phone) {
-                        this.showMessage('Phone is required.', 'error');
+                    if (!this.params.no_hp) {
+                        this.showMessage('No Hp pengguna harus diisi.', 'error');
+                        return true;
+                    }
+                    if (!this.params.opd) {
+                        this.showMessage('OPD pengguna harus diisi.', 'error');
                         return true;
                     }
                     if (!this.params.role) {
-                        this.showMessage('Occupation is required.', 'error');
+                        this.showMessage('Role pengguna harus diisi.', 'error');
+                        return true;
+                    }
+                    if (!this.params.password) {
+                        this.showMessage('Password pengguna harus diisi.', 'error');
+                        return true;
+                    }
+                    if (!this.params.password_confirmation) {
+                        this.showMessage('Konfirmasi Password Pengguna harus diisi.', 'error');
+                        return true;
+                    }
+                    if (this.params.password !== this.params.password_confirmation) {
+                        this.showMessage(
+                            'Password dan Konfirmasi Password berbeda, tolong diperbaiki.',
+                            'error');
                         return true;
                     }
 
-                    if (this.params.id) {
-                        //update user
-                        let user = this.contactList.find((d) => d.id === this.params.id);
-                        user.name = this.params.name;
-                        user.email = this.params.email;
-                        user.role = this.params.role;
-                        user.phone = this.params.phone;
-                        user.location = this.params.location;
-                    } else {
-                        //add user
-                        let maxUserId = this.contactList.length ?
-                            this.contactList.reduce((max, character) => (character.id > max ? character
-                                .id : max), this.contactList[0].id) :
-                            0;
-
-                        let user = {
-                            id: maxUserId + 1,
-                            path: 'profile-35.png',
-                            name: this.params.name,
-                            email: this.params.email,
-                            role: this.params.role,
-                            phone: this.params.phone,
-                            location: this.params.location,
-                            posts: 20,
-                            followers: '5K',
-                            following: 500,
-                        };
-                        this.contactList.splice(0, 0, user);
-                        this.searchContacts();
+                    try {
+                        let response;
+                        if (this.params.id) {
+                            response = await fetch(`/admin/user/${this.params.id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute(
+                                        'content')
+                                },
+                                body: JSON.stringify(this.params),
+                            });
+                        } else {
+                            response = await fetch('/admin/user', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute(
+                                        'content')
+                                },
+                                body: JSON.stringify(this.params),
+                            });
+                        }
+                        if (!response.ok) {
+                            console.log('Response status:', response.status);
+                            console.log('Response status text:', response.statusText);
+                            console.log('Response body:', await response.text());
+                            throw new Error('Failed to save user');
+                        }
+                        console.log('User saved successfully:', await response.json());
+                        this.showMessage('User has been saved successfully.');
+                        this.addUserModal = false;
+                        setTimeout(() => {
+                            window.location.href = '/admin/user';
+                        }, 1000);
+                    } catch (error) {
+                        console.log('Error in save User:', error);
+                        this.showMessage('Failed to save user.', 'error');
                     }
-
-                    this.showMessage('User has been saved successfully.');
-                    this.addContactModal = false;
                 },
 
-                deleteUser(user) {
-                    this.contactList = this.contactList.filter((d) => d.id != user.id);
-                    // this.ids = this.ids.filter((d) => d != user.id);
-                    this.searchContacts();
-                    this.showMessage('User has been deleted successfully.');
+                async deleteUser(user) {
+                    try {
+                        const response = await fetch(`/admin/user/${user.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        });
+
+                        if (!response.ok) throw new Error('Failed to delete user');
+                        this.showMessage('User has been deleted successfully.');
+                        setTimeout(() => {
+                            window.location.href = '/admin/user';
+                        }, 1000);
+                    } catch (error) {
+                        this.showMessage('Failed to delete User.', 'error');
+                    }
                 },
 
                 setDisplayType(type) {

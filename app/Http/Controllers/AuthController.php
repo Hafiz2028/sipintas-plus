@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
@@ -32,18 +34,50 @@ class AuthController extends Controller
                 return redirect()->route('admin.home');
             }
             if (Auth::user()->role == 'peminjam') {
-                return redirect()->route('landing');
+                return redirect()->route('homepage');
             }
         } else {
-            return redirect()->back()->withErrors([
-                'loginError' => 'NIP dan Password yang dimasukkan tidak sesuai',
+            return redirect()->back()->with([
+                'fail' => 'NIP dan Password yang dimasukkan tidak sesuai',
             ])->withInput();
         }
     }
+    public function register()
+    {
+        return view('back.pages.register');
+    }
 
-    public function logout()
+    public function createUser(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'no_hp' => 'required|string|min:8',
+            'opd' => 'required|string|max:255',
+            'nip' => 'required|string|max:255|unique:users',
+            'password' => 'required|string|min:5|confirmed',
+        ]);
+        $user = User::create([
+            'name' => $request->input('name'),
+            'no_hp' => $request->input('no_hp'),
+            'opd' => $request->input('opd'),
+            'nip' => $request->input('nip'),
+            'role' => 'peminjam',
+            'password' => Hash::make($request->input('password')),
+        ]);
+        return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
+    }
+    public function adminRegister()
+    {
+        return view('back.pages.adminRegister');
+    }
+
+    public function logout(Request $request)
     {
         Auth::logout();
+        $request->session()->flush();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        // dd('logged out');
         return redirect('login');
     }
 }

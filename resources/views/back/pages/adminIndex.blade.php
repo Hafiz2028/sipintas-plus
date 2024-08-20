@@ -9,7 +9,7 @@
                         <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Total Peminjaman</div>
                     </div>
                     <div class="mt-5 flex items-center">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">50 Peminjaman</div>
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ $rentsCount }} Peminjaman</div>
                     </div>
                 </div>
 
@@ -19,7 +19,7 @@
                         <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Jumlah Pengguna</div>
                     </div>
                     <div class="mt-5 flex items-center">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">41 Pengguna</div>
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ $usersCount }} Pengguna</div>
                     </div>
                 </div>
                 <!-- Time On-Site -->
@@ -28,7 +28,7 @@
                         <div class="text-md font-semibold ltr:mr-1 rtl:ml-1">Jumlah Fasilitas</div>
                     </div>
                     <div class="mt-5 flex items-center">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">21 Fasilitas</div>
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ $facilitiesCount }} Fasilitas</div>
                     </div>
                 </div>
                 <!-- Bounce Rate -->
@@ -39,7 +39,7 @@
                         </div>
                     </div>
                     <div class="mt-5 flex items-center">
-                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">8 Kategori</div>
+                        <div class="text-3xl font-bold ltr:mr-3 rtl:ml-3">{{ $facilityTypesCount }} Kategori</div>
                     </div>
                 </div>
             </div>
@@ -62,78 +62,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td class="font-semibold">01</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-semibold">02</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-semibold">03</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-semibold">04</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-semibold">05</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="font-semibold">06</td>
-                                    <td class="whitespace-nowrap">Rizki Juni</td>
-                                    <td class="whitespace-nowrap">BPSDM</td>
-                                    <td class="whitespace-nowrap">Aula Gedung Putih</td>
-                                    <td class="whitespace-nowrap">20/08/2023</td>
-                                    <td class="whitespace-nowrap">0831231231</td>
-                                    <td class="text-center">
-                                        <span
-                                            class="badge rounded-full bg-warning/20 text-warning hover:top-0">Pending</span>
-                                    </td>
-                                </tr>
+                                @foreach ($rents as $rent)
+                                    <tr>
+                                        <td class="font-semibold">{{ $loop->iteration }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->user->name }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->user->opd }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->facility->name }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->start }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->user->no_hp }}</td>
+                                        <td class="text-center">
+                                            <span
+                                                class="badge rounded-full bg-warning/20 text-warning hover:top-0">{{ $rent->status }}</span>
+                                        </td>
+                                    </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

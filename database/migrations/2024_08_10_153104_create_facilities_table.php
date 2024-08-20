@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('facilities', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('facility_type_id');
-            $table->string('pembayaran');
+            $table->string('name');
+            $table->string('size');
+            $table->string('kapasitas');
+            $table->string('information');
+            $table->enum('pembayaran',['tidak','ya'])->default('tidak');
             $table->foreign('facility_type_id')->references('id')->on('facility_types')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();
         });

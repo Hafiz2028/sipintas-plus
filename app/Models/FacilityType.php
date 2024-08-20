@@ -9,7 +9,7 @@ class FacilityType extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'nama'
+        'name'
     ];
 
     public function facilities(){

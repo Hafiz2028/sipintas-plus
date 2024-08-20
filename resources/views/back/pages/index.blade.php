@@ -449,9 +449,17 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="{{ route('home') }}">
-                                <img src="/landing/assets/images/logo/logo2.png" alt="Logo" style="width: 120px;" />
-                            </a>
+                            @if (!Auth::check())
+                                <a class="navbar-brand" href="{{ route('landing') }}">
+                                    <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
+                                        style="width: 120px;" />
+                                </a>
+                            @else
+                                <a class="navbar-brand" href="{{ route('homepage') }}">
+                                    <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
+                                        style="width: 120px;" />
+                                </a>
+                            @endif
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -471,9 +479,15 @@
                                     <li class="nav-item">
                                         <a class="page-scroll" href="#about">Cara Peminjaman</a>
                                     </li>
-                                    <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
-                                        Masuk / Daftar
-                                    </a>
+                                    @if (!Auth::check())
+                                        <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
+                                            Masuk / Daftar
+                                        </a>
+                                    @else
+                                        <a class="main-btn" data-scroll-nav="0" href="{{ route('logout') }}">
+                                            Logout
+                                        </a>
+                                    @endif
                                     </li>
                                 </ul>
                             </div>
@@ -511,41 +525,20 @@
                         <div class="wow fadeIn" data-wow-duration="1.0s" data-wow-delay="1.0s">
                             <div class="swiper mySwiper">
                                 <div class="swiper-wrapper text-center">
-                                    <div class="swiper-slide">
-                                        <img src="/back/fasilitas/aula.jpeg" alt="">
-                                        <div class="info">
-                                            <h3>Aula Kantor Gubernur</h3>
-                                            <p>Memiliki berbagai fasilitas</p>
+                                    @foreach ($facilities as $facility)
+                                        <div class="swiper-slide">
+                                            @if ($facility->facilityImages->isNotEmpty())
+                                                <img src="/facility_images/{{ $facility->facilityImages->first()->image }}"
+                                                    alt="{{ $facility->facilityImages->first()->image }}">
+                                            @else
+                                                <img src="/facility_images/default.png" alt="No Image Available">
+                                            @endif
+                                            <div class="info">
+                                                <h3>{{ $facility->name }}</h3>
+                                                <p>{{ $facility->information }}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="/back/fasilitas/aula2.jpeg" alt="">
-                                        <div class="info">
-                                            <h3>Aula Kantor Gubernur</h3>
-                                            <p>Memiliki berbagai fasilitas</p>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="/back/fasilitas/halaman.jpeg" alt="">
-                                        <div class="info">
-                                            <h3>Aula Kantor Gubernur</h3>
-                                            <p>Memiliki berbagai fasilitas</p>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="/back/fasilitas/mobil 2.jpeg" alt="">
-                                        <div class="info">
-                                            <h3>Aula Kantor Gubernur</h3>
-                                            <p>Memiliki berbagai fasilitas</p>
-                                        </div>
-                                    </div>
-                                    <div class="swiper-slide">
-                                        <img src="/back/fasilitas/mobil.jpeg" alt="">
-                                        <div class="info">
-                                            <h3>Aula Kantor Gubernur</h3>
-                                            <p>Memiliki berbagai fasilitas</p>
-                                        </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                                 <div class="swiper-button-next"></div>
                                 <div class="swiper-button-prev"></div>
@@ -615,7 +608,6 @@
                                                 d="M4 52V36H8V28C8 25.8 9.8 24 12 24H52C54.2 24 56 25.8 56 28V36H60V52H56V44H8V52H4ZM12 36H52V28H12V36ZM20 32H16C14.3 32 13 30.7 13 29C13 27.3 14.3 26 16 26H20C21.7 26 23 27.3 23 29C23 30.7 21.7 32 20 32ZM48 32H44C42.3 32 41 30.7 41 29C41 27.3 42.3 26 44 26H48C49.7 26 51 27.3 51 29C51 30.7 49.7 32 48 32Z"
                                                 fill="currentColor" />
                                         </svg>
-
                                     </span>
                                     <span class="checkbox-label">Penginapan</span>
                                 </span>
@@ -711,7 +703,6 @@
                             </label>
                         </div>
                     </fieldset>
-
                     <!-- brand logo -->
                 </div>
             </div>
@@ -740,87 +731,30 @@
                 <div class="col-lg-12 swiper" style="padding-top: 15px; padding-bottom: 35px;">
                     <div class="slider-penyewaan">
                         <div class="ini-tes swiper-wrapper">
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/aula2.jpeg"
-                                            alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/aula.jpeg"
-                                            alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/halaman.jpeg"
-                                            alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/mobil 2.jpeg"
-                                            alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/mobil.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/aula.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href="{{ route('booking-fasilitas') }}"><img src="/back/fasilitas/aula2.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
+                            @foreach ($facilities as $facility)
+                                @if ($facility->facilityType->name == 'Kendaraan Dinas' || $facility->facilityType->name == 'Kendaraan')
+                                    <div class="penyewaan swiper-slide">
+                                        @if ($facility->facilityImages->isNotEmpty())
+                                            <picture>
+                                                <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
+                                                        src="/facility_images/{{ $facility->facilityImages->first()->image }}"
+                                                        alt="{{ $facility->facilityImages->first()->image }}"></a>
+                                            </picture>
+                                        @else
+                                            <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
+                                                    src="/facility_images/default-panjang.png"
+                                                    alt="No Image Available"
+                                                    style="width: 228px; height: 382.5px; object-fit: cover; object-position: center;"></a>
+                                        @endif
+                                        <div class="detail">
+                                            <p>
+                                                <b>{{ $facility->name }}</b><br>
+                                                <small>{{ $facility->facilityType->name }}</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                         <div class="swiper-pagination"></div>
                         <div class="swiper-slide-button swiper-button-next"></div>
@@ -852,72 +786,31 @@
                 <div class="col-lg-12 swiper" style="padding-top: 15px; padding-bottom: 35px;">
                     <div class="slider-penyewaan">
                         <div class="ini-tes swiper-wrapper">
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/aula.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/aula2.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/halaman.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/aula.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/aula2.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
-                            <div class="penyewaan swiper-slide">
-                                <picture>
-                                    <a href=""><img src="/back/fasilitas/halaman.jpeg" alt=""></a>
-                                </picture>
-                                <div class="detail">
-                                    <p>
-                                        <b>Product Two</b><br>
-                                        <small>New arrival</small>
-                                    </p>
-                                </div>
-                            </div>
+                            @foreach ($facilities as $facility)
+                                @if ($facility->facilityType->name != 'Kendaraan Dinas' && $facility->facilityType->name != 'Kendaraan')
+                                    <div class="penyewaan swiper-slide">
+                                        @if ($facility->facilityImages->isNotEmpty())
+                                            <picture>
+                                                <a
+                                                    href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
+                                                        src="/facility_images/{{ $facility->facilityImages->first()->image }}"
+                                                        alt="{{ $facility->facilityImages->first()->image }}"></a>
+                                            </picture>
+                                        @else
+                                            <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
+                                                    src="/facility_images/default-panjang.png"
+                                                    alt="No Image Available"
+                                                    style="width: 228px; height: 382.5px; object-fit: cover; object-position: center;"></a>
+                                        @endif
+                                        <div class="detail">
+                                            <p>
+                                                <b>{{ $facility->name }}</b><br>
+                                                <small>{{ $facility->facilityType->name }}</small>
+                                            </p>
+                                        </div>
+                                    </div>
+                                @endif
+                            @endforeach
                         </div>
                         <div class="swiper-pagination"></div>
                         <div class="swiper-slide-button swiper-button-next"></div>

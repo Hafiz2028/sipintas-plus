@@ -1,6 +1,6 @@
 ﻿@extends('back.layout.admin-layout')
 @section('content')
-    <div x-data="contacts">
+    <div x-data="facilityTypes()">
         <ul class="flex space-x-2 rtl:space-x-reverse">
             <li>
                 <a href="javascript:;" class="text-primary hover:underline">Data Master</a>
@@ -14,7 +14,7 @@
             <div class="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center sm:gap-3">
                 <div class="flex gap-3">
                     <div>
-                        <button type="button" class="btn btn-primary" @click="editUser">
+                        <button type="button" class="btn btn-primary" @click="editFacilityType">
                             <svg width="24" height="24" viewbox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ltr:mr-2 rtl:ml-2">
                                 <circle cx="10" cy="6" r="4" stroke="currentColor" stroke-width="1.5">
@@ -28,14 +28,14 @@
                             Tambah Kategori Fasilitas
                         </button>
                         <div class="fixed inset-0 z-[999] hidden overflow-y-auto bg-[black]/60"
-                            :class="addContactModal && '!block'">
+                            :class="addFacilityTypeModal && '!block'">
                             <div class="flex min-h-screen items-center justify-center px-4"
-                                @click.self="addContactModal = false">
-                                <div x-show="addContactModal" x-transition="" x-transition.duration.300=""
+                                @click.self="addFacilityTypeModal = false">
+                                <div x-show="addFacilityTypeModal" x-transition="" x-transition.duration.300=""
                                     class="panel my-8 w-[90%] max-w-lg overflow-hidden rounded-lg border-0 p-0 md:w-full">
                                     <button type="button"
                                         class="absolute top-4 text-white-dark hover:text-dark ltr:right-4 rtl:left-4"
-                                        @click="addContactModal = false">
+                                        @click="addFacilityTypeModal = false">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="24px" height="24px"
                                             viewbox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
                                             stroke-linecap="round" stroke-linejoin="round" class="h-6 w-6">
@@ -44,37 +44,18 @@
                                         </svg>
                                     </button>
                                     <h3 class="bg-[#fbfbfb] py-3 text-lg font-medium ltr:pl-5 ltr:pr-[50px] rtl:pr-5 rtl:pl-[50px] dark:bg-[#121c2c]"
-                                        x-text="params.id ? 'Edit Contact' : 'Add Contact'"></h3>
+                                        x-text="params.id ? 'Edit FacilityType' : 'Tambah Kategori Fasilitas'"></h3>
                                     <div class="p-5">
-                                        <form @submit.prevent="saveUser">
+                                        <form @submit.prevent="saveFacilityType">
                                             <div class="mb-5">
-                                                <label for="name">Name</label>
-                                                <input id="name" type="text" placeholder="Enter Name"
-                                                    class="form-input" x-model="params.name">
-                                            </div>
-                                            <div class="mb-5">
-                                                <label for="email">Email</label>
-                                                <input id="email" type="email" placeholder="Enter Email"
-                                                    class="form-input" x-model="params.email">
-                                            </div>
-                                            <div class="mb-5">
-                                                <label for="number">Phone Number</label>
-                                                <input id="number" type="text" placeholder="Enter Phone Number"
-                                                    class="form-input" x-model="params.phone">
-                                            </div>
-                                            <div class="mb-5">
-                                                <label for="occupation">Occupation</label>
-                                                <input id="occupation" type="text" placeholder="Enter Occupation"
-                                                    class="form-input" x-model="params.role">
-                                            </div>
-                                            <div class="mb-5">
-                                                <label for="address">Address</label>
-                                                <textarea id="address" rows="3" placeholder="Enter Address" class="form-textarea min-h-[130px] resize-none"
-                                                    x-model="params.location"></textarea>
+                                                <label for="name">Nama Kategori</label>
+                                                <input id="name" type="text"
+                                                    placeholder="Tambahkan nama kategori fasilitas" class="form-input"
+                                                    x-model="params.name">
                                             </div>
                                             <div class="mt-8 flex items-center justify-end">
                                                 <button type="button" class="btn btn-outline-danger"
-                                                    @click="addContactModal = false">
+                                                    @click="addFacilityTypeModal = false">
                                                     Cancel
                                                 </button>
                                                 <button type="submit" class="btn btn-primary ltr:ml-4 rtl:mr-4"
@@ -89,9 +70,8 @@
                 </div>
                 <div class="relative">
                     <input type="text" placeholder="Cari Kategori" class="peer form-input py-2 ltr:pr-11 rtl:pl-11"
-                        x-model="searchUser" @keyup="searchContacts">
-                    <div
-                        class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
+                        x-model="searchName" @keyup="searchFacilityTypes">
+                    <div class="absolute top-1/2 -translate-y-1/2 peer-focus:text-primary ltr:right-[11px] rtl:left-[11px]">
                         <svg class="mx-auto" width="16" height="16" viewbox="0 0 24 24" fill="none"
                             xmlns="http://www.w3.org/2000/svg">
                             <circle cx="11.5" cy="11.5" r="9.5" stroke="currentColor" stroke-width="1.5"
@@ -110,25 +90,25 @@
                         <thead>
                             <tr>
                                 <th>No</th>
-                                <th>Nama Kategori</th>
-                                <th>Icon</th>
+                                <th>Name Kategori</th>
+                                {{-- <th>Icon</th> --}}
                                 <th class="!text-center">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <template x-for="contact in filterdContactsList" :key="contact.id">
+                            <template x-for="(facilityType, index) in filterdFacilityTypesList" :key="facilityType.id">
                                 <tr>
-                                    <td x-text="contact.id" class="whitespace-nowrap"></td>></td>
-                                    <td x-text="contact.name"></td>
-                                    <td x-text="contact.location" class="whitespace-nowrap"></td>
+                                    <td x-text="index + 1" class="whitespace-nowrap"></td>></td>
+                                    <td x-text="facilityType.name"></td>
+                                    {{-- <td x-text="facilityType.location" class="whitespace-nowrap"></td> --}}
                                     <td>
                                         <div class="flex items-center justify-center gap-4">
                                             <button type="button" class="btn btn-sm btn-outline-primary"
-                                                @click="editUser(contact)">
+                                                @click="editFacilityType(facilityType)">
                                                 Edit
                                             </button>
                                             <button type="button" class="btn btn-sm btn-outline-danger"
-                                                @click="deleteUser(contact)">
+                                                @click="deleteFacilityType(facilityType)">
                                                 Delete
                                             </button>
                                         </div>
@@ -298,249 +278,115 @@
                 ],
             }));
 
-            Alpine.data('contacts', () => ({
+            Alpine.data('facilityTypes', () => ({
                 defaultParams: {
                     id: null,
                     name: '',
-                    email: '',
-                    role: '',
-                    phone: '',
-                    location: '',
                 },
                 displayType: 'list',
-                addContactModal: false,
+                addFacilityTypeModal: false,
                 params: {
                     id: null,
                     name: '',
-                    email: '',
-                    role: '',
-                    phone: '',
-                    location: '',
                 },
-                filterdContactsList: [],
-                searchUser: '',
-                contactList: [{
-                        id: 1,
-                        path: 'profile-35.png',
-                        name: 'Soeng Souy',
-                        role: 'Web Developer',
-                        email: 'soengsouy@mail.com',
-                        location: 'Boston, USA',
-                        phone: '+1 202 555 0197',
-                        posts: 25,
-                        followers: '5K',
-                        following: 500,
-                    },
-                    {
-                        id: 2,
-                        path: 'profile-35.png',
-                        name: 'StarCode Kh',
-                        role: 'Web Designer',
-                        email: 'starcodekh@mail.com',
-                        location: 'Sydney, Australia',
-                        phone: '+1 202 555 0170',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 3,
-                        path: 'profile-35.png',
-                        name: 'Lila Perry',
-                        role: 'UX/UI Designer',
-                        email: 'lila@mail.com',
-                        location: 'Miami, USA',
-                        phone: '+1 202 555 0105',
-                        posts: 20,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 4,
-                        path: 'profile-35.png',
-                        name: 'Andy King',
-                        role: 'Project Lead',
-                        email: 'andy@mail.com',
-                        location: 'Tokyo, Japan',
-                        phone: '+1 202 555 0194',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 300,
-                    },
-                    {
-                        id: 5,
-                        path: 'profile-35.png',
-                        name: 'Jesse Cory',
-                        role: 'Web Developer',
-                        email: 'jesse@mail.com',
-                        location: 'Edinburgh, UK',
-                        phone: '+1 202 555 0161',
-                        posts: 30,
-                        followers: '20K',
-                        following: 350,
-                    },
-                    {
-                        id: 6,
-                        path: 'profile-35.png',
-                        name: 'Xavier',
-                        role: 'UX/UI Designer',
-                        email: 'xavier@mail.com',
-                        location: 'Phnom Penh',
-                        phone: '+1 202 555 0155',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 7,
-                        path: 'profile-35.png',
-                        name: 'Susan',
-                        role: 'Project Manager',
-                        email: 'susan@mail.com',
-                        location: 'Miami, USA',
-                        phone: '+1 202 555 0118',
-                        posts: 40,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 8,
-                        path: 'profile-35.png',
-                        name: 'Raci Lopez',
-                        role: 'Web Developer',
-                        email: 'traci@mail.com',
-                        location: 'Edinburgh, UK',
-                        phone: '+1 202 555 0135',
-                        posts: 25,
-                        followers: '21.5K',
-                        following: 350,
-                    },
-                    {
-                        id: 9,
-                        path: 'profile-35.png',
-                        name: 'Steven Mendoza',
-                        role: 'HR',
-                        email: 'sokol@verizon.net',
-                        location: 'Monrovia, US',
-                        phone: '+1 202 555 0100',
-                        posts: 40,
-                        followers: '21.8K',
-                        following: 300,
-                    },
-                    {
-                        id: 10,
-                        path: 'profile-35.png',
-                        name: 'James Cantrell',
-                        role: 'Web Developer',
-                        email: 'sravani@comcast.net',
-                        location: 'Michigan, US',
-                        phone: '+1 202 555 0134',
-                        posts: 100,
-                        followers: '28K',
-                        following: 520,
-                    },
-                    {
-                        id: 11,
-                        path: 'profile-35.png',
-                        name: 'Reginald Brown',
-                        role: 'Web Designer',
-                        email: 'drhyde@gmail.com',
-                        location: 'Entrimo, Spain',
-                        phone: '+1 202 555 0153',
-                        posts: 35,
-                        followers: '25K',
-                        following: 500,
-                    },
-                    {
-                        id: 12,
-                        path: 'profile-35.png',
-                        name: 'Stacey Smith',
-                        role: 'Chief technology officer',
-                        email: 'maikelnai@optonline.net',
-                        location: 'Lublin, Poland',
-                        phone: '+1 202 555 0115',
-                        posts: 21,
-                        followers: '5K',
-                        following: 200,
-                    },
-                ],
+                filterdFacilityTypesList: [],
+                searchName: '',
+                facilityTypesList: @json($facilityTypes) || [],
 
                 init() {
-                    this.searchContacts();
+                    this.searchFacilityTypes();
                 },
 
-                searchContacts() {
-                    this.filterdContactsList = this.contactList.filter((d) => d.name.toLowerCase()
-                        .includes(this.searchUser.toLowerCase()));
+                searchFacilityTypes() {
+                    if (!Array.isArray(this.facilityTypesList)) {
+                        console.error('facilityTypesList is not an array:', this.facilityTypesList);
+                        return;
+                    }
+                    this.filterdFacilityTypesList = this.facilityTypesList.filter((d) => d.name
+                        .toLowerCase()
+                        .includes(this.searchName.toLowerCase()));
                 },
 
-                editUser(user) {
+                editFacilityType(facilityType) {
                     this.params = this.defaultParams;
-                    if (user) {
-                        this.params = JSON.parse(JSON.stringify(user));
+                    if (facilityType) {
+                        this.params = JSON.parse(JSON.stringify(facilityType));
                     }
 
-                    this.addContactModal = true;
+                    this.addFacilityTypeModal = true;
                 },
 
-                saveUser() {
+                async saveFacilityType() {
+                    console.log('Data being sent:', this.params);
                     if (!this.params.name) {
                         this.showMessage('Name is required.', 'error');
-                        return true;
-                    }
-                    if (!this.params.email) {
-                        this.showMessage('Email is required.', 'error');
-                        return true;
-                    }
-                    if (!this.params.phone) {
-                        this.showMessage('Phone is required.', 'error');
-                        return true;
-                    }
-                    if (!this.params.role) {
-                        this.showMessage('Occupation is required.', 'error');
-                        return true;
+                        return;
                     }
 
-                    if (this.params.id) {
-                        //update user
-                        let user = this.contactList.find((d) => d.id === this.params.id);
-                        user.name = this.params.name;
-                        user.email = this.params.email;
-                        user.role = this.params.role;
-                        user.phone = this.params.phone;
-                        user.location = this.params.location;
-                    } else {
-                        //add user
-                        let maxUserId = this.contactList.length ?
-                            this.contactList.reduce((max, character) => (character.id > max ? character
-                                .id : max), this.contactList[0].id) :
-                            0;
+                    try {
+                        let response;
+                        if (this.params.id) {
+                            response = await fetch(`/admin/tipe-fasilitas/${this.params.id}`, {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute(
+                                        'content')
+                                },
+                                body: JSON.stringify(this.params),
+                            });
+                        } else {
+                            response = await fetch('/admin/tipe-fasilitas', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]').getAttribute(
+                                        'content')
+                                },
+                                body: JSON.stringify(this.params),
+                            });
+                        }
 
-                        let user = {
-                            id: maxUserId + 1,
-                            path: 'profile-35.png',
-                            name: this.params.name,
-                            email: this.params.email,
-                            role: this.params.role,
-                            phone: this.params.phone,
-                            location: this.params.location,
-                            posts: 20,
-                            followers: '5K',
-                            following: 500,
-                        };
-                        this.contactList.splice(0, 0, user);
-                        this.searchContacts();
+                        if (!response.ok) {
+                            console.log('Response status:', response.status);
+                            console.log('Response status text:', response.statusText);
+                            console.log('Response body:', await response.text());
+                            throw new Error('Failed to save facility type');
+                        }
+
+                        console.log('Facility type saved successfully:', await response.json());
+
+                        this.showMessage('Facility type has been saved successfully.');
+                        this.addFacilityModal = false;
+                        setTimeout(() => {
+                            window.location.href = '/admin/tipe-fasilitas';
+                        }, 1000);
+                    } catch (error) {
+                        console.log('Error in saveFacilityType:', error);
+                        this.showMessage('Failed to save facility type.', 'error');
                     }
-
-                    this.showMessage('User has been saved successfully.');
-                    this.addContactModal = false;
                 },
 
-                deleteUser(user) {
-                    this.contactList = this.contactList.filter((d) => d.id != user.id);
-                    // this.ids = this.ids.filter((d) => d != user.id);
-                    this.searchContacts();
-                    this.showMessage('User has been deleted successfully.');
+                async deleteFacilityType(facilityType) {
+                    try {
+                        const response = await fetch(`/admin/tipe-fasilitas/${facilityType.id}`, {
+                            method: 'DELETE',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector(
+                                    'meta[name="csrf-token"]').getAttribute('content')
+                            }
+                        });
+
+                        if (!response.ok) throw new Error('Failed to delete facility type');
+                        this.showMessage('Facility type has been deleted successfully.');
+                        setTimeout(() => {
+                            window.location.href = '/admin/tipe-fasilitas';
+                        }, 1000);
+                    } catch (error) {
+                        this.showMessage('Failed to delete facility type.', 'error');
+                    }
                 },
 
                 setDisplayType(type) {

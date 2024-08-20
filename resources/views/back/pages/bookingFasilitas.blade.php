@@ -2,7 +2,9 @@
 <html class="no-js" lang="en">
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!--====== Title ======-->
     <title>SIPINTAS PLUS</title>
@@ -72,21 +74,25 @@
         .fc-event-danger {
             background-color: #ff4d4d !important;
             border-color: #ff4d4d !important;
+            color: white !important;
         }
 
         .fc-event-primary {
             background-color: #007bff !important;
             border-color: #007bff !important;
+            color: white !important;
         }
 
         .fc-event-info {
             background-color: #17a2b8 !important;
             border-color: #17a2b8 !important;
+            color: white !important;
         }
 
         .fc-event-success {
             background-color: #28a745 !important;
             border-color: #28a745 !important;
+            color: white !important;
         }
 
 
@@ -515,9 +521,17 @@
                 <div class="row">
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
-                            <a class="navbar-brand" href="{{ route('home') }}">
-                                <img src="/landing/assets/images/logo/logo2.png" alt="Logo" style="width: 120px;" />
-                            </a>
+                            @if (!Auth::check())
+                                <a class="navbar-brand" href="{{ route('landing') }}">
+                                    <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
+                                        style="width: 120px;" />
+                                </a>
+                            @else
+                                <a class="navbar-brand" href="{{ route('homepage') }}">
+                                    <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
+                                        style="width: 120px;" />
+                                </a>
+                            @endif
                             <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                                 aria-expanded="false" aria-label="Toggle navigation">
@@ -528,15 +542,27 @@
 
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ms-auto">
+                                    @if (!Auth::check())
+                                        <li class="nav-item">
+                                            <a href="{{ route('landing') }}">Beranda</a>
+                                        </li>
+                                    @else
+                                        <li class="nav-item">
+                                            <a href="{{ route('homepage') }}">Beranda</a>
+                                        </li>
+                                    @endif
                                     <li class="nav-item">
-                                        <a href="{{ route('home') }}">Beranda</a>
+                                        <a href="#">Riwayat Peminjaman</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="#">Riwayat Peminajaman</a>
-                                    </li>
-                                    <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
-                                        Masuk / Daftar
-                                    </a>
+                                    @if (!Auth::check())
+                                        <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
+                                            Masuk / Daftar
+                                        </a>
+                                    @else
+                                        <a class="main-btn" data-scroll-nav="0" href="{{ route('logout') }}">
+                                            Logout
+                                        </a>
+                                    @endif
                                     </li>
                                 </ul>
                             </div>
@@ -561,21 +587,18 @@
                             <div class="wow fadeIn" data-wow-duration="1.0s" data-wow-delay="1.0s">
                                 <div class="swiper mySwiper">
                                     <div class="swiper-wrapper text-center">
-                                        <div class="swiper-slide">
-                                            <img src="/back/fasilitas/aula.jpeg" alt="">
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="/back/fasilitas/aula2.jpeg" alt="">
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="/back/fasilitas/halaman.jpeg" alt="">
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="/back/fasilitas/mobil 2.jpeg" alt="">
-                                        </div>
-                                        <div class="swiper-slide">
-                                            <img src="/back/fasilitas/mobil.jpeg" alt="">
-                                        </div>
+                                        @if ($facility->facilityImages->isNotEmpty())
+                                            @foreach ($facility->facilityImages as $facilityImage)
+                                                <div class="swiper-slide">
+                                                    <img src="/facility_images/{{ $facilityImage->image }}"
+                                                        alt="{{ $facilityImage->image }}">
+                                                </div>
+                                            @endforeach
+                                        @else
+                                            <div class="swiper-slide">
+                                                <img src="/facility_images/default.png" alt="No Image Available">
+                                            </div>
+                                        @endif
                                     </div>
                                     <div class="swiper-button-next"></div>
                                     <div class="swiper-button-prev"></div>
@@ -599,20 +622,18 @@
             <div class="row">
                 <div class="col-lg-12 wow fadeInLeft" data-wow-duration="0.8s" data-wow-delay="0.1s">
                     <h3 class="judul-dua wow fadeInUp" data-wow-duration="1.0s" data-wow-delay="0.5s">
-                        Aula Kantor Gubernur
+                        {{ $facility->name }}
                     </h3>
                     <p style="font-weight:lighter; text-align: justify;" class="text wow fadeInUp"
                         data-wow-duration="1.0s" data-wow-delay="0.8s">
-                        Aula Kantor Gubernur | 1240 m2 | 750 Orang | Fasilitas : Hall Utama, Area Latihan, Tribun
-                        Penonton, Ruang Sekretariat, Ruang Official, Ruang Kesehatan, Ruang Ticketing, Gudang, Ruang
-                        Ganti Atlet dan Toilet
+                        {{ $facility->name }} | {{ $facility->size }}m2 | {{ $facility->kapasitas }} Orang |
+                        Fasilitas
+                        :
+                        {{ $facility->information }} | Pembayaran : {{ $facility->pembayaran }}
                     </p>
-
                     <div class="mt-5">
                         <div id='calendar'></div>
                     </div>
-
-
                 </div>
             </div>
             <!-- row -->
@@ -620,6 +641,12 @@
         <!-- container -->
     </div>
     <!--====== FASILITAS PART ENDS ======-->
+
+
+    @if (Auth::check())
+        @include('back.pages.modalPeminjaman')
+    @endif
+
 
     <!--====== FOOTER PART START ======-->
     <footer id="footer" class="footer-area pt-120">
@@ -766,6 +793,7 @@
     <script src="/landing/assets/js/count-up.min.js"></script>
     <script src="/landing/assets/js/particles.min.js"></script>
     <script src="/landing/assets/js/main.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
@@ -832,112 +860,71 @@
         });
 
         document.addEventListener('DOMContentLoaded', function() {
-            var now = new Date();
+            var rents = @json($rents);
+            var bookingForm = document.getElementById('bookingForm');
+            var pembayaranInput = document.getElementById('pembayaran');
+            var suratInput = document.getElementById('surat');
+            var submitButton = document.querySelector('#bookingForm button[type="submit"]');
+            var startInput = document.getElementById('start');
+            var endInput = document.getElementById('end');
+
+            function toggleFormForExistingBooking(isExisting) {
+                if (isExisting) {
+                    if (pembayaranInput) {
+                        pembayaranInput.closest('.mb-3').style.display = 'none';
+                    }
+                    if (suratInput) {
+                        suratInput.closest('.mb-3').style.display = 'none';
+                    }
+                    submitButton.textContent = 'Oke';
+                    submitButton.addEventListener('click', function() {
+                        var bookingModal = bootstrap.Modal.getInstance(document.getElementById(
+                            'bookingModal'));
+                        bookingModal.hide();
+                    });
+                    submitButton.setAttribute('type', 'button');
+                    startInput.readOnly = true;
+                    endInput.readOnly = true;
+                } else {
+                    if (pembayaranInput) {
+                        pembayaranInput.closest('.mb-3').style.display = 'block';
+                    }
+                    if (suratInput) {
+                        suratInput.closest('.mb-3').style.display = 'block';
+                    }
+                    submitButton.textContent = 'Submit';
+                    submitButton.setAttribute('type', 'submit');
+                    startInput.readOnly = false;
+                    endInput.readOnly = false;
+                }
+            }
 
             function getMonth(date, offset = 0) {
                 var month = date.getMonth() + 1 + offset;
                 return (month < 10 ? '0' : '') + month;
             }
 
-            var events = [{
-                    id: 1,
-                    title: 'All Day Event',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-01T14:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-02T14:30:00',
-                    className: 'fc-event-danger',
-                    description: 'Aenean fermentum quam vel sapien rutrum cursus. Vestibulum imperdiet finibus odio, nec tincidunt felis facilisis eu.',
-                },
-                {
-                    id: 2,
-                    title: 'Site Visit',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-07T19:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-08T14:30:00',
-                    className: 'fc-event-primary',
-                    description: 'Etiam a odio eget enim aliquet laoreet. Vivamus auctor nunc ultrices varius lobortis.',
-                },
-                {
-                    id: 3,
-                    title: 'Product Lunching Event',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-17T14:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-18T14:30:00',
-                    className: 'fc-event-info',
-                    description: 'Proin et consectetur nibh. Mauris et mollis purus. Ut nec tincidunt lacus. Nam at rutrum justo, vitae egestas dolor.',
-                },
-                {
-                    id: 4,
-                    title: 'Meeting',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-12T10:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-13T10:30:00',
-                    className: 'fc-event-danger',
-                    description: 'Mauris ut mauris aliquam, fringilla sapien et, dignissim nisl. Pellentesque ornare velit non mollis fringilla.',
-                },
-                {
-                    id: 5,
-                    title: 'Lunch',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-12T15:00:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-13T15:00:00',
-                    className: 'fc-event-info',
-                    description: 'Integer fermentum bibendum elit in egestas. Interdum et malesuada fames ac ante ipsum primis in faucibus.',
-                },
-                {
-                    id: 6,
-                    title: 'Conference',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-12T21:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-13T21:30:00',
-                    className: 'fc-event-success',
-                    description: 'Curabitur facilisis vel elit sed dapibus. Nunc sagittis ex nec ante facilisis, sed sodales purus rhoncus. Donec est sapien, porttitor et feugiat sed, eleifend quis sapien. Sed sit amet maximus dolor.',
-                },
-                {
-                    id: 7,
-                    title: 'Happy Hour',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-12T05:30:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-13T05:30:00',
-                    className: 'fc-event-info',
-                    description: ' odio lectus, porttitor molestie scelerisque blandit, hendrerit sed ex. Aenean malesuada iaculis erat, vitae blandit nisl accumsan ut.',
-                },
-                {
-                    id: 8,
-                    title: 'Dinner',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-12T20:00:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-13T20:00:00',
-                    className: 'fc-event-danger',
-                    description: 'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                },
-                {
-                    id: 9,
-                    title: 'Birthday Party',
-                    start: now.getFullYear() + '-' + getMonth(now) + '-27T20:00:00',
-                    end: now.getFullYear() + '-' + getMonth(now) + '-28T20:00:00',
-                    className: 'fc-event-success',
-                    description: 'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                },
-                {
-                    id: 10,
-                    title: 'New Talent Event',
-                    start: now.getFullYear() + '-' + getMonth(now, 1) + '-24T08:12:14',
-                    end: now.getFullYear() + '-' + getMonth(now, 1) + '-27T22:20:20',
-                    className: 'fc-event-danger',
-                    description: 'Sed purus urna, aliquam et pharetra ut, efficitur id mi. Pellentesque ut convallis velit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                },
-                {
-                    id: 11,
-                    title: 'Other new',
-                    start: now.getFullYear() + '-' + getMonth(now, -1) + '-13T08:12:14',
-                    end: now.getFullYear() + '-' + getMonth(now, -1) + '-16T22:20:20',
-                    className: 'fc-event-primary',
-                    description: 'Pellentesque ut convallis velit. Sed purus urna, aliquam et pharetra ut, efficitur id mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                },
-                {
-                    id: 13,
-                    title: 'Upcoming Event',
-                    start: now.getFullYear() + '-' + getMonth(now, 1) + '-15T08:12:14',
-                    end: now.getFullYear() + '-' + getMonth(now, 1) + '-18T22:20:20',
-                    className: 'fc-event-primary',
-                    description: 'Pellentesque ut convallis velit. Sed purus urna, aliquam et pharetra ut, efficitur id mi. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                },
-            ];
+            var events = rents.map(function(rent) {
+                let className = '';
+                if (rent.status === 'proses') {
+                    className = 'fc-event-info';
+                } else if (rent.status === 'diterima') {
+                    className = 'fc-event-success';
+                } else if (rent.status === 'ditolak') {
+                    return null;
+                }
+                return {
+                    id: rent.id,
+                    title: 'Peminjam : ' + rent.user.name,
+                    start: rent.start,
+                    end: rent.end,
+                    className: [className],
+                    description: 'OPD: ' + rent.user.opd,
+                };
+            }).filter(event => event !== null);
 
             var calendarEl = document.getElementById('calendar');
+            var isLoggedIn = @json(auth()->check());
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: {
@@ -948,15 +935,142 @@
                 events: events,
                 editable: true,
                 selectable: true,
+
                 eventClick: function(info) {
-                    alert(info.event.title + '\n' + info.event.extendedProps.description);
+                    if (!isLoggedIn) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tidak Login',
+                            text: 'Silahkan melakukan Login terlebih dahulu',
+                            showCancelButton: true,
+                            confirmButtonText: 'Login',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login';
+                            }
+                        });
+                    } else {
+                        var rent = rents.find(r => r.id == info.event.id);
+                        if (rent) {
+                            document.getElementById('eventId').value = rent.id;
+                            document.getElementById('start').value = rent.start.substring(0, 16);
+                            document.getElementById('end').value = rent.end.substring(0, 16);
+                            document.getElementById('name').value = rent.user.name;
+                            document.getElementById('opd').value = rent.user.opd;
+                            document.getElementById('nip').value = rent.user.nip;
+                            toggleFormForExistingBooking(true);
+                            var bookingModal = new bootstrap.Modal(document.getElementById(
+                                'bookingModal'));
+                            bookingModal.show();
+                        }
+                    }
                 },
                 select: function(info) {
-                    alert('selected ' + info.startStr + ' to ' + info.endStr);
-                    window.location.replace("{{ route('login') }}")
+                    if (!isLoggedIn) {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tidak Login',
+                            text: 'Silahkan melakukan Login terlebih dahulu',
+                            showCancelButton: true,
+                            confirmButtonText: 'Login',
+                            cancelButtonText: 'Cancel'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                window.location.href = '/login';
+                            }
+                        });
+                    } else {
+                        var startDateTime = info.startStr.substring(0, 16);
+                        var endDateTime = info.endStr.substring(0, 16);
+                        document.getElementById('start').value = startDateTime;
+                        document.getElementById('end').value = endDateTime;
+                        document.getElementById('name').value = "{{ auth()->user()->name }}";
+                        document.getElementById('opd').value = "{{ auth()->user()->opd }}";
+                        document.getElementById('nip').value = "{{ auth()->user()->nip }}";
+                        toggleFormForExistingBooking(false);
+                        var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+                        bookingModal.show();
+                    }
                 }
             });
             calendar.render();
+            document.getElementById('bookingForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+                var isValid = true;
+                var requiredFields = ['start', 'end', 'surat'];
+                requiredFields.forEach(function(field) {
+                    var input = document.getElementById(field);
+                    if (!input.value) {
+                        isValid = false;
+                        input.classList.add('is-invalid');
+                    } else {
+                        input.classList.remove('is-invalid');
+                    }
+                });
+                if (!isValid) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Validation Error',
+                        text: 'Please fill in all required fields.',
+                    });
+                    return;
+                }
+                fetch('/book-facility', {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .getAttribute('content')
+                        }
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            return response.json().then(data => {
+                                throw new Error(data.error || 'An unknown error occurred.');
+                            });
+                        }
+                        const contentType = response.headers.get("content-type");
+                        if (contentType && contentType.includes("application/json")) {
+                            return response.json();
+                        } else {
+                            return response.text().then(text => {
+                                throw new Error(
+                                    `Expected JSON but got ${contentType}: ${text}`);
+                            });
+                        }
+                    })
+                    .then(data => {
+                        console.log(data);
+                        if (data.success) {
+                            var bookingModal = bootstrap.Modal.getInstance(document.getElementById(
+                                'bookingModal'));
+                            bookingModal.hide();
+                            var successModal = new bootstrap.Modal(document.getElementById(
+                                'successModal'));
+                            successModal.show();
+                            setTimeout(() => {
+                                window.location.href =
+                                    "{{ route('detail-booking', ['facility' => $facility->id]) }}";
+                            }, 1500);
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Peminjaman Gagal',
+                                text: data.message,
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: error.message,
+                        });
+                    });
+            });
         });
     </script>
 

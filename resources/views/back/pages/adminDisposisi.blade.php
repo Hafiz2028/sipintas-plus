@@ -1,6 +1,6 @@
 ﻿@extends('back.layout.admin-layout')
 @section('content')
-    <div x-data="sorting">
+    <div x-data="disposisi" x-init="init()">
         <div class="panel mt-6">
             <h5 class="mb-5 text-lg font-semibold dark:text-white-light md:absolute md:top-[25px] md:mb-0">
                 Disposisi Peminjaman</h5>
@@ -166,48 +166,29 @@
                 ],
             }));
 
-            Alpine.data('sorting', () => ({
+            Alpine.data('disposisi', () => ({
                 datatable: null,
+                rents: [],
                 addContactModal: false,
-                init() {
+                async init() {
+                    await this.fetchData();
                     this.datatable = new simpleDatatables.DataTable('#myTable', {
                         data: {
-                            headings: ['No', 'Nama Peminjam', 'OPD', 'Fasilitas Yang Dipinjam',
-                                'Tanggal Pakai', 'Phone', 'Status',
+                            headings: ['No', 'Nama Peminjam', 'OPD',
+                                'Fasilitas Yang Dipinjam',
+                                'Jadwal Peminjaman', 'Phone', 'Status',
                                 "<div class='text-center'>Action</div>"
                             ],
-                            data: [
-                                [1, 'Caroline', 'DPR', 'Parkir Kantor Gubernur',
-                                    '01/07/2024', '+1 (821) 447-3782', 'Diizinkan', ''
-                                ],
-                                [2, 'Celeste', 'Umum', 'Mobil Inova', '01/07/2024',
-                                    '+1 (838) 515-3408', 'Pending', ''
-                                ],
-                                [3, 'Tillman', 'Forbes', 'Meeting Room', '01/07/2024',
-                                    '+1 (969) 496-2892', 'Gagal', ''
-                                ],
-                                [4, 'Daisy', 'Whitley', 'Aula Kantor Gubernur',
-                                    '01/07/2024', '+1 (861) 564-2877', 'Diizinkan', ''
-                                ],
-                                [5, 'Weber', 'Bowman', 'Parkir Kantor Gubernur',
-                                    '01/07/2024', '+1 (962) 466-3483', 'Diizinkan', ''
-                                ],
-                                [6, 'Buckley', 'Townsend', 'Mobil Inova', '01/07/2024',
-                                    '+1 (884) 595-2643', 'Pending', ''
-                                ],
-                                [7, 'Latoya', 'Bradshaw', 'Parkir Kantor Gubernur',
-                                    '01/07/2024', '+1 (906) 474-3155', 'Gagal', ''
-                                ],
-                                [8, 'Kate', 'Lindsay', 'Meeting Room', '01/07/2024',
-                                    '+1 (930) 546-2952', 'Gagal', ''
-                                ],
-                                [9, 'Marva', 'Sandoval', 'Mobil Inova', '01/07/2024',
-                                    '+1 (927) 566-3600', 'Diizinkan', ''
-                                ],
-                                [10, 'Decker', 'Russell', 'Aula Kantor Gubernur',
-                                    '01/07/2024', '+1 (846) 535-3283', 'Pending', ''
-                                ],
-                            ],
+                            data: this.rents.map((rent, index) => [
+                                index + 1,
+                                rent.user.name,
+                                rent.user.opd,
+                                rent.facility.name,
+                                this.formatDate(rent.start),
+                                rent.user.no_hp,
+                                rent.status,
+                                rent.id
+                            ]),
                         },
                         searchable: true,
                         perPage: 10,
@@ -221,13 +202,13 @@
                                 render: (data, cell, row) => {
                                     let color;
                                     switch (data) {
-                                        case 'Diizinkan':
-                                            color = 'bg-success';
-                                            break;
-                                        case 'Pending':
+                                        case 'proses':
                                             color = 'bg-warning';
                                             break;
-                                        case 'Gagal':
+                                        case 'diterima':
+                                            color = 'bg-success';
+                                            break;
+                                        case 'ditolak':
                                             color = 'bg-danger';
                                             break;
                                         default:
@@ -242,15 +223,16 @@
                                 select: 7,
                                 sortable: false,
                                 render: (data, cell, row) => {
+                                    const rentId = data;
                                     return `
                                 <div class="flex items-center justify-center">
                                     <td>
-                                        <a href="{{ route('detail-disposisi') }}" target="_blank" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
+                                        <a href="/admin/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
                                             <span class="icon">
                                                 <i class="fas fa-edit"></i>
                                             </span>
                                         </a>
-                                        <a href="#" onclick="confirmDelete()" class="btn btn-outline-danger ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                        <a href="javascript:;" onclick="confirmDelete('/admin/disposisi/${rentId}')" class="btn btn-outline-danger ltr:mr-2 w-10 h-10 p-0 rounded-full">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash"></i>
                                         </span>
@@ -274,28 +256,68 @@
                         },
                     });
                 },
+                async fetchData() {
+                    const response = await fetch('{{ route('admin.disposisi.api') }}');
+                    const data = await response.json();
+                    this.rents = data.rents;
+                },
+                formatDate(dateString) {
+                    const date = new Date(dateString);
+                    const time = date.toLocaleTimeString('id-ID', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: false
+                    });
+                    const options = {
+                        day: '2-digit',
+                        month: 'short',
+                        year: 'numeric'
+                    };
+                    const formattedDate = date.toLocaleDateString('id-ID', options);
+                    const formattedDateTime = `${time} | ${formattedDate}`;
+                    return `${formattedDateTime}`;
+                }
             }));
-
         });
 
-        async function confirmDelete() {
+        async function confirmDelete(deleteUrl) {
             Swal.fire({
                 icon: 'warning',
                 title: 'Are you sure?',
-                text: "delete this data!",
+                text: "This data will be deleted!",
                 showCancelButton: true,
                 confirmButtonText: 'Delete',
+                cancelButtonText: 'Cancel',
                 padding: '2em',
                 customClass: 'sweet-alerts',
-            }).then((result) => {
-                if (result.value) {
-                    new window.Swal({
-                        title: 'Deleted!',
-                        text: 'Your file has been deleted.',
-                        icon: 'success',
-                        customClass: 'sweet-alerts'
-                    });
-                    window.location.replace("index.html")
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    try {
+                        await fetch(deleteUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            },
+                        });
+
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: 'The data has been deleted.',
+                            icon: 'success',
+                            customClass: 'sweet-alerts'
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } catch (error) {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Something went wrong.',
+                            icon: 'error',
+                            customClass: 'sweet-alerts'
+                        });
+                    }
                 }
             });
         }

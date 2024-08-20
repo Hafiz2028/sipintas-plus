@@ -45,4 +45,8 @@ class User extends Authenticatable
         'nip' => 'string',
         'password' => 'hashed',
     ];
+    public function rents()
+    {
+        return $this->hasMany(Rent::class, 'user_id', 'id');
+    }
 }

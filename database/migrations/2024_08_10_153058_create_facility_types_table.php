@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('facility_types', function (Blueprint $table) {
             $table->unsignedInteger('id')->autoIncrement();
-            $table->string('nama');
+            $table->string('name');
             $table->timestamps();
         });
     }
