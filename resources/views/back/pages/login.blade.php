@@ -80,7 +80,7 @@
                                 </p>
                             </div>
                             <form class="space-y-5 dark:text-white" action="{{ route('login-handler') }}"
-                                method="POST">
+                                method="POST"> 
                                 {{-- @submit.prevent="window.location='adminIndex.html'" --}}
                                 @csrf
                                 <x-alert.form-alert />

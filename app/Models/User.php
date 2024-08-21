@@ -22,6 +22,7 @@ class User extends Authenticatable
         'nip',
         'no_hp',
         'opd',
+        'picture',
         'password',
         'role',
     ];
@@ -45,6 +46,12 @@ class User extends Authenticatable
         'nip' => 'string',
         'password' => 'hashed',
     ];
+
+    public function getPictureAttribute($value)
+    {
+        return $value ? asset('/profile/' . $value) : asset('/profile/default-avatar.png');
+    }
+
     public function rents()
     {
         return $this->hasMany(Rent::class, 'user_id', 'id');

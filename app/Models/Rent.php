@@ -16,6 +16,10 @@ class Rent extends Model
         'end',
         'status',
     ];
+    protected $casts = [
+        'start' => 'datetime',
+        'end' => 'datetime',
+    ];
 
     public function facility()
     {

@@ -546,24 +546,23 @@
                                         <li class="nav-item">
                                             <a href="{{ route('landing') }}">Beranda</a>
                                         </li>
-                                    @else
                                         <li class="nav-item">
-                                            <a href="{{ route('homepage') }}">Beranda</a>
+                                            <a href="javascript:;" id="riwayatPeminjamanLink">Riwayat Peminjaman</a>
                                         </li>
-                                    @endif
-                                    <li class="nav-item">
-                                        <a href="#">Riwayat Peminjaman</a>
-                                    </li>
-                                    @if (!Auth::check())
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
                                             Masuk / Daftar
                                         </a>
                                     @else
+                                        <li class="nav-item">
+                                            <a href="{{ route('homepage') }}">Beranda</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="{{ route('history') }}">Riwayat Peminjaman</a>
+                                        </li>
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('logout') }}">
                                             Logout
                                         </a>
                                     @endif
-                                    </li>
                                 </ul>
                             </div>
                             <!-- navbar collapse -->
@@ -798,6 +797,28 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var riwayatLink = document.getElementById('riwayatPeminjamanLink');
+            if (riwayatLink) {
+                riwayatLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tidak Login',
+                        text: 'Silahkan melakukan Login terlebih dahulu',
+                        showCancelButton: true,
+                        confirmButtonText: 'Login',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
 
     <script>
         var swiper = new Swiper(".mySwiper", {
@@ -953,9 +974,11 @@
                     } else {
                         var rent = rents.find(r => r.id == info.event.id);
                         if (rent) {
+                            const startDate = moment(rent.start).format('YYYY-MM-DDTHH:mm');
+                            const endDate = moment(rent.end).format('YYYY-MM-DDTHH:mm');
                             document.getElementById('eventId').value = rent.id;
-                            document.getElementById('start').value = rent.start.substring(0, 16);
-                            document.getElementById('end').value = rent.end.substring(0, 16);
+                            document.getElementById('start').value = startDate;
+                            document.getElementById('end').value = endDate;
                             document.getElementById('name').value = rent.user.name;
                             document.getElementById('opd').value = rent.user.opd;
                             document.getElementById('nip').value = rent.user.nip;
@@ -985,9 +1008,12 @@
                         var endDateTime = info.endStr.substring(0, 16);
                         document.getElementById('start').value = startDateTime;
                         document.getElementById('end').value = endDateTime;
-                        document.getElementById('name').value = "{{ auth()->user()->name }}";
-                        document.getElementById('opd').value = "{{ auth()->user()->opd }}";
-                        document.getElementById('nip').value = "{{ auth()->user()->nip }}";
+
+                        @if (auth()->check())
+                            document.getElementById('name').value = "{{ auth()->user()->name }}";
+                            document.getElementById('opd').value = "{{ auth()->user()->opd }}";
+                            document.getElementById('nip').value = "{{ auth()->user()->nip }}";
+                        @endif
                         toggleFormForExistingBooking(false);
                         var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
                         bookingModal.show();

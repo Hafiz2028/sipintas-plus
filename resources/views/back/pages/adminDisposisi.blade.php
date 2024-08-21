@@ -227,11 +227,19 @@
                                     return `
                                 <div class="flex items-center justify-center">
                                     <td>
-                                        <a href="/admin/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
+                                        @if (auth()->check() && auth()->user()->role === 'admin')
+                                            <a href="/admin/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
                                             <span class="icon">
                                                 <i class="fas fa-edit"></i>
                                             </span>
                                         </a>
+                                        @elseif (auth()->check() && auth()->user()->role === 'kabag')
+                                            <a href="/kabag/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
+                                            <span class="icon">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        </a>
+                                        @endif
                                         <a href="javascript:;" onclick="confirmDelete('/admin/disposisi/${rentId}')" class="btn btn-outline-danger ltr:mr-2 w-10 h-10 p-0 rounded-full">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash"></i>

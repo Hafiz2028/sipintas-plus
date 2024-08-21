@@ -5,32 +5,40 @@
                 <h5 class="modal-title" id="bookingModalLabel">Book Facility</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body"> 
+            <div class="modal-body">
                 <form id="bookingForm" enctype="multipart/form-data" method="POST">
                     @csrf
                     <input type="hidden" id="eventId" name="eventId" value="{{ $facility->id }}">
                     <div class="mb-3">
+                        <label for="fasilitas" class="form-label">Fasilitas:</label>
+                        <input type="text" id="fasilitas" class="form-control"
+                            value="{{ $facility->name }}" readonly>
+                    </div>
+                    <div class="mb-3">
                         <label for="name" class="form-label">Peminjam:</label>
-                        <input type="text" id="name" class="form-control" value="{{ isset($rent) ? $rent->user->name : auth()->user()->name }}"
-                            readonly>
+                        <input type="text" id="name" class="form-control"
+                            value="{{ isset($rent) ? $rent->user->name : auth()->user()->name }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="opd" class="form-label">OPD:</label>
-                        <input type="text" id="opd" class="form-control" value="{{ isset($rent) ? $rent->user->opd : auth()->user()->opd }}"
-                            readonly>
+                        <input type="text" id="opd" class="form-control"
+                            value="{{ isset($rent) ? $rent->user->opd : auth()->user()->opd }}" readonly>
                     </div>
                     <div class="mb-3">
                         <label for="nip" class="form-label">NIP:</label>
-                        <input type="text" id="nip" value="{{ isset($rent) ? $rent->user->nip : auth()->user()->nip }}" class="form-control"
+                        <input type="text" id="nip"
+                            value="{{ isset($rent) ? $rent->user->nip : auth()->user()->nip }}" class="form-control"
                             readonly>
                     </div>
                     <div class="mb-3">
                         <label for="start" class="form-label">Dari Tanggal:</label>
-                        <input type="datetime-local" id="start" value="{{ isset($rent) ? $rent->start : '' }}" name="start" class="form-control" required>
+                        <input type="datetime-local" id="start" value="{{ isset($rent) ? $rent->start : '' }}"
+                            name="start" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="end" class="form-label">Sampai Tanggal:</label>
-                        <input type="datetime-local" id="end" value="{{ isset($rent) ? $rent->end : '' }}" name="end" class="form-control" required>
+                        <input type="datetime-local" id="end" value="{{ isset($rent) ? $rent->end : '' }}"
+                            name="end" class="form-control" required>
                     </div>
                     <div class="mb-3">
                         <label for="surat" class="form-label">Surat Peminjaman (PDF only):</label>

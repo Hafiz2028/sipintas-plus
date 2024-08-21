@@ -24,7 +24,7 @@ class DummyUsersSeeder extends Seeder
             ],
             [
                 'name' => 'Super Kabag',
-                'nip' => '123992338',
+                'nip' => '12345678',
                 'no_hp' => '08239481223',
                 'opd' => 'blabla',
                 'role' => 'kabag',
@@ -32,7 +32,7 @@ class DummyUsersSeeder extends Seeder
             ],
             [
                 'name' => 'Super Peminjam',
-                'nip' => '123932348',
+                'nip' => '12345',
                 'no_hp' => '08239481233',
                 'opd' => 'blabla',
                 'role' => 'peminjam',

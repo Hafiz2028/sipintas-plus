@@ -22,7 +22,7 @@ class DisposisiController extends Controller
 
     public function getDisposisi()
     {
-        $rents = Rent::with(['facility', 'rentPayment' , 'user'])->get();
+        $rents = Rent::with(['facility', 'rentPayment', 'user'])->get();
         $data = [
             'rents' => $rents
         ];
@@ -41,11 +41,25 @@ class DisposisiController extends Controller
     {
         $validatedData = $request->validate([
             'status' => 'required|in:diterima,ditolak',
+            'reject_note' => 'nullable|string|max:255',
         ]);
         $rent = Rent::findOrFail($id);
         $rent->status = $validatedData['status'];
+        if ($rent->status === 'ditolak') {
+            $rent->reject_note = $validatedData['reject_note'];
+        } else {
+            $rent->reject_note = null;
+        }
         $rent->save();
-        return redirect()->route('admin.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+        if (auth()->check()) {
+            $userRole = auth()->user()->role;
+            if ($userRole === 'admin') {
+                return redirect()->route('admin.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'kabag') {
+                return redirect()->route('kabag.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            }
+        }
+        return redirect()->route('landing')->with('error', 'Anda tidak memiliki akses untuk melakukan tindakan ini.');
     }
     public function create()
     {

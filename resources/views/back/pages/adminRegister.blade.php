@@ -71,7 +71,7 @@
                                 <p class="text-base font-bold leading-normal text-white-dark">Inputkan seluruh data
                                     berikut</p>
                             </div>
-                            <form class="space-y-5 dark:text-white" @submit.prevent="window.location='index.html'">
+                            <form class="space-y-5 dark:text-white">
                                 <div>
                                     <label for="nik">Nama</label>
                                     <div class="relative text-white-dark">

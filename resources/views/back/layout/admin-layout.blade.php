@@ -11,7 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
     {{-- <link href="css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet"> --}}
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
+    {{-- <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet"> --}}
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap">
     <link rel="stylesheet" type="text/css" media="screen" href="/back/assets/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="/back/assets/css/highlight.min.css">
@@ -23,6 +23,9 @@
     <script defer="" src="/back/assets/js/sweetalert.min.js"></script>
     <link href="/back/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="/back/assets/css/fullcalendar.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="/extra-assets/ijaboCropTool/ijaboCropTool.min.css">
     @stack('stylesheets')
 </head>
 
@@ -296,113 +299,127 @@
                         </a>
                     </div>
                     <br>
-
                     <ul class="perfect-scrollbar relative h-[calc(100vh-80px)] space-y-0.5 overflow-y-auto overflow-x-hidden p-4 py-0 font-semibold"
                         x-data="{ activeDropdown: 'datatables' }">
                         <li class="menu nav-item">
-                            <a href="{{ route('admin.home') }}"
-                                class="nav-link {{ Route::is('admin.home') ? 'active' : '' }} group">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.5"
-                                            d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
-                                            fill="currentColor"></path>
-                                        <path
-                                            d="M9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Dashboard</span>
-                                </div>
+                            @if (auth()->check() && auth()->user()->role === 'admin')
+                                <a href="{{ route('admin.home') }}"
+                                    class="nav-link {{ Route::is('admin.home') ? 'active' : '' }} group">
+                                @elseif (auth()->check() && auth()->user()->role === 'kabag')
+                                    <a href="{{ route('kabag.home') }}"
+                                        class="nav-link {{ Route::is('kabag.home') ? 'active' : '' }} group">
+                            @endif
+                            <div class="flex items-center">
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                    viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5"
+                                        d="M2 12.2039C2 9.91549 2 8.77128 2.5192 7.82274C3.0384 6.87421 3.98695 6.28551 5.88403 5.10813L7.88403 3.86687C9.88939 2.62229 10.8921 2 12 2C13.1079 2 14.1106 2.62229 16.116 3.86687L18.116 5.10812C20.0131 6.28551 20.9616 6.87421 21.4808 7.82274C22 8.77128 22 9.91549 22 12.2039V13.725C22 17.6258 22 19.5763 20.8284 20.7881C19.6569 22 17.7712 22 14 22H10C6.22876 22 4.34315 22 3.17157 20.7881C2 19.5763 2 17.6258 2 13.725V12.2039Z"
+                                        fill="currentColor"></path>
+                                    <path
+                                        d="M9 17.25C8.58579 17.25 8.25 17.5858 8.25 18C8.25 18.4142 8.58579 18.75 9 18.75H15C15.4142 18.75 15.75 18.4142 15.75 18C15.75 17.5858 15.4142 17.25 15 17.25H9Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                                <span
+                                    class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Dashboard</span>
+                            </div>
                             </a>
                         </li>
+                        @if (auth()->check() && auth()->user()->role === 'admin')
+                            <li class="nav-item">
+                                <a href="{{ route('admin.rent.index') }}"
+                                    class="nav-link {{ Route::is('admin.rent.index') ? 'active' : '' }} group">
+                                    <div class="flex items-center">
+                                        <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                            viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.5"
+                                                d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span
+                                            class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Peminjaman</span>
+                                    </div>
+                                </a>
+                            </li>
+                        @endif
                         <li class="nav-item">
-                            <a href="{{ route('admin.rent.index') }}"
-                                class="nav-link {{ Route::is('admin.rent.index') ? 'active' : '' }} group">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.5"
-                                            d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Peminjaman</span>
-                                </div>
+                            @if (auth()->check() && auth()->user()->role === 'admin')
+                                <a href="{{ route('admin.disposisi.index') }}"
+                                    class="nav-link {{ Route::is('admin.disposisi.index') ? 'active' : '' }} group">
+                                @elseif (auth()->check() && auth()->user()->role === 'kabag')
+                                    <a href="{{ route('kabag.disposisi.index') }}"
+                                        class="nav-link {{ Route::is('kabag.disposisi.index') ? 'active' : '' }} group">
+                            @endif
+                            <div class="flex items-center">
+                                <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                    viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path opacity="0.5"
+                                        d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
+                                        fill="currentColor"></path>
+                                    <path fill-rule="evenodd" clip-rule="evenodd"
+                                        d="M12 5.25C12.4142 5.25 12.75 5.58579 12.75 6V7.25H14C14.4142 7.25 14.75 7.58579 14.75 8C14.75 8.41421 14.4142 8.75 14 8.75L12.75 8.75L12.75 10C12.75 10.4142 12.4142 10.75 12 10.75C11.5858 10.75 11.25 10.4142 11.25 10L11.25 8.75H9.99997C9.58575 8.75 9.24997 8.41421 9.24997 8C9.24997 7.58579 9.58575 7.25 9.99997 7.25H11.25L11.25 6C11.25 5.58579 11.5858 5.25 12 5.25ZM7.25 14C7.25 13.5858 7.58579 13.25 8 13.25H16C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H8C7.58579 14.75 7.25 14.4142 7.25 14ZM8.25 18C8.25 17.5858 8.58579 17.25 9 17.25H15C15.4142 17.25 15.75 17.5858 15.75 18C15.75 18.4142 15.4142 18.75 15 18.75H9C8.58579 18.75 8.25 18.4142 8.25 18Z"
+                                        fill="currentColor"></path>
+                                </svg>
+                                <span
+                                    class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Disposisi</span>
+                            </div>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ route('admin.disposisi.index') }}"
-                                class="nav-link {{ Route::is('admin.disposisi.index') ? 'active' : '' }} group">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path opacity="0.5"
-                                            d="M3 10C3 6.22876 3 4.34315 4.17157 3.17157C5.34315 2 7.22876 2 11 2H13C16.7712 2 18.6569 2 19.8284 3.17157C21 4.34315 21 6.22876 21 10V14C21 17.7712 21 19.6569 19.8284 20.8284C18.6569 22 16.7712 22 13 22H11C7.22876 22 5.34315 22 4.17157 20.8284C3 19.6569 3 17.7712 3 14V10Z"
-                                            fill="currentColor"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M12 5.25C12.4142 5.25 12.75 5.58579 12.75 6V7.25H14C14.4142 7.25 14.75 7.58579 14.75 8C14.75 8.41421 14.4142 8.75 14 8.75L12.75 8.75L12.75 10C12.75 10.4142 12.4142 10.75 12 10.75C11.5858 10.75 11.25 10.4142 11.25 10L11.25 8.75H9.99997C9.58575 8.75 9.24997 8.41421 9.24997 8C9.24997 7.58579 9.58575 7.25 9.99997 7.25H11.25L11.25 6C11.25 5.58579 11.5858 5.25 12 5.25ZM7.25 14C7.25 13.5858 7.58579 13.25 8 13.25H16C16.4142 13.25 16.75 13.5858 16.75 14C16.75 14.4142 16.4142 14.75 16 14.75H8C7.58579 14.75 7.25 14.4142 7.25 14ZM8.25 18C8.25 17.5858 8.58579 17.25 9 17.25H15C15.4142 17.25 15.75 17.5858 15.75 18C15.75 18.4142 15.4142 18.75 15 18.75H9C8.58579 18.75 8.25 18.4142 8.25 18Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Disposisi</span>
-                                </div>
-                            </a>
-                        </li>
-                        <li class="menu nav-item">
-                            <button type="button"
-                                class="nav-link group {{ Route::is('admin.user.index') || Route::is('admin.fasilitas.index') || Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}"
-                                :class="{ 'active': activeDropdown === 'dashboard' }"
-                                @click="activeDropdown === 'dashboard' ? activeDropdown = null : activeDropdown = 'dashboard'">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"
-                                            fill="currentColor"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2 8C2 8.49355 2.99294 8.89073 4.97883 9.68508L7.7873 10.8085C9.77318 11.6028 10.7661 12 12 12C13.2339 12 14.2268 11.6028 16.2127 10.8085L19.0212 9.68508C21.0071 8.89073 22 8.49355 22 8C22 7.50645 21.0071 7.10927 19.0212 6.31492L16.2127 5.19153C14.2268 4.39718 13.2339 4 12 4C10.7661 4 9.77318 4.39718 7.7873 5.19153L4.97883 6.31492C2.99294 7.10927 2 7.50645 2 8Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.7"
-                                            d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L5.76613 10Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.4"
-                                            d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L5.76613 14Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Data
-                                        Master</span>
-                                </div>
-                                <div class="rtl:rotate-180"
-                                    :class="{ '!rotate-90': activeDropdown === 'dashboard' }">
-                                    <svg width="16" height="16" viewbox="0 0 24 24" fill="none"
-                                        xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                </div>
-                            </button>
-                            <ul x-cloak="" x-show="activeDropdown === 'dashboard'" x-collapse=""
-                                class="sub-menu text-gray-500">
-                                <li>
-                                    <a href="{{ route('admin.user.index') }}"
-                                        class="{{ Route::is('admin.user.index') ? 'active' : '' }}">Pengguna</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.fasilitas.index') }}"
-                                        class="{{ Route::is('admin.fasilitas.index') ? 'active' : '' }}">Fasilitas</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.tipe-fasilitas.index') }}"
-                                        class="{{ Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}">Kategori Fasilitas</a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (auth()->check() && auth()->user()->role === 'admin')
+                            <li class="menu nav-item">
+                                <button type="button"
+                                    class="nav-link group {{ Route::is('admin.user.index') || Route::is('admin.fasilitas.index') || Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}"
+                                    :class="{ 'active': activeDropdown === 'dashboard' }"
+                                    @click="activeDropdown === 'dashboard' ? activeDropdown = null : activeDropdown = 'dashboard'">
+                                    <div class="flex items-center">
+                                        <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                            viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"
+                                                fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M2 8C2 8.49355 2.99294 8.89073 4.97883 9.68508L7.7873 10.8085C9.77318 11.6028 10.7661 12 12 12C13.2339 12 14.2268 11.6028 16.2127 10.8085L19.0212 9.68508C21.0071 8.89073 22 8.49355 22 8C22 7.50645 21.0071 7.10927 19.0212 6.31492L16.2127 5.19153C14.2268 4.39718 13.2339 4 12 4C10.7661 4 9.77318 4.39718 7.7873 5.19153L4.97883 6.31492C2.99294 7.10927 2 7.50645 2 8Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.7"
+                                                d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L5.76613 10Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.4"
+                                                d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L5.76613 14Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span
+                                            class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Data
+                                            Master</span>
+                                    </div>
+                                    <div class="rtl:rotate-180"
+                                        :class="{ '!rotate-90': activeDropdown === 'dashboard' }">
+                                        <svg width="16" height="16" viewbox="0 0 24 24" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                </button>
+                                <ul x-cloak="" x-show="activeDropdown === 'dashboard'" x-collapse=""
+                                    class="sub-menu text-gray-500">
+                                    <li>
+                                        <a href="{{ route('admin.user.index') }}"
+                                            class="{{ Route::is('admin.user.index') ? 'active' : '' }}">Pengguna</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.fasilitas.index') }}"
+                                            class="{{ Route::is('admin.fasilitas.index') ? 'active' : '' }}">Fasilitas</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.tipe-fasilitas.index') }}"
+                                            class="{{ Route::is('admin.tipe-fasilitas.index') ? 'active' : '' }}">Kategori
+                                            Fasilitas</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </nav>
@@ -638,7 +655,7 @@
                                 <a href="javascript:;" class="group relative" @click="toggle()">
                                     <span><img
                                             class="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100"
-                                            src="/back/assets/images/user-profile.jpeg" alt="image"></span>
+                                            src="{{ auth()->user()->picture }}" alt="image"></span>
                                 </a>
                                 <ul x-cloak="" x-show="open" x-transition="" x-transition.duration.300ms=""
                                     class="top-11 w-[230px] !py-0 font-semibold text-dark ltr:right-0 rtl:left-0 dark:text-white-dark dark:text-white-light/90">
@@ -646,7 +663,7 @@
                                         <div class="flex items-center px-4 py-4">
                                             <div class="flex-none">
                                                 <img class="h-10 w-10 rounded-md object-cover"
-                                                    src="/back/assets/images/user-profile.jpeg" alt="image">
+                                                    src="{{ auth()->user()->picture }}" alt="image">
                                             </div>
                                             <div class="truncate ltr:pl-4 rtl:pr-4">
                                                 <h4 class="text-base">
@@ -658,17 +675,34 @@
                                         </div>
                                     </li>
                                     <li>
-                                        <a href="users-profile.html" class="dark:hover:text-white" @click="toggle">
-                                            <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18"
-                                                height="18" viewbox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg">
-                                                <circle cx="12" cy="6" r="4" stroke="currentColor"
-                                                    stroke-width="1.5"></circle>
-                                                <path opacity="0.5"
-                                                    d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
-                                                    stroke="currentColor" stroke-width="1.5"></path>
-                                            </svg>
-                                            Profile</a>
+                                        @if (auth()->check() && auth()->user()->role === 'admin')
+                                            <a href="{{ route('admin.profile') }}" class="dark:hover:text-white"
+                                                @click="toggle">
+                                                <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18"
+                                                    height="18" viewbox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="12" cy="6" r="4" stroke="currentColor"
+                                                        stroke-width="1.5"></circle>
+                                                    <path opacity="0.5"
+                                                        d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+                                                        stroke="currentColor" stroke-width="1.5"></path>
+                                                </svg>
+                                                Profile</a>
+                                        @elseif (auth()->check() && auth()->user()->role === 'kabag')
+                                            <a href="{{ route('kabag.profile') }}" class="dark:hover:text-white"
+                                                @click="toggle">
+                                                <svg class="h-4.5 w-4.5 shrink-0 ltr:mr-2 rtl:ml-2" width="18"
+                                                    height="18" viewbox="0 0 24 24" fill="none"
+                                                    xmlns="http://www.w3.org/2000/svg">
+                                                    <circle cx="12" cy="6" r="4" stroke="currentColor"
+                                                        stroke-width="1.5"></circle>
+                                                    <path opacity="0.5"
+                                                        d="M20 17.5C20 19.9853 20 22 12 22C4 22 4 19.9853 4 17.5C4 15.0147 7.58172 13 12 13C16.4183 13 20 15.0147 20 17.5Z"
+                                                        stroke="currentColor" stroke-width="1.5"></path>
+                                                </svg>
+                                                Profile</a>
+                                        @endif
+
                                     </li>
                                     <li>
                                         <a href="setting.html" class="dark:hover:text-white" @click="toggle">
@@ -724,23 +758,25 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="menu nav-item">
-                            <a href="{{ route('admin.rent.index') }}" class="nav-link group">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.5"
-                                            d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span
-                                        class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Peminjaman</span>
-                                </div>
-                            </a>
-                        </li>
+                        @if (auth()->check() && auth()->user()->role === 'admin')
+                            <li class="menu nav-item">
+                                <a href="{{ route('admin.rent.index') }}" class="nav-link group">
+                                    <div class="flex items-center">
+                                        <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                            viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M6.94028 2C7.35614 2 7.69326 2.32421 7.69326 2.72414V4.18487C8.36117 4.17241 9.10983 4.17241 9.95219 4.17241H13.9681C14.8104 4.17241 15.5591 4.17241 16.227 4.18487V2.72414C16.227 2.32421 16.5641 2 16.98 2C17.3958 2 17.733 2.32421 17.733 2.72414V4.24894C19.178 4.36022 20.1267 4.63333 20.8236 5.30359C21.5206 5.97385 21.8046 6.88616 21.9203 8.27586L22 9H2.92456H2V8.27586C2.11571 6.88616 2.3997 5.97385 3.09665 5.30359C3.79361 4.63333 4.74226 4.36022 6.1873 4.24894V2.72414C6.1873 2.32421 6.52442 2 6.94028 2Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.5"
+                                                d="M21.9995 14.0001V12.0001C21.9995 11.161 21.9963 9.66527 21.9834 9H2.00917C1.99626 9.66527 1.99953 11.161 1.99953 12.0001V14.0001C1.99953 17.7713 1.99953 19.6569 3.1711 20.8285C4.34267 22.0001 6.22829 22.0001 9.99953 22.0001H13.9995C17.7708 22.0001 19.6564 22.0001 20.828 20.8285C21.9995 19.6569 21.9995 17.7713 21.9995 14.0001Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span
+                                            class="text-black ltr:pl-3 rtl:pr-3 dark:text-[#506690] dark:group-hover:text-white-dark">Peminjaman</span>
+                                    </div>
+                                </a>
+                            </li>
+                        @endif
                         <li class="menu nav-item">
                             <a href="{{ route('admin.disposisi.index') }}" class="nav-link group">
                                 <div class="flex items-center">
@@ -758,46 +794,48 @@
                                 </div>
                             </a>
                         </li>
-                        <li class="menu nav-item relative">
-                            <a href="javascript:;" class="nav-link">
-                                <div class="flex items-center">
-                                    <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
-                                        viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path
-                                            d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"
-                                            fill="currentColor"></path>
-                                        <path fill-rule="evenodd" clip-rule="evenodd"
-                                            d="M2 8C2 8.49355 2.99294 8.89073 4.97883 9.68508L7.7873 10.8085C9.77318 11.6028 10.7661 12 12 12C13.2339 12 14.2268 11.6028 16.2127 10.8085L19.0212 9.68508C21.0071 8.89073 22 8.49355 22 8C22 7.50645 21.0071 7.10927 19.0212 6.31492L16.2127 5.19153C14.2268 4.39718 13.2339 4 12 4C10.7661 4 9.77318 4.39718 7.7873 5.19153L4.97883 6.31492C2.99294 7.10927 2 7.50645 2 8Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.7"
-                                            d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L5.76613 10Z"
-                                            fill="currentColor"></path>
-                                        <path opacity="0.4"
-                                            d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L5.76613 14Z"
-                                            fill="currentColor"></path>
-                                    </svg>
-                                    <span class="px-1">Data Master</span>
-                                </div>
-                                <div class="right_arrow">
-                                    <svg class="h-4 w-4 rotate-90" width="16" height="16" viewbox="0 0 24 24"
-                                        fill="none" xmlns="http://www.w3.org/2000/svg">
-                                        <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
-                                            stroke-linecap="round" stroke-linejoin="round"></path>
-                                    </svg>
-                                </div>
-                            </a>
-                            <ul class="sub-menu">
-                                <li>
-                                    <a href="{{ route('admin.user.index') }}">Pengguna</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.fasilitas.index') }}">Fasilitas</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.tipe-fasilitas.index') }}">Kategori Fasilitas</a>
-                                </li>
-                            </ul>
-                        </li>
+                        @if (auth()->check() && auth()->user()->role === 'admin')
+                            <li class="menu nav-item relative">
+                                <a href="javascript:;" class="nav-link">
+                                    <div class="flex items-center">
+                                        <svg class="shrink-0 group-hover:!text-primary" width="20" height="20"
+                                            viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M4.97883 9.68508C2.99294 8.89073 2 8.49355 2 8C2 7.50645 2.99294 7.10927 4.97883 6.31492L7.7873 5.19153C9.77318 4.39718 10.7661 4 12 4C13.2339 4 14.2268 4.39718 16.2127 5.19153L19.0212 6.31492C21.0071 7.10927 22 7.50645 22 8C22 8.49355 21.0071 8.89073 19.0212 9.68508L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L4.97883 9.68508Z"
+                                                fill="currentColor"></path>
+                                            <path fill-rule="evenodd" clip-rule="evenodd"
+                                                d="M2 8C2 8.49355 2.99294 8.89073 4.97883 9.68508L7.7873 10.8085C9.77318 11.6028 10.7661 12 12 12C13.2339 12 14.2268 11.6028 16.2127 10.8085L19.0212 9.68508C21.0071 8.89073 22 8.49355 22 8C22 7.50645 21.0071 7.10927 19.0212 6.31492L16.2127 5.19153C14.2268 4.39718 13.2339 4 12 4C10.7661 4 9.77318 4.39718 7.7873 5.19153L4.97883 6.31492C2.99294 7.10927 2 7.50645 2 8Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.7"
+                                                d="M5.76613 10L4.97883 10.3149C2.99294 11.1093 2 11.5065 2 12C2 12.4935 2.99294 12.8907 4.97883 13.6851L7.7873 14.8085C9.77318 15.6028 10.7661 16 12 16C13.2339 16 14.2268 15.6028 16.2127 14.8085L19.0212 13.6851C21.0071 12.8907 22 12.4935 22 12C22 11.5065 21.0071 11.1093 19.0212 10.3149L18.2339 10L16.2127 10.8085C14.2268 11.6028 13.2339 12 12 12C10.7661 12 9.77318 11.6028 7.7873 10.8085L5.76613 10Z"
+                                                fill="currentColor"></path>
+                                            <path opacity="0.4"
+                                                d="M5.76613 14L4.97883 14.3149C2.99294 15.1093 2 15.5065 2 16C2 16.4935 2.99294 16.8907 4.97883 17.6851L7.7873 18.8085C9.77318 19.6028 10.7661 20 12 20C13.2339 20 14.2268 19.6028 16.2127 18.8085L19.0212 17.6851C21.0071 16.8907 22 16.4935 22 16C22 15.5065 21.0071 15.1093 19.0212 14.3149L18.2339 14L16.2127 14.8085C14.2268 15.6028 13.2339 16 12 16C10.7661 16 9.77318 15.6028 7.7873 14.8085L5.76613 14Z"
+                                                fill="currentColor"></path>
+                                        </svg>
+                                        <span class="px-1">Data Master</span>
+                                    </div>
+                                    <div class="right_arrow">
+                                        <svg class="h-4 w-4 rotate-90" width="16" height="16"
+                                            viewbox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M9 5L15 12L9 19" stroke="currentColor" stroke-width="1.5"
+                                                stroke-linecap="round" stroke-linejoin="round"></path>
+                                        </svg>
+                                    </div>
+                                </a>
+                                <ul class="sub-menu">
+                                    <li>
+                                        <a href="{{ route('admin.user.index') }}">Pengguna</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.fasilitas.index') }}">Fasilitas</a>
+                                    </li>
+                                    <li>
+                                        <a href="{{ route('admin.tipe-fasilitas.index') }}">Kategori Fasilitas</a>
+                                    </li>
+                                </ul>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </header>
@@ -829,6 +867,33 @@
     <script src="/back/assets/js/custom.js"></script>
     <script src="/back/assets/js/simple-datatables.js"></script>
     <script src="/back/assets/js/fullcalendar.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="/extra-assets/ijaboCropTool/ijaboCropTool.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: '{!! session('success') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ $error }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endforeach
+            @endif
+        });
+    </script>
     @stack('scripts')
 </body>
 

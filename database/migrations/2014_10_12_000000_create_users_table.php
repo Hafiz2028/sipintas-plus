@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('nip');
             $table->string('no_hp');
             $table->string('opd');
+            $table->string('picture')->nullable();
             $table->string('password');
             $table->enum('role',['admin','kabag','peminjam'])->default('admin');
             $table->rememberToken();

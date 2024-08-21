@@ -25,7 +25,9 @@ class RedirectIfAuthenticated
                 if ($role === 'admin') {
                     return redirect()->route('admin.home');
                 } elseif ($role === 'peminjam') {
-                    return redirect()->route('landing');
+                    return redirect()->route('homepage');
+                }elseif ($role === 'kabag'){
+                    return redirect()->route('kabag.home');
                 }
             }
         }
