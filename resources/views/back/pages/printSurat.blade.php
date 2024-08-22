@@ -60,7 +60,7 @@
         <table cellscellspacing="0" style="width: 100%;">
             <tr>
                 <td>
-                    <img src="logo.png" alt="Lambang Sumatera Barat" width="65dp">
+                    <img src="/back/image/logo/logo.png" alt="Logo Sumatera Barat" width="65dp">
                 </td>
                 <td style="text-align: center; padding-right: 13%;">
                     <span style="font-size: 16; font-weight: bold;">PEMERINTAH PROVINSI SUMATERA BARAT<br></span>
@@ -77,13 +77,14 @@
             <tr>
                 <td colspan="2"
                     style="font-size: 14; font-weight: bold; text-decoration: underline; text-align: center; padding-top: 20px;">
-                    SURAT IZIN PEMAKAIAN RUANGAN</td>
+                    SURAT IZIN PEMAKAIAN FASILITAS</td>
             </tr>
         </table>
         <table>
             <tr>
                 <td colspan="2" style="font-size: 14px; text-align: justify; padding-top: 10px;">
-                    Yang bertanda tangan di bawah ini Kepala Biro Sekretariat Daerah Provinsi Sumatera Barat, dengan ini
+                    Yang bertanda tangan di bawah ini Kepala Biro Umum Sekretariat Daerah Provinsi Sumatera Barat,
+                    dengan ini
                     menerangkan bahwa :
                 </td>
             </tr>
@@ -151,17 +152,15 @@
 
         <table style="width: 100%;">
             <tr>
-                <td style=" padding-left: 50%;">
-                    <div style="font-size: 14; text-align: center; padding-top: 100px; height: auto; right: auto;">
-                        Padang, 21 Agustus 2024<br>
-                        <b>Kabiro Sekretariat Daerah <br>Provinsi Sumatera Barat</b><br>
-                        <center>
-                            <div id="qrcode"></div>
-                        </center>
-                        <div style="font-weight: bold; text-decoration: underline;">Prof. RIZKI JUNI DARMAWAN, M.Kom,
-                            Phd
+                <td style=" padding-left: 70%;">
+                    <div style="font-size: 14; padding-top: 100px; height: auto; right: auto;">
+                        Padang, 22 Agustus 2024<br>
+                        <b>Kepala Biro Umum,</b><br>
+                        <div id="qrcode"></div>
+                        <div style="font-weight: bold;">Ir, Edi Dharma Syafni, M.Si
                         </div>
-                        <div style="font-weight: bold;">NIP.198209272009021003</div>
+                        <div style="font-weight: bold;">Pembina Utama Muda (IV/c)</div>
+                        <div style="font-weight: bold;">NIP. 19680513 199403 1 014</div>
                     </div>
                 </td>
             </tr>
@@ -173,6 +172,9 @@
                 width: 100, // Lebar QR code
                 height: 100 // Tinggi QR code
             });
+            window.onload = function() {
+                window.print();
+            };
         </script>
     </div>
 </body>

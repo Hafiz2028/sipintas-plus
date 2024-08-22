@@ -46,7 +46,7 @@ class FasilitasController extends Controller
                 'kapasitas' => 'required|string|max:255',
                 'information' => 'required|string|max:255',
                 'pembayaran' => 'required|string|max:255',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:5000',
             ]);
 
             $facility = Facility::create($request->except('images'));
@@ -98,7 +98,7 @@ class FasilitasController extends Controller
                 'kapasitas' => 'nullable|string|max:255',
                 'information' => 'nullable|string|max:255',
                 'pembayaran' => 'nullable|string|max:255',
-                'images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'images.*' => 'image|mimes:jpeg,png,hiec,jpg,gif,svg|max:5000',
                 'keep_images' => 'nullable|array',
                 'keep_images.*' => 'integer|exists:facility_images,id',
                 'imagesToRemove' => 'nullable|array',

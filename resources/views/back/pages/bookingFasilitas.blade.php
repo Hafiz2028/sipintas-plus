@@ -22,17 +22,31 @@
     <link rel="stylesheet" href="/landing/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales/id.global.min.js"></script>
 
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
         /* Swiper */
+        .header-bg{
+            position: relative;
+            z-index: 5;
+            background-position: bottom center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+        }
+        .fc-col-header-cell-cushion {
+            display: inline-block; // x-browser for when sticky (when multi-tier header)
+            padding: 2px 4px;
+            }
         .fc-daygrid-day-number {
-            color: #000000 !important;
+            color: #1b1b1b !important;
             /* Mengubah warna angka tanggal menjadi hitam */
         }
 
         .fc-daygrid-day-top {
-            color: #000000 !important;
+            color: #992121 !important;
             /* Mengubah warna teks hari dalam kalender */
         }
 
@@ -47,18 +61,24 @@
         }
 
         .fc-button-primary {
-            background-color: #000000 !important;
+            padding-left: 10px !important;
+            background-color: #ffffff !important;
+            color: #007bff !important;
             /* Mengubah warna latar tombol menjadi hitam */
-            border-color: #000000 !important;
+            border-color: #007bff !important;
             /* Mengubah warna border tombol menjadi hitam */
         }
 
         .fc-button-primary:not(:disabled):active,
         .fc-button-primary:not(:disabled).fc-button-active {
-            background-color: #000000 !important;
+            background-color: #007bff !important;
             /* Mengubah warna latar tombol yang aktif menjadi hitam */
-            border-color: #000000 !important;
+            color: white !important;
             /* Mengubah warna border tombol yang aktif menjadi hitam */
+        }
+        .fc-daygrid-day-name {
+            color: #000000 ;
+            /* Mengubah warna angka tanggal menjadi hitam */
         }
 
         .fc-daygrid-day-number {
@@ -106,7 +126,7 @@
             background-position: center;
             background-size: cover;
             width: 100%;
-            height: 550px;
+            height:550px;
         }
 
         .swiper-slide img {
@@ -384,7 +404,9 @@
             }
 
             .swiper-slide {
-                width: 300px;
+                width: 100%;
+                height: auto;
+                padding-bottom: 0;
             }
 
             .info h3 {
@@ -523,7 +545,7 @@
                         <nav class="navbar navbar-expand-lg">
                             @if (!Auth::check())
                                 <a class="navbar-brand" href="{{ route('landing') }}">
-                                    <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
+                                    <img src="/landing/assets/images/logo/logo.png" alt="Logo"
                                         style="width: 120px;" />
                                 </a>
                             @else
@@ -577,15 +599,15 @@
         <!-- navbar area -->
 
         <!-- Slider View -->
-        <div id="home" class="header-hero bg_cover"
-            style="background-image: url(/landing/assets/images/header/banner-bg.svg)">
+        <div class="header-bg"
+            style="background-image: url(/landing/assets/images/header/banner-bg.svg);">
             <div class="container">
                 <div class="pt-60">
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="wow fadeIn" data-wow-duration="1.0s" data-wow-delay="1.0s">
                                 <div class="swiper mySwiper">
-                                    <div class="swiper-wrapper text-center">
+                                    <div class="swiper-wrapper">
                                         @if ($facility->facilityImages->isNotEmpty())
                                             @foreach ($facility->facilityImages as $facilityImage)
                                                 <div class="swiper-slide">
@@ -794,7 +816,6 @@
     <script src="/landing/assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
     <script>
@@ -947,11 +968,19 @@
             var calendarEl = document.getElementById('calendar');
             var isLoggedIn = @json(auth()->check());
             var calendar = new FullCalendar.Calendar(calendarEl, {
+                locale: 'id',
                 initialView: 'dayGridMonth',
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
                     right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                buttonText: {
+                    today: 'Hari Ini',
+                    month: 'Bulan',
+                    week: 'Minggu',
+                    day: 'Hari',
+                    list: 'Daftar'
                 },
                 events: events,
                 editable: true,

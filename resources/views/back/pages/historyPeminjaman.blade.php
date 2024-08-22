@@ -11,7 +11,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!--====== Favicon Icon ======-->
-    <link rel="icon" type="image/x-icon" href="logo.png">
+    <link rel="icon" type="image/x-icon" href="/back/image/logo/logo.png">
 
     <!--====== CSS Files LinkUp ======-->
     <link rel="stylesheet" href="landing/assets/css/animate.css" />
@@ -174,7 +174,7 @@
                                             <td class="text-center">{{ $rent->reject_note ?? '-' }}</td>
                                             <td class="text-center">
                                                 <a class="btn btn-success print-btn" id="printButton"
-                                                    href="javascript:;" role="button"
+                                                    href="{{ route('printSurat', $rent->id) }}" target="_blank" role="button"
                                                     data-rent-id="{{ $rent->id }}"><i
                                                         class="bi bi-printer"></i></a>
                                             </td>
@@ -465,7 +465,7 @@
                     .then(data => {
                         var printTab = window.open('', '_blank');
                         printTab.document.open();
-                        printTab.document.write('<html><head><title>Print Surat</title>');
+                        printTab.document.write('<html><head>');
                         printTab.document.write('</head><body>');
                         printTab.document.write(data);
                         printTab.document.write('</body></html>');

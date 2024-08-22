@@ -20,6 +20,7 @@
     <link rel="stylesheet" href="/landing/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    
 
     <style>
         /* Swiper */
@@ -33,7 +34,7 @@
         .swiper-slide {
             background-position: center;
             background-size: cover;
-            width: 500px;
+            width: 400px;
         }
 
         .swiper-slide img {
@@ -116,20 +117,17 @@
             width: 1px;
 
             &:checked+.checkbox-tile {
-                border-color: #52dc97;
+                border-color: #fff;
                 box-shadow: 0 5px 10px rgba(#000, 0.1);
                 color: #52dc97;
+                background-color: #00ab55;
 
                 &:before {
                     transform: scale(1);
                     opacity: 1;
-                    background-color: #00ab55;
-                    border-color: #00ab55;
-                }
 
-                .checkbox-icon,
-                .checkbox-label {
-                    color: #00ab55;
+                background-color: #00ab55;
+                    border-color: #00ab55;
                 }
             }
 
@@ -153,7 +151,7 @@
             width: 7rem;
             min-height: 7rem;
             border-radius: 0.5rem;
-            border: 2px solid #b5bfd9;
+            border: 2px solid #ffffff;
             background-color: #fff;
             box-shadow: 0 5px 10px rgba(#000, 0.1);
             transition: 0.15s ease;
@@ -187,21 +185,26 @@
                     transform: scale(1);
                     opacity: 1;
                 }
+                .checkbox-icon,
+                .checkbox-label {
+                    color: #00ab55;
+                }
             }
         }
 
         .checkbox-icon {
             transition: .375s ease;
-            color: #494949;
+            color: #ffffff;
 
             svg {
                 width: 3rem;
                 height: 3rem;
             }
+
         }
 
         .checkbox-label {
-            color: #707070;
+            color: #ffffff;
             transition: .375s ease;
             text-align: center;
         }
@@ -503,19 +506,18 @@
         <!-- navbar area -->
 
         <!-- Slider View -->
-        <div id="home" class="header-hero bg_cover"
-            style="background-image: url(/landing/assets/images/header/banner-bg.svg)">
+        <div id="home" class="header-hero" style="padding-top: 250px;">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-lg-8">
                         <div class="header-hero-content text-center">
-                            <h2 class="header-title wow fadeInUp" data-wow-duration="1.0s" data-wow-delay="0.5s">
+                            <h1 class="header-title wow fadeInUp" data-wow-duration="1.0s" data-wow-delay="0.5s">
                                 SIPINTAS - PLUS
-                            </h2>
+                            </h1>
                             <h5 style="font-weight:lighter;" class="text wow fadeInUp" data-wow-duration="1.0s"
                                 data-wow-delay="0.8s">
                                 Layanan Peminjaman Fasilitas Online Provinsi Sumatera Barat
-                                </p>
+                        </h5>
                         </div>
                         <!-- header hero content -->
                     </div>
@@ -550,6 +552,8 @@
                 <!-- End Slide View -->
             </div>
             <!-- container -->
+
+            <div class="bg_cover"></div>
             <div id="particles-1" class="particles"></div>
         </div>
         <!-- End Slider View -->
@@ -567,7 +571,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#DC493A'" style=" background-color: #DC493A; ">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
                                             fill="currentColor" class="bi bi-grid" viewBox="-3 0 20 18">
@@ -582,7 +586,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" checked />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#FFEC4F'" style=" background-color: #FFEC4F ">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
                                             fill="currentColor" class="bi bi-car-front" viewBox="0 0 18 18">
@@ -599,7 +603,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#30C5F9'" style=" background-color: #30C5F9">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="4 10 55 55"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -616,7 +620,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#245CA1'" style=" background-color: #245CA1">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -634,7 +638,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#F2288C'" style=" background-color: #F2288C">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -651,7 +655,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#971585'" style=" background-color: #971585">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -668,7 +672,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#FEA002'" style=" background-color: #FEA002">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-tools" viewBox="-3 0 20 18">
@@ -683,7 +687,7 @@
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
                                 <input type="checkbox" class="checkbox-input" checked />
-                                <span class="checkbox-tile">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#1ED593'" style=" background-color: #1ED593">
                                     <span class="checkbox-icon">
                                         <svg width="70" height="70" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">

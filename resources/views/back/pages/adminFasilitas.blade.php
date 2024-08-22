@@ -115,6 +115,7 @@
                                                 </div>
                                                 <input id="photos" type="file" multiple accept="image/*"
                                                     class="form-input mt-4" @change="previewImages">
+                                                <small>maks size : 5 MB</small>
                                                 <div class="mt-4"
                                                     style="display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem;">
                                                     <template x-for="(image, index) in imagePreviews"

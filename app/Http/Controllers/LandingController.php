@@ -17,7 +17,7 @@ class LandingController extends Controller
         $facilities = Facility::with('facilityType', 'facilityImages')->get();
 
         $data = [
-            'facilities' => $facilities,
+            'facilities' => $facilities, 
         ];
         return view('back.pages.index', $data);
     }

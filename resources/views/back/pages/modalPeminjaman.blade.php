@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="bookingModalLabel">Book Facility</h5>
+                <h5 class="modal-title" id="bookingModalLabel">Pinjam Fasilitas</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -41,7 +41,7 @@
                             name="end" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="surat" class="form-label">Surat Peminjaman (PDF only):</label>
+                        <label for="surat" class="form-label">Surat Peminjaman (format PDF):</label>
                         <input type="file" id="surat" name="surat" class="form-control" accept=".pdf"
                             required>
                     </div>
@@ -53,8 +53,8 @@
                                 accept=".jpg,.jpeg,.png">
                         </div>
                     @endif
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </form>
+                    <button type="submit" class="btn btn-primary">Tambah Peminjaman</button>
+                    <button type="submit" class="btn btn-danger" data-bs-dismiss="modal" aria-label="Close">Batal</button>
             </div>
         </div>
     </div>
@@ -64,14 +64,14 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="successModalLabel">Booking Successful</h5>
+                <h5 class="modal-title" id="successModalLabel">Peminjaman Berhasil</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Your booking has been saved successfully!
+                Peminjaman berhasil dilakukan!
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Kembali</button>
             </div>
         </div>
     </div>
