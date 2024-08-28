@@ -26,6 +26,34 @@
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales/id.global.min.js"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
+        .alert-card {
+            background-color: #d9534f;
+            /* Warna merah */
+            color: #fff;
+            /* Warna teks putih */
+            padding: 10px;
+            border-radius: 8px;
+            font-family: Arial, sans-serif;
+            font-size: 16px;
+            text-align: center;
+            max-width: 500px;
+            margin: 20px 0; /* Hanya margin atas dan bawah, tidak ada margin kiri-kanan */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .alert-card h3 {
+            color: #fff;
+            margin-top: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .alert-card p {
+            color: #fff;
+            margin: 0;
+            font-size: 16px;
+        }
+
         .disabled-input {
             pointer-events: none;
             background-color: #e9ecef;
@@ -108,6 +136,7 @@
         .calendar-wrapper .fc-daygrid-event-dot {
             display: none;
         }
+
         .calendar-wrapper .fc-event {
             padding: 2px 4px;
             color: #fff;
@@ -201,12 +230,15 @@
             background-position: center;
             background-size: cover;
             width: 100%;
-            height: 550px;
+            height: 700px;
         }
 
         .swiper-slide img {
             display: block;
             width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
         }
 
         .info {
@@ -460,8 +492,8 @@
             }
 
             .calendar-wrapper .fc-toolbar-title {
-            font-size: 30px !important;
-        }
+                font-size: 30px !important;
+            }
         }
 
         @media (max-width: 767px) {
@@ -595,37 +627,36 @@
                 margin-top: 0 !important;
             }
 
-        .calendar-wrapper .fc-toolbar-title {
-            font-size: 20px;
-        }
+            .calendar-wrapper .fc-toolbar-title {
+                font-size: 20px;
+            }
 
-        .calendar-wrapper .fc .fc-popover {
-            z-index: 10;
-        }
+            .calendar-wrapper .fc .fc-popover {
+                z-index: 10;
+            }
 
-        .calendar-wrapper .fc-event {
-            padding: 2px 4px;
-            color: #fff;
-        }
+            .calendar-wrapper .fc-event {
+                padding: 2px 4px;
+                color: #fff;
+            }
 
-        .calendar-wrapper .fc-timegrid-event-harness-inset .fc-timegrid-event {
-            box-shadow: none;
-            overflow: hidden;
-        }
+            .calendar-wrapper .fc-timegrid-event-harness-inset .fc-timegrid-event {
+                box-shadow: none;
+                overflow: hidden;
+            }
 
-        .calendar-wrapper .fc-daygrid-event-dot {
-            display: none;
-        }
+            .calendar-wrapper .fc-daygrid-event-dot {
+                display: none;
+            }
 
-        .calendar-wrapper .fc-daygrid-dot-event {
-            border-width: 1px;
-        }
+            .calendar-wrapper .fc-daygrid-dot-event {
+                border-width: 1px;
+            }
 
-        .calendar-wrapper .fc-event-time {
-            flex-shrink: 0;
+            .calendar-wrapper .fc-event-time {
+                flex-shrink: 0;
+            }
         }
-    }
-
     </style>
 
 </head>
@@ -768,13 +799,17 @@
                     <h3 class="judul-dua wow fadeInUp" data-wow-duration="1.0s" data-wow-delay="0.5s">
                         {{ $facility->name }}
                     </h3>
-                    <p style="font-weight:lighter; text-align: justify;" class="text wow fadeInUp"
+                    <p style="text-align: justify;" class="text wow fadeInUp"
                         data-wow-duration="1.0s" data-wow-delay="0.8s">
                         {{ $facility->name }} | {{ $facility->size }}m2 | {{ $facility->kapasitas }} Orang |
                         Fasilitas
                         :
                         {{ $facility->information }} | Pembayaran : {{ $facility->pembayaran }}
                     </p>
+                    <div class="alert-card">
+                        <h3>Informasi Penting!!!</h3>
+                        <p>Berikan jeda 1 jam jika di hari yang sama fasilitas juga dipinjam.</p>
+                    </div>
                     <div class="mt-5 panel-card">
                         <div id='calendar' class="calendar-wrapper"></div>
                         <div class="mt-2">
@@ -812,15 +847,17 @@
                     <div class="col-lg-6">
                         <div class="subscribe-content mt-45">
                             <h2 class="subscribe-title">
-                                Subscribe Our Newsletter <span>get reguler updates</span>
-                            </h2>
+                                <h2 class="subscribe-title">
+                                    Dapatkan informasi lainnya <span>pada web utama kami</span>
+                                </h2>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="subscribe-form mt-50">
-                            <form action="#">
-                                <input type="text" placeholder="Enter eamil" />
-                                <button class="main-btn">Subscribe</button>
+                            <form action="">
+                                <input type="text" placeholder="https://biroumum.sumbarprov.go.id/" readonly />
+                                <button type="button" class="main-btn"
+                                    onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
                             </form>
                         </div>
                     </div>
@@ -836,9 +873,8 @@
                                 <img src="/landing/assets/images/logo/logo2.png" alt="logo" />
                             </a>
                             <p class="text">
-                                Lorem ipsum dolor sit amet consetetur sadipscing elitr,
-                                sederfs diam nonumy eirmod tempor invidunt ut labore et dolore
-                                magna aliquyam.
+                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan
+                                operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
                             </p>
                             <ul class="social">
                                 <li>

@@ -1431,6 +1431,160 @@ class FacilitiesSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now()
             ],
+            [
+                'id' => 134,
+                'facility_id' => 25,
+                'image' => 'Hiace_7232_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 135,
+                'facility_id' => 25,
+                'image' => 'Hiace_7232_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 136,
+                'facility_id' => 25,
+                'image' => 'Hiace_7232_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 137,
+                'facility_id' => 25,
+                'image' => 'Hiace_7232_4.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 138,
+                'facility_id' => 27,
+                'image' => 'Inova_1786_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 139,
+                'facility_id' => 27,
+                'image' => 'Inova_1786_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 140,
+                'facility_id' => 27,
+                'image' => 'Inova_1786_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 141,
+                'facility_id' => 33,
+                'image' => 'Bus_7006_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 142,
+                'facility_id' => 33,
+                'image' => 'Bus_7006_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 143,
+                'facility_id' => 33,
+                'image' => 'Bus_7006_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 144,
+                'facility_id' => 33,
+                'image' => 'Bus_7006_4.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 145,
+                'facility_id' => 34,
+                'image' => 'Inova_1592_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 146,
+                'facility_id' => 34,
+                'image' => 'Inova_1592_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 147,
+                'facility_id' => 34,
+                'image' => 'Inova_1592_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 148,
+                'facility_id' => 34,
+                'image' => 'Inova_1592_4.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 149,
+                'facility_id' => 35,
+                'image' => 'Camry_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 150,
+                'facility_id' => 35,
+                'image' => 'Camry_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 151,
+                'facility_id' => 35,
+                'image' => 'Camry_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 152,
+                'facility_id' => 35,
+                'image' => 'Camry_4.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 153,
+                'facility_id' => 38,
+                'image' => 'Hilux_1.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 154,
+                'facility_id' => 38,
+                'image' => 'Hilux_2.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
+            [
+                'id' => 155,
+                'facility_id' => 38,
+                'image' => 'Hilux_3.jpg',
+                'created_at' => now(),
+                'updated_at' => now()
+            ],
 
 
         ]);

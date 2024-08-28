@@ -37,26 +37,33 @@
             background-size: cover;
             width: 450px;
         }
+        .swiper-slide .gambar {
+            height: 300px;
+        }
 
         .swiper-slide img {
             display: block;
             width: 100%;
+            height: 100%;
             border-radius: 10px;
         }
 
+        .slider-penyewaan .swiper-pagination-bullet {
+            background: #00ab55;
+            height: 15px;
+            width: 15px;
+        }
 
+        .slider-penyewaan .swiper-slide-button {
+            color: #00ab55;
+            margin-top: -50px;
+        }
 
         .swiper-button-next,
         .swiper-button-prev {
             /* Style navigation buttons */
             color: #000;
             /* Adjust color as needed */
-        }
-
-        .swiper-pagination {
-            /* Style pagination dots */
-            bottom: 10px;
-            /* Adjust positioning */
         }
 
         .info {
@@ -258,17 +265,6 @@
             font-size: 20px;
         }
 
-        .slider-penyewaan .swiper-pagination-bullet {
-            background: #00ab55;
-            height: 15px;
-            width: 15px;
-        }
-
-        .slider-penyewaan .swiper-slide-button {
-            color: #00ab55;
-            margin-top: -50px;
-        }
-
         .judul-satu {
             font-size: 30px;
         }
@@ -331,10 +327,6 @@
                 width: 90px;
             }
 
-            .swiper-slide {
-                width: 300px;
-            }
-
 
             .info h3 {
                 font-size: 12px;
@@ -388,6 +380,10 @@
             .slider-penyewaan {
                 height: 390px;
                 margin: 0;
+            }
+
+            .swiper-slide {
+                width: 300px;
             }
 
             picture {
@@ -550,15 +546,17 @@
                                 <div class="swiper-wrapper text-center">
                                     @foreach ($facilities as $facility)
                                         <div class="swiper-slide">
-                                            @if ($facility['image_url'])
-                                                <img src="{{ $facility['image_url'] }}"
-                                                    alt="{{ $facility['image_alt'] }}">
-                                            @else
-                                                <img src="/facility_images/default.png" alt="No Image Available">
-                                            @endif
-                                            <div class="info">
-                                                <h3>{{ $facility['name'] }}</h3>
-                                                <p>{{ $facility['information'] }}</p>
+                                            <div class="gambar">
+                                                @if ($facility['image_url'])
+                                                    <img src="{{ $facility['image_url'] }}"
+                                                        alt="{{ $facility['image_alt'] }}">
+                                                @else
+                                                    <img src="/facility_images/default.png" alt="No Image Available">
+                                                @endif
+                                                <div class="info">
+                                                    <h3>{{ $facility['name'] }}</h3>
+                                                    <p>{{ $facility['information'] }}</p>
+                                                </div>
                                             </div>
                                         </div>
                                     @endforeach
@@ -728,26 +726,19 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" value="Lapangan">
+                                <input type="checkbox" class="checkbox-input" value="Lainnya">
                                 <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
                                     onMouseClick="this.style.backgroundColor='#F8F8F8'"
                                     onMouseOut="this.style.backgroundColor='#1ED593'"
                                     style=" background-color: #1ED593">
                                     <span class="checkbox-icon">
-                                        <svg width="70" height="70" viewBox="0 0 64 64"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none">
-                                            <rect width="70" height="70" fill="none" />
-                                            <rect x="8" y="16" width="48" height="32" fill="none"
-                                                stroke="currentColor" stroke-width="3" />
-                                            <line x1="32" y1="16" x2="32" y2="48"
-                                                stroke="currentColor" stroke-width="3" />
-                                            <line x1="8" y1="32" x2="56" y2="32"
-                                                stroke="currentColor" stroke-width="3" />
-                                            <circle cx="32" cy="32" r="6" fill="none"
-                                                stroke="currentColor" stroke-width="3" />
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                            fill="currentColor" class="bi bi-three-dots" viewBox="0 0 16 16">
+                                            <path
+                                                d="M3 9.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3m5 0a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3" />
                                         </svg>
                                     </span>
-                                    <span class="checkbox-label">Lapangan</span>
+                                    <span class="checkbox-label">Lainnya</span>
                                 </span>
                             </label>
                         </div>
@@ -910,15 +901,15 @@
                     <div class="col-lg-6">
                         <div class="subscribe-content mt-45">
                             <h2 class="subscribe-title">
-                                Subscribe Our Newsletter <span>get reguler updates</span>
+                                Dapatkan informasi lainnya <span>pada web utama kami</span>
                             </h2>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="subscribe-form mt-50">
-                            <form action="#">
-                                <input type="text" placeholder="Enter eamil" />
-                                <button class="main-btn">Subscribe</button>
+                            <form action="">
+                                <input type="text" placeholder="https://biroumum.sumbarprov.go.id/" readonly />
+                                <button type="button" class="main-btn" onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
                             </form>
                         </div>
                     </div>
@@ -934,9 +925,7 @@
                                 <img src="/landing/assets/images/logo/logo2.png" alt="logo" />
                             </a>
                             <p class="text">
-                                Lorem ipsum dolor sit amet consetetur sadipscing elitr,
-                                sederfs diam nonumy eirmod tempor invidunt ut labore et dolore
-                                magna aliquyam.
+                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
                             </p>
                             <ul class="social">
                                 <li>
@@ -1060,31 +1049,71 @@
 
             // Initialize Swiper instances
             var swiperVehicles = new Swiper('#features-vehicles .swiper-container', {
-                loop: true,
+                breakpoints: {
+                    "@0.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 10,
+                    },
+                    "@0.75": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.50": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                    "@2.00": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                },
                 pagination: {
-                    el: '#features-vehicles .swiper-pagination',
+                    el: ".swiper-pagination",
                     clickable: true,
+                    dynamicBullets: true,
                 },
                 navigation: {
-                    nextEl: '#features-vehicles .swiper-button-next',
-                    prevEl: '#features-vehicles .swiper-button-prev',
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
                 },
-                slidesPerView: 'auto',
-                spaceBetween: 20,
             });
 
             var swiperBuildings = new Swiper('#features-buildings .swiper-container', {
-                loop: true,
+                breakpoints: {
+                    "@0.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 10,
+                    },
+                    "@0.75": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.50": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                    "@2.00": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                },
                 pagination: {
-                    el: '#features-buildings .swiper-pagination',
+                    el: ".swiper-pagination",
                     clickable: true,
+                    dynamicBullets: true,
                 },
                 navigation: {
-                    nextEl: '#features-buildings .swiper-button-next',
-                    prevEl: '#features-buildings .swiper-button-prev',
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
                 },
-                slidesPerView: 'auto',
-                spaceBetween: 20,
             });
 
             // Function to update the facility results based on filter
@@ -1237,40 +1266,40 @@
             },
         });
 
-        var swiper = new Swiper(".slider-penyewaan", {
+        // var swiper = new Swiper(".slider-penyewaan", {
 
-            breakpoints: {
-                "@0.00": {
-                    slidesPerView: 3,
-                    spaceBetween: 10,
-                },
-                "@0.75": {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
-                "@1.00": {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
-                "@1.50": {
-                    slidesPerView: 5,
-                    spaceBetween: 20,
-                },
-                "@2.00": {
-                    slidesPerView: 5,
-                    spaceBetween: 20,
-                },
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                dynamicBullets: true,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
+        //     breakpoints: {
+        //         "@0.00": {
+        //             slidesPerView: 3,
+        //             spaceBetween: 10,
+        //         },
+        //         "@0.75": {
+        //             slidesPerView: 3,
+        //             spaceBetween: 20,
+        //         },
+        //         "@1.00": {
+        //             slidesPerView: 3,
+        //             spaceBetween: 20,
+        //         },
+        //         "@1.50": {
+        //             slidesPerView: 5,
+        //             spaceBetween: 20,
+        //         },
+        //         "@2.00": {
+        //             slidesPerView: 5,
+        //             spaceBetween: 20,
+        //         },
+        //     },
+        //     pagination: {
+        //         el: ".swiper-pagination",
+        //         clickable: true,
+        //         dynamicBullets: true,
+        //     },
+        //     navigation: {
+        //         nextEl: ".swiper-button-next",
+        //         prevEl: ".swiper-button-prev",
+        //     },
+        // });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -308,9 +308,7 @@
                                 <img src="/landing/assets/images/logo/logo2.png" alt="logo" />
                             </a>
                             <p class="text">
-                                Lorem ipsum dolor sit amet consetetur sadipscing elitr,
-                                sederfs diam nonumy eirmod tempor invidunt ut labore et dolore
-                                magna aliquyam.
+                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
                             </p>
                             <ul class="social">
                                 <li>
