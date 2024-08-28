@@ -31,14 +31,14 @@ class AuthController extends Controller
         ];
         if (Auth::attempt($credentials)) {
             if (Auth::user()->role == 'admin' || Auth::user()->role == 'kabag') {
-                return redirect()->route('admin.home');
+                return redirect()->route('admin.home')->with('success', 'Selamat Datang di Beranda');
             }
             if (Auth::user()->role == 'peminjam') {
-                return redirect()->route('homepage');
+                return redirect()->route('homepage')->with('success', 'Selamat Datang di SIPINTAS PLUS');
             }
         } else {
-            return redirect()->back()->with([
-                'fail' => 'NIP dan Password yang dimasukkan tidak sesuai',
+            return redirect()->back()->withErrors([
+                'login' => 'NIP dan Password yang dimasukkan tidak sesuai',
             ])->withInput();
         }
     }

@@ -15,6 +15,7 @@
     <link defer="" rel="stylesheet" type="text/css" media="screen" href="back/assets/css/animate.css">
     <!-- Add Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
 
     <script src="back/assets/js/perfect-scrollbar.min.js"></script>
     <script defer="" src="back/assets/js/popper.min.js"></script>
@@ -80,10 +81,9 @@
                                 </p>
                             </div>
                             <form class="space-y-5 dark:text-white" action="{{ route('login-handler') }}"
-                                method="POST"> 
+                                method="POST">
                                 {{-- @submit.prevent="window.location='adminIndex.html'" --}}
                                 @csrf
-                                <x-alert.form-alert />
                                 <div>
                                     <label for="nip">NIP</label>
                                     <div class="relative text-white-dark">
@@ -150,6 +150,7 @@
     </div>
     <!-- Add Bootstrap JavaScript Bundle -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 
     <script src="back/assets/js/alpine-collaspe.min.js"></script>
     <script src="back/assets/js/alpine-persist.min.js"></script>
@@ -158,7 +159,29 @@
     <script defer="" src="back/assets/js/alpine.min.js"></script>
 
     <script src="back/assets/js/custom.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: '{!! session('success') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
 
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ $error }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endforeach
+            @endif
+        });
+    </script>
     <script>
         // main section
         document.addEventListener('alpine:init', () => {

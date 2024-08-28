@@ -56,9 +56,10 @@
                                     <th>Nama</th>
                                     <th>OPD</th>
                                     <th>Fasilitas Yang Dipinjam</th>
-                                    <th>Tanggal Pakai</th>
-                                    <th>Phone</th>
-                                    <th class="text-center ltr:rounded-r-md rtl:rounded-l-md">STATUS</th>
+                                    <th>Jadwal Pakai</th>
+                                    <th>Agenda</th>
+                                    <th>Nomor Hp / WA</th>
+                                    <th class="text-center ltr:rounded-r-md rtl:rounded-l-md">Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,11 +69,12 @@
                                         <td class="whitespace-nowrap">{{ $rent->user->name }}</td>
                                         <td class="whitespace-nowrap">{{ $rent->user->opd }}</td>
                                         <td class="whitespace-nowrap">{{ $rent->facility->name }}</td>
-                                        <td class="whitespace-nowrap">{{ $rent->start }}</td>
+                                        <td class="whitespace-nowrap">{{ \Carbon\Carbon::parse($rent->start)->locale('id')->translatedFormat('H:i | d F Y') }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->agenda }}</td>
                                         <td class="whitespace-nowrap">{{ $rent->user->no_hp }}</td>
                                         <td class="text-center">
                                             <span
-                                                class="badge rounded-full bg-warning/20 text-warning hover:top-0">{{ $rent->status }}</span>
+                                                class="badge rounded-full bg-warning/20 text-warning hover:top-0">{{ ucfirst($rent->status) }}</span>
                                         </td>
                                     </tr>
                                 @endforeach

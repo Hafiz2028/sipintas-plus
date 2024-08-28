@@ -104,6 +104,8 @@ Route::get('/admin/api/home', [AdminController::class, 'getHomes'])->name('admin
 Route::get('/admin/api/disposisi', [DisposisiController::class, 'getDisposisi'])->name('admin.disposisi.api');
 Route::get('/admin/api/rent', [RentController::class, 'getRents'])->name('admin.rent.api');
 
+Route::get('/download', [LandingController::class, 'downloadFile'])->name('file.download');
+Route::get('/search/filter', [LandingController::class, 'filter'])->name('search.filter');
 
 Route::get('/api/rent/{rent}', [LandingController::class, 'getRentById'])->name('api.rent');
 

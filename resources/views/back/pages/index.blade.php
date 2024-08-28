@@ -20,7 +20,8 @@
     <link rel="stylesheet" href="/landing/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
     <style>
         /* Swiper */
@@ -34,13 +35,28 @@
         .swiper-slide {
             background-position: center;
             background-size: cover;
-            width: 400px;
+            width: 450px;
         }
 
         .swiper-slide img {
             display: block;
             width: 100%;
             border-radius: 10px;
+        }
+
+
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            /* Style navigation buttons */
+            color: #000;
+            /* Adjust color as needed */
+        }
+
+        .swiper-pagination {
+            /* Style pagination dots */
+            bottom: 10px;
+            /* Adjust positioning */
         }
 
         .info {
@@ -126,7 +142,7 @@
                     transform: scale(1);
                     opacity: 1;
 
-                background-color: #00ab55;
+                    background-color: #00ab55;
                     border-color: #00ab55;
                 }
             }
@@ -185,6 +201,7 @@
                     transform: scale(1);
                     opacity: 1;
                 }
+
                 .checkbox-icon,
                 .checkbox-label {
                     color: #00ab55;
@@ -318,6 +335,7 @@
                 width: 300px;
             }
 
+
             .info h3 {
                 font-size: 12px;
             }
@@ -347,7 +365,7 @@
 
             .checkbox-icon {
                 transition: .375s ease;
-                color: #494949;
+                color: #fff;
 
                 svg {
                     padding-top: 15px;
@@ -357,7 +375,7 @@
 
             .checkbox-label {
                 font-size: 13px;
-                color: #707070;
+                color: #fff;
                 transition: .375s ease;
                 text-align: center;
                 padding-top: -80px;
@@ -453,7 +471,7 @@
                     <div class="col-lg-12">
                         <nav class="navbar navbar-expand-lg">
                             @if (!Auth::check())
-                                <a class="navbar-brand" href="{{ route('landing') }}">
+                                <a class="navbar-brand" href="#home">
                                     <img src="/landing/assets/images/logo/logo2.png" alt="Logo"
                                         style="width: 120px;" />
                                 </a>
@@ -474,13 +492,16 @@
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ms-auto">
                                     <li class="nav-item">
-                                        <a class="page-scroll active" href="#home">Beranda</a>
-                                    </li>
-                                    <li class="nav-item">
                                         <a class="page-scroll" href="#kategori">Fasilitas</a>
                                     </li>
                                     <li class="nav-item">
                                         <a class="page-scroll" href="#about">Cara Peminjaman</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('file.download') }}" class="">SOP Peminjaman</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a href="{{ route('history') }}">Riwayat Peminjaman</a>
                                     </li>
                                     @if (!Auth::check())
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
@@ -517,7 +538,7 @@
                             <h5 style="font-weight:lighter;" class="text wow fadeInUp" data-wow-duration="1.0s"
                                 data-wow-delay="0.8s">
                                 Layanan Peminjaman Fasilitas Online Provinsi Sumatera Barat
-                        </h5>
+                            </h5>
                         </div>
                         <!-- header hero content -->
                     </div>
@@ -529,15 +550,15 @@
                                 <div class="swiper-wrapper text-center">
                                     @foreach ($facilities as $facility)
                                         <div class="swiper-slide">
-                                            @if ($facility->facilityImages->isNotEmpty())
-                                                <img src="/facility_images/{{ $facility->facilityImages->first()->image }}"
-                                                    alt="{{ $facility->facilityImages->first()->image }}">
+                                            @if ($facility['image_url'])
+                                                <img src="{{ $facility['image_url'] }}"
+                                                    alt="{{ $facility['image_alt'] }}">
                                             @else
                                                 <img src="/facility_images/default.png" alt="No Image Available">
                                             @endif
                                             <div class="info">
-                                                <h3>{{ $facility->name }}</h3>
-                                                <p>{{ $facility->information }}</p>
+                                                <h3>{{ $facility['name'] }}</h3>
+                                                <p>{{ $facility['information'] }}</p>
                                             </div>
                                         </div>
                                     @endforeach
@@ -570,8 +591,11 @@
                         <legend class="checkbox-group-legend">Pilih Kategori Fasilitas</legend>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#DC493A'" style=" background-color: #DC493A; ">
+                                <input type="checkbox" class="checkbox-input" value="Semua">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#DC493A'"
+                                    style=" background-color: #DC493A; ">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
                                             fill="currentColor" class="bi bi-grid" viewBox="-3 0 20 18">
@@ -585,8 +609,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" checked />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#FFEC4F'" style=" background-color: #FFEC4F ">
+                                <input type="checkbox" class="checkbox-input" value="Kendaraan">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#FFEC4F'"
+                                    style=" background-color: #FFEC4F ">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10"
                                             fill="currentColor" class="bi bi-car-front" viewBox="0 0 18 18">
@@ -602,8 +629,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#30C5F9'" style=" background-color: #30C5F9">
+                                <input type="checkbox" class="checkbox-input" value="Penginapan">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#30C5F9'"
+                                    style=" background-color: #30C5F9">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="4 10 55 55"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -619,8 +649,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#245CA1'" style=" background-color: #245CA1">
+                                <input type="checkbox" class="checkbox-input" value="Ruang Rapat">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#245CA1'"
+                                    style=" background-color: #245CA1">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -637,8 +670,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#F2288C'" style=" background-color: #F2288C">
+                                <input type="checkbox" class="checkbox-input" value="Aula">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#F2288C'"
+                                    style=" background-color: #F2288C">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -654,8 +690,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#971585'" style=" background-color: #971585">
+                                <input type="checkbox" class="checkbox-input" value="Auditorium">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#971585'"
+                                    style=" background-color: #971585">
                                     <span class="checkbox-icon">
                                         <svg width="64" height="64" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -671,8 +710,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#FEA002'" style=" background-color: #FEA002">
+                                <input type="checkbox" class="checkbox-input" value="Peralatan">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#FEA002'"
+                                    style=" background-color: #FEA002">
                                     <span class="checkbox-icon">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                             fill="currentColor" class="bi bi-tools" viewBox="-3 0 20 18">
@@ -686,8 +728,11 @@
                         </div>
                         <div class="checkbox">
                             <label class="checkbox-wrapper">
-                                <input type="checkbox" class="checkbox-input" checked />
-                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'" onMouseClick="this.style.backgroundColor='#F8F8F8'" onMouseOut="this.style.backgroundColor='#1ED593'" style=" background-color: #1ED593">
+                                <input type="checkbox" class="checkbox-input" value="Lapangan">
+                                <span class="checkbox-tile" onMouseOver="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseClick="this.style.backgroundColor='#F8F8F8'"
+                                    onMouseOut="this.style.backgroundColor='#1ED593'"
+                                    style=" background-color: #1ED593">
                                     <span class="checkbox-icon">
                                         <svg width="70" height="70" viewBox="0 0 64 64"
                                             xmlns="http://www.w3.org/2000/svg" fill="none">
@@ -717,7 +762,7 @@
     <!--====== FASILITAS PART ENDS ======-->
 
     <!--====== Fasilitas Kendaraan ======-->
-    <section id="features" class="services-area pt-25">
+    <section id="features-vehicles" class="services-area pt-25">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-11 wow fadeInLeft" data-wow-duration="0.8s" data-wow-delay="1.0s">
@@ -733,32 +778,9 @@
             <!-- row -->
             <div class="row justify-content-center wow fadeInRight" data-wow-duration="0.8s" data-wow-delay="1.4s">
                 <div class="col-lg-12 swiper" style="padding-top: 15px; padding-bottom: 35px;">
-                    <div class="slider-penyewaan">
-                        <div class="ini-tes swiper-wrapper">
-                            @foreach ($facilities as $facility)
-                                @if ($facility->facilityType->name == 'Kendaraan Dinas' || $facility->facilityType->name == 'Kendaraan')
-                                    <div class="penyewaan swiper-slide">
-                                        @if ($facility->facilityImages->isNotEmpty())
-                                            <picture>
-                                                <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
-                                                        src="/facility_images/{{ $facility->facilityImages->first()->image }}"
-                                                        alt="{{ $facility->facilityImages->first()->image }}"></a>
-                                            </picture>
-                                        @else
-                                            <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
-                                                    src="/facility_images/default-panjang.png"
-                                                    alt="No Image Available"
-                                                    style="width: 228px; height: 382.5px; object-fit: cover; object-position: center;"></a>
-                                        @endif
-                                        <div class="detail">
-                                            <p>
-                                                <b>{{ $facility->name }}</b><br>
-                                                <small>{{ $facility->facilityType->name }}</small>
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
+                    <div class="slider-penyewaan swiper-container">
+                        <div class="swiper-wrapper" id="facility-results-vehicles">
+
                         </div>
                         <div class="swiper-pagination"></div>
                         <div class="swiper-slide-button swiper-button-next"></div>
@@ -773,7 +795,7 @@
     <!--====== Fasilitas Kendaraan ENDS ======-->
 
     <!--====== Fasilitas Bangunan ======-->
-    <section id="features" class="services-area pt-20">
+    <section id="features-buildings" class="services-area pt-20">
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-lg-11 wow fadeInLeft" data-wow-duration="1s" data-wow-delay="1.4s">
@@ -788,33 +810,9 @@
             <!-- row -->
             <div class="row justify-content-center wow fadeInRight" data-wow-duration="1.2s" data-wow-delay="1.4s">
                 <div class="col-lg-12 swiper" style="padding-top: 15px; padding-bottom: 35px;">
-                    <div class="slider-penyewaan">
-                        <div class="ini-tes swiper-wrapper">
-                            @foreach ($facilities as $facility)
-                                @if ($facility->facilityType->name != 'Kendaraan Dinas' && $facility->facilityType->name != 'Kendaraan')
-                                    <div class="penyewaan swiper-slide">
-                                        @if ($facility->facilityImages->isNotEmpty())
-                                            <picture>
-                                                <a
-                                                    href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
-                                                        src="/facility_images/{{ $facility->facilityImages->first()->image }}"
-                                                        alt="{{ $facility->facilityImages->first()->image }}"></a>
-                                            </picture>
-                                        @else
-                                            <a href="{{ route('detail-booking', ['facility' => $facility->id]) }}"><img
-                                                    src="/facility_images/default-panjang.png"
-                                                    alt="No Image Available"
-                                                    style="width: 228px; height: 382.5px; object-fit: cover; object-position: center;"></a>
-                                        @endif
-                                        <div class="detail">
-                                            <p>
-                                                <b>{{ $facility->name }}</b><br>
-                                                <small>{{ $facility->facilityType->name }}</small>
-                                            </p>
-                                        </div>
-                                    </div>
-                                @endif
-                            @endforeach
+                    <div class="slider-penyewaan swiper-container">
+                        <div class="swiper-wrapper" id="facility-results-buildings">
+
                         </div>
                         <div class="swiper-pagination"></div>
                         <div class="swiper-slide-button swiper-button-next"></div>
@@ -1050,6 +1048,169 @@
     <script src="/landing/assets/js/particles.min.js"></script>
     <script src="/landing/assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            // Pass the facilities data from the controller to JavaScript
+            var facilities = @json($facilities);
+
+            // Log the facilities data to check the structure
+            console.log('Facilities data:', facilities);
+
+            // Initialize Swiper instances
+            var swiperVehicles = new Swiper('#features-vehicles .swiper-container', {
+                loop: true,
+                pagination: {
+                    el: '#features-vehicles .swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '#features-vehicles .swiper-button-next',
+                    prevEl: '#features-vehicles .swiper-button-prev',
+                },
+                slidesPerView: 'auto',
+                spaceBetween: 20,
+            });
+
+            var swiperBuildings = new Swiper('#features-buildings .swiper-container', {
+                loop: true,
+                pagination: {
+                    el: '#features-buildings .swiper-pagination',
+                    clickable: true,
+                },
+                navigation: {
+                    nextEl: '#features-buildings .swiper-button-next',
+                    prevEl: '#features-buildings .swiper-button-prev',
+                },
+                slidesPerView: 'auto',
+                spaceBetween: 20,
+            });
+
+            // Function to update the facility results based on filter
+            function updateFacilityResults(facilities) {
+                $('#facility-results-vehicles').empty();
+                $('#facility-results-buildings').empty();
+
+                let showVehicles = false;
+                let showBuildings = false;
+
+                facilities.forEach(function(facility) {
+                    console.log('Facility data:', facility); // Check the data structure
+
+                    var imageUrl = facility.image_url || 'default-panjang.png';
+                    var imageAlt = facility.image_alt || 'No Image Available';
+
+                    var facilityHtml = `
+                <div class="penyewaan swiper-slide">
+                    <picture>
+                        <a href="${facility.detail_url}">
+                            <img src="${imageUrl}" alt="${imageAlt}">
+                        </a>
+                    </picture>
+                    <div class="detail">
+                        <p>
+                            <b>${facility.name}</b><br>
+                            <small>${facility.facilityTypeName}</small>
+                        </p>
+                    </div>
+                </div>
+            `;
+
+                    if (facility.facilityTypeName === 'Kendaraan Dinas' || facility.facilityTypeName ===
+                        'Kendaraan') {
+                        $('#facility-results-vehicles').append(facilityHtml);
+                        showVehicles = true;
+                    } else {
+                        $('#facility-results-buildings').append(facilityHtml);
+                        showBuildings = true;
+                    }
+                });
+
+                if (showVehicles) {
+                    $('#features-vehicles').fadeIn();
+                    swiperVehicles.update(); // Update Swiper after adding new slides
+                } else {
+                    $('#features-vehicles').fadeOut();
+                }
+
+                if (showBuildings) {
+                    $('#features-buildings').fadeIn();
+                    swiperBuildings.update(); // Update Swiper after adding new slides
+                } else {
+                    $('#features-buildings').fadeOut();
+                }
+            }
+
+            // Function to get selected categories
+            function getSelectedCategories() {
+                var selectedCategories = [];
+                var isAllSelected = $('.checkbox-input:checked').filter(function() {
+                    return $(this).val() === "Semua";
+                }).length > 0;
+
+                if (isAllSelected) {
+                    // If "Semua" is selected, ignore other selections and return an empty array
+                    selectedCategories = [];
+                } else {
+                    $('.checkbox-input:checked').each(function() {
+                        var category = $(this).next().find('.checkbox-label').text();
+                        selectedCategories.push(category);
+                    });
+                }
+
+                return selectedCategories;
+            }
+
+            // Automatically trigger the filter for "Semua" on page load
+            function filterAllCategories() {
+                var selectedCategories = getSelectedCategories();
+                $.ajax({
+                    url: '/search/filter',
+                    method: 'GET',
+                    data: {
+                        categories: selectedCategories
+                    },
+                    success: function(response) {
+                        console.log('Filtered facilities data:', response
+                            .facilities); // Log filtered facilities data
+                        updateFacilityResults(response.facilities);
+                    },
+                    error: function(xhr) {
+                        console.log('Error:', xhr.responseText);
+                    }
+                });
+            }
+
+            // Trigger filtering for "Semua" on page load
+            filterAllCategories();
+
+            // Handle checkbox change
+            $('.checkbox-input').change(function() {
+                var selectedCategories = getSelectedCategories();
+                $.ajax({
+                    url: '/search/filter',
+                    method: 'GET',
+                    data: {
+                        categories: selectedCategories
+                    },
+                    success: function(response) {
+                        console.log('Filtered facilities data:', response
+                            .facilities); // Log filtered facilities data
+                        updateFacilityResults(response.facilities);
+                    },
+                    error: function(xhr) {
+                        console.log('Error:', xhr.responseText);
+                    }
+                });
+            });
+
+            // Initialize with current facilities
+            updateFacilityResults(facilities);
+        });
+    </script>
+
+
 
     <script>
         var swiper = new Swiper(".mySwiper", {
@@ -1109,6 +1270,29 @@
                 nextEl: ".swiper-button-next",
                 prevEl: ".swiper-button-prev",
             },
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: '{!! session('success') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
+
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ $error }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endforeach
+            @endif
         });
     </script>
 

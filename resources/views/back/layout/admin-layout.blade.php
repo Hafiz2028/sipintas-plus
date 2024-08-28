@@ -23,11 +23,25 @@
     <script defer="" src="/back/assets/js/sweetalert.min.js"></script>
     <link href="/back/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link href="/back/assets/css/fullcalendar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
     <link rel="stylesheet" href="/extra-assets/ijaboCropTool/ijaboCropTool.min.css">
     @stack('stylesheets')
 </head>
+
+<style>
+    .input-container {
+        display: flex;
+        gap: 10px;
+
+    }
+
+    .input-container .form-input {
+        flex: 1;
+        background-color: white;
+    }
+</style>
 
 <body x-data="main" class="relative overflow-x-hidden font-nunito text-sm font-normal antialiased"
     :class="[$store.app.sidebar ? 'toggle-sidebar' : '', $store.app.theme === 'dark' || $store.app.isDarkMode ? 'dark' : '',
@@ -867,6 +881,7 @@
     <script src="/back/assets/js/custom.js"></script>
     <script src="/back/assets/js/simple-datatables.js"></script>
     <script src="/back/assets/js/fullcalendar.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

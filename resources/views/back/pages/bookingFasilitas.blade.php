@@ -22,12 +22,75 @@
     <link rel="stylesheet" href="/landing/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/locales/id.global.min.js"></script>
-
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
     <style>
+        .disabled-input {
+            pointer-events: none;
+            background-color: #e9ecef;
+            /* Optional: Change background to indicate disabled state */
+            cursor: not-allowed;
+        }
+
+        .flatpickr-input {
+            border: 1px solid #ced4da;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            display: block;
+            width: 100%;
+        }
+
+        .flatpickr-input:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .25);
+        }
+
+        /* Warna Keterangan Calender */
+        .color-legend {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        .color-legend li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .color-circle {
+            display: inline-block;
+            width: 15px;
+            height: 15px;
+            margin-right: 10px;
+            border: 1px solid #ccc;
+        }
+
+        .color-text {
+            font-size: 16px;
+        }
+
+        .input-container {
+            display: flex;
+            gap: 10px;
+
+        }
+
+        .input-container .form-control {
+            flex: 1;
+            background-color: white;
+        }
+
         /* Swiper */
-        .header-bg{
+        .header-bg {
             position: relative;
             z-index: 5;
             background-position: bottom center;
@@ -36,18 +99,23 @@
             width: 100%;
             height: 100%;
         }
+
         .fc-col-header-cell-cushion {
             display: inline-block; // x-browser for when sticky (when multi-tier header)
             padding: 2px 4px;
-            }
+        }
+
+        .calendar-wrapper .fc-daygrid-event-dot {
+            display: none;
+        }
+        .calendar-wrapper .fc-event {
+            padding: 2px 4px;
+            color: #fff;
+        }
+
         .fc-daygrid-day-number {
             color: #1b1b1b !important;
             /* Mengubah warna angka tanggal menjadi hitam */
-        }
-
-        .fc-daygrid-day-top {
-            color: #992121 !important;
-            /* Mengubah warna teks hari dalam kalender */
         }
 
         .fc-col-header-cell {
@@ -76,8 +144,9 @@
             color: white !important;
             /* Mengubah warna border tombol yang aktif menjadi hitam */
         }
+
         .fc-daygrid-day-name {
-            color: #000000 ;
+            color: #000000;
             /* Mengubah warna angka tanggal menjadi hitam */
         }
 
@@ -100,6 +169,12 @@
         .fc-event-primary {
             background-color: #007bff !important;
             border-color: #007bff !important;
+            color: white !important;
+        }
+
+        .fc-event-warning {
+            background-color: #ffc107 !important;
+            border-color: #ffc107 !important;
             color: white !important;
         }
 
@@ -126,7 +201,7 @@
             background-position: center;
             background-size: cover;
             width: 100%;
-            height:550px;
+            height: 550px;
         }
 
         .swiper-slide img {
@@ -383,6 +458,10 @@
                 width: 500px;
                 padding-right: 10px;
             }
+
+            .calendar-wrapper .fc-toolbar-title {
+            font-size: 30px !important;
+        }
         }
 
         @media (max-width: 767px) {
@@ -500,8 +579,53 @@
                 display: none;
             }
 
+            .panel-card {
+                padding: 5px;
+            }
 
+            .calendar-wrapper .fc-toolbar {
+                flex-direction: column !important;
+            }
+
+            .calendar-wrapper .fc-toolbar .fc-toolbar-chunk {
+                margin-top: 16px;
+            }
+
+            .calendar-wrapper .fc-toolbar .fc-toolbar-chunk:first-child {
+                margin-top: 0 !important;
+            }
+
+        .calendar-wrapper .fc-toolbar-title {
+            font-size: 20px;
         }
+
+        .calendar-wrapper .fc .fc-popover {
+            z-index: 10;
+        }
+
+        .calendar-wrapper .fc-event {
+            padding: 2px 4px;
+            color: #fff;
+        }
+
+        .calendar-wrapper .fc-timegrid-event-harness-inset .fc-timegrid-event {
+            box-shadow: none;
+            overflow: hidden;
+        }
+
+        .calendar-wrapper .fc-daygrid-event-dot {
+            display: none;
+        }
+
+        .calendar-wrapper .fc-daygrid-dot-event {
+            border-width: 1px;
+        }
+
+        .calendar-wrapper .fc-event-time {
+            flex-shrink: 0;
+        }
+    }
+
     </style>
 
 </head>
@@ -599,8 +723,7 @@
         <!-- navbar area -->
 
         <!-- Slider View -->
-        <div class="header-bg"
-            style="background-image: url(/landing/assets/images/header/banner-bg.svg);">
+        <div class="header-bg" style="background-image: url(/landing/assets/images/header/banner-bg.svg);">
             <div class="container">
                 <div class="pt-60">
                     <div class="row">
@@ -652,8 +775,20 @@
                         :
                         {{ $facility->information }} | Pembayaran : {{ $facility->pembayaran }}
                     </p>
-                    <div class="mt-5">
-                        <div id='calendar'></div>
+                    <div class="mt-5 panel-card">
+                        <div id='calendar' class="calendar-wrapper"></div>
+                        <div class="mt-2">
+                            <ul class="color-legend">
+                                <li>
+                                    <span class="color-circle" style="background-color: #28a745;"></span>
+                                    <span class="color-text">Peminjaman Disetujui</span>
+                                </li>
+                                <li>
+                                    <span class="color-circle" style="background-color: #ffc107;"></span>
+                                    <span class="color-text">Peminjaman Sedang Diproses</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -817,6 +952,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -840,7 +976,6 @@
             }
         });
     </script>
-
     <script>
         var swiper = new Swiper(".mySwiper", {
             effect: "coverflow",
@@ -901,43 +1036,153 @@
             },
         });
 
+
+
         document.addEventListener('DOMContentLoaded', function() {
             var rents = @json($rents);
+            var facility = @json($facility);
             var bookingForm = document.getElementById('bookingForm');
             var pembayaranInput = document.getElementById('pembayaran');
             var suratInput = document.getElementById('surat');
+            var suratLink = document.getElementById('suratLink');
             var submitButton = document.querySelector('#bookingForm button[type="submit"]');
-            var startInput = document.getElementById('start');
-            var endInput = document.getElementById('end');
+            var startDateInput = document.getElementById('start_date');
+            var startTimeInput = document.getElementById('start_time');
+            var endDateInput = document.getElementById('end_date');
+            var endTimeInput = document.getElementById('end_time');
+            var agendaInput = document.getElementById('agenda');
+            var tujuanInput = document.getElementById('tujuan');
+            var sppdInputs = document.querySelectorAll('input[name="sppd"]');
+            var bbmInputs = document.querySelectorAll('input[name="bbm"]');
+            var isLoggedIn = @json(auth()->check());
+            var startDatePicker, endDatePicker, startTimePicker, endTimePicker;
+
+            var bookingModalElement = document.getElementById('bookingModal');
+            var bookingModal;
+            if (bookingModalElement) {
+                bookingModal = new bootstrap.Modal(bookingModalElement);
+            }
+
+            if (startDateInput && startTimeInput && endDateInput && endTimeInput) {
+                startDatePicker = flatpickr(startDateInput, {
+                    dateFormat: "Y-m-d",
+                });
+
+                endDatePicker = flatpickr(endDateInput, {
+                    dateFormat: "Y-m-d",
+                });
+
+                startTimePicker = flatpickr(startTimeInput, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    minuteIncrement: 60,
+                });
+
+                endTimePicker = flatpickr(endTimeInput, {
+                    enableTime: true,
+                    noCalendar: true,
+                    dateFormat: "H:i",
+                    time_24hr: true,
+                    minuteIncrement: 60,
+                });
+
+                function parseDateTime(dateTimeString) {
+                    const [date, time] = dateTimeString.split('T');
+                    return {
+                        date: date,
+                        time: time.slice(0, 5)
+                    };
+                }
+
+                function setDateTimePickers(datePicker, timePicker, dateTimeString) {
+                    const {
+                        date,
+                        time
+                    } = parseDateTime(dateTimeString);
+                    datePicker.setDate(date);
+                    timePicker.setDate(time);
+                }
+
+                function getFormattedDateTime(datePicker, timePicker) {
+                    const date = datePicker.input.value;
+                    const time = timePicker.input.value;
+                    return `${date}T${time}`;
+                }
+
+                function prepareRequestData() {
+                    const startDateTime = getFormattedDateTime(startDatePicker, startTimePicker);
+                    const endDateTime = getFormattedDateTime(endDatePicker, endTimePicker);
+                    const requestData = {
+                        start: startDateTime,
+                        end: endDateTime,
+                    };
+                    console.log('Prepared Request Data:', requestData);
+                    return requestData;
+                }
+            } else {
+                console.warn('Start or End input elements not found');
+            }
 
             function toggleFormForExistingBooking(isExisting) {
                 if (isExisting) {
+                    console.log('Existing booking');
                     if (pembayaranInput) {
                         pembayaranInput.closest('.mb-3').style.display = 'none';
                     }
                     if (suratInput) {
                         suratInput.closest('.mb-3').style.display = 'none';
                     }
+                    if (suratLink) {
+                        suratLink.style.display = 'block';
+                    }
                     submitButton.textContent = 'Oke';
-                    submitButton.addEventListener('click', function() {
-                        var bookingModal = bootstrap.Modal.getInstance(document.getElementById(
-                            'bookingModal'));
-                        bookingModal.hide();
-                    });
                     submitButton.setAttribute('type', 'button');
-                    startInput.readOnly = true;
-                    endInput.readOnly = true;
+                    submitButton.style.display = 'none';
+                    submitButton.addEventListener('click', function() {
+                        if (isLoggedIn) {
+                            bookingModal.hide();
+                        }
+                    });
+                    agendaInput.readOnly = true;
+                    if (isLoggedIn && startDateInput && startTimeInput && endDateInput && endTimeInput) {
+                        startDateInput.classList.add('disabled-input');
+                        startTimeInput.classList.add('disabled-input');
+                        endDateInput.classList.add('disabled-input');
+                        endTimeInput.classList.add('disabled-input');
+                    }
+                    if (facility.facility_type.name == 'Kendaraan') {
+                        tujuanInput.readOnly = true;
+                        sppdInputs.forEach(input => input.disabled = true);
+                        bbmInputs.forEach(input => input.disabled = true);
+                    }
                 } else {
+                    console.log('New booking');
                     if (pembayaranInput) {
                         pembayaranInput.closest('.mb-3').style.display = 'block';
                     }
                     if (suratInput) {
                         suratInput.closest('.mb-3').style.display = 'block';
                     }
+                    if (suratLink) {
+                        suratLink.style.display = 'none';
+                    }
                     submitButton.textContent = 'Submit';
                     submitButton.setAttribute('type', 'submit');
-                    startInput.readOnly = false;
-                    endInput.readOnly = false;
+                    submitButton.style.display = 'inline';
+                    agendaInput.readOnly = false;
+                    if (isLoggedIn && startDateInput && startTimeInput && endDateInput && endTimeInput) {
+                        startDateInput.classList.remove('disabled-input');
+                        startTimeInput.classList.remove('disabled-input');
+                        endDateInput.classList.remove('disabled-input');
+                        endTimeInput.classList.remove('disabled-input');
+                    }
+                    if (facility.facility_type.name == 'Kendaraan') {
+                        tujuanInput.readOnly = false;
+                        sppdInputs.forEach(input => input.disabled = false);
+                        bbmInputs.forEach(input => input.disabled = false);
+                    }
                 }
             }
 
@@ -949,7 +1194,7 @@
             var events = rents.map(function(rent) {
                 let className = '';
                 if (rent.status === 'proses') {
-                    className = 'fc-event-info';
+                    className = 'fc-event-warning';
                 } else if (rent.status === 'diterima') {
                     className = 'fc-event-success';
                 } else if (rent.status === 'ditolak') {
@@ -966,7 +1211,7 @@
             }).filter(event => event !== null);
 
             var calendarEl = document.getElementById('calendar');
-            var isLoggedIn = @json(auth()->check());
+
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 locale: 'id',
                 initialView: 'dayGridMonth',
@@ -1002,23 +1247,52 @@
                         });
                     } else {
                         var rent = rents.find(r => r.id == info.event.id);
+                        console.log(rent);
                         if (rent) {
                             const startDate = moment(rent.start).format('YYYY-MM-DDTHH:mm');
                             const endDate = moment(rent.end).format('YYYY-MM-DDTHH:mm');
-                            document.getElementById('eventId').value = rent.id;
-                            document.getElementById('start').value = startDate;
-                            document.getElementById('end').value = endDate;
-                            document.getElementById('name').value = rent.user.name;
-                            document.getElementById('opd').value = rent.user.opd;
-                            document.getElementById('nip').value = rent.user.nip;
+                            const eventIdElem = document.getElementById('eventId');
+                            const startDateElem = document.getElementById('start_date');
+                            const startTimeElem = document.getElementById('start_time');
+                            const endDateElem = document.getElementById('end_date');
+                            const endTimeElem = document.getElementById('end_time');
+                            const agendaElem = document.getElementById('agenda');
+                            const nameElem = document.getElementById('name');
+                            const opdElem = document.getElementById('opd');
+                            const tujuanElem = document.getElementById('tujuan');
+                            const sppdElems = document.getElementsByName('sppd');
+                            const bbmElems = document.getElementsByName('bbm');
+                            if (eventIdElem) eventIdElem.value = rent.id;
+                            if (startDateElem && startTimeElem) {
+                                setDateTimePickers(startDatePicker, startTimePicker, startDate);
+                            }
+                            if (endDateElem && endTimeElem) {
+                                setDateTimePickers(endDatePicker, endTimePicker, endDate);
+                            }
+                            if (agendaElem) agendaElem.value = rent.agenda;
+                            if (nameElem) nameElem.value = rent.user.name;
+                            if (opdElem) opdElem.value = rent.user.opd;
+                            if (rent.facility.facility_type.name == 'Kendaraan') {
+                                if (tujuanElem) tujuanElem.value = rent.rent_detail.tujuan;
+                                sppdElems.forEach(elem => {
+                                    if (elem.value === rent.rent_detail.sppd) {
+                                        elem.checked = true;
+                                    }
+                                });
+                                bbmElems.forEach(elem => {
+                                    if (elem.value === rent.rent_detail.bbm) {
+                                        elem.checked = true;
+                                    }
+                                });
+                            }
                             toggleFormForExistingBooking(true);
-                            var bookingModal = new bootstrap.Modal(document.getElementById(
-                                'bookingModal'));
-                            bookingModal.show();
+                            if (isLoggedIn && bookingModal) {
+                                bookingModal.show();
+                            }
                         }
                     }
                 },
-                select: function(info) {
+                dateClick: function(info) {
                     if (!isLoggedIn) {
                         Swal.fire({
                             icon: 'warning',
@@ -1033,99 +1307,171 @@
                             }
                         });
                     } else {
-                        var startDateTime = info.startStr.substring(0, 16);
-                        var endDateTime = info.endStr.substring(0, 16);
-                        document.getElementById('start').value = startDateTime;
-                        document.getElementById('end').value = endDateTime;
+                        startDatePicker.setDate(info.dateStr);
+                        endDatePicker.setDate(info.dateStr);
+                        startTimePicker.setDate('00:00');
+                        endTimePicker.setDate('23:59');
+                        var agendaElem = document.getElementById('agenda');
+                        if (agendaElem) {
+                            agendaElem.value = '';
+                        }
+                        if (facilityTypeName === 'Kendaraan') {
+                            var tujuanElem = document.getElementById('tujuan');
+                            var sppdElems = document.getElementsByName('sppd');
+                            var bbmElems = document.getElementsByName('bbm');
 
+                            if (tujuanElem) {
+                                tujuanElem.value = '';
+                            }
+                            sppdElems.forEach(function(elem) {
+                                elem.checked = false;
+                            });
+                            bbmElems.forEach(function(elem) {
+                                elem.checked = false;
+                            });
+                        }
                         @if (auth()->check())
                             document.getElementById('name').value = "{{ auth()->user()->name }}";
                             document.getElementById('opd').value = "{{ auth()->user()->opd }}";
-                            document.getElementById('nip').value = "{{ auth()->user()->nip }}";
                         @endif
                         toggleFormForExistingBooking(false);
-                        var bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
-                        bookingModal.show();
+                        if (isLoggedIn && bookingModal) {
+                            bookingModal.show();
+                        }
                     }
                 }
             });
             calendar.render();
-            document.getElementById('bookingForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-                var isValid = true;
-                var requiredFields = ['start', 'end', 'surat'];
-                requiredFields.forEach(function(field) {
-                    var input = document.getElementById(field);
-                    if (!input.value) {
-                        isValid = false;
-                        input.classList.add('is-invalid');
-                    } else {
-                        input.classList.remove('is-invalid');
-                    }
-                });
-                if (!isValid) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Validation Error',
-                        text: 'Please fill in all required fields.',
-                    });
-                    return;
-                }
-                fetch('/book-facility', {
-                        method: 'POST',
-                        body: formData,
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
-                                .getAttribute('content')
-                        }
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            return response.json().then(data => {
-                                throw new Error(data.error || 'An unknown error occurred.');
-                            });
-                        }
-                        const contentType = response.headers.get("content-type");
-                        if (contentType && contentType.includes("application/json")) {
-                            return response.json();
+            bookingModalElement.addEventListener('hide.bs.modal', function() {
+                window.location.reload();
+            });
+            if (bookingForm) {
+                bookingForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    var requestData = prepareRequestData();
+                    var formData = new FormData(this);
+                    var isValid = true;
+                    var facilityTypeName = '{{ $facility->facilityType->name }}';
+                    var facilityPembayaran = '{{ $facility->pembayaran }}';
+                    var startDateInput = document.getElementById('start_date');
+                    var startTimeInput = document.getElementById('start_time');
+                    var endDateInput = document.getElementById('end_date');
+                    var endTimeInput = document.getElementById('end_time');
+                    var agendaInput = document.getElementById('agenda');
+                    var suratInput = document.getElementById('surat');
+                    var pembayaranInput = document.getElementById('pembayaran');
+                    var start = `${startDateInput.value}T${startTimeInput.value}`;
+                    var end = `${endDateInput.value}T${endTimeInput.value}`;
+                    var surat = suratInput.files.length;
+                    var pembayaran = pembayaranInput ? pembayaranInput.files.length : 0;
+                    if (isLoggedIn) {
+                        if (!agendaInput.value.trim()) {
+                            isValid = false;
+                            agendaInput.classList.add('is-invalid');
                         } else {
-                            return response.text().then(text => {
-                                throw new Error(
-                                    `Expected JSON but got ${contentType}: ${text}`);
-                            });
+                            agendaInput.classList.remove('is-invalid');
                         }
-                    })
-                    .then(data => {
-                        console.log(data);
-                        if (data.success) {
-                            var bookingModal = bootstrap.Modal.getInstance(document.getElementById(
-                                'bookingModal'));
-                            bookingModal.hide();
-                            var successModal = new bootstrap.Modal(document.getElementById(
-                                'successModal'));
-                            successModal.show();
-                            setTimeout(() => {
-                                window.location.href =
-                                    "{{ route('detail-booking', ['facility' => $facility->id]) }}";
-                            }, 1500);
+
+                        if (!start) {
+                            isValid = false;
+                            startDateInput.classList.add('is-invalid');
+                            startTimeInput.classList.add('is-invalid');
                         } else {
+                            startDateInput.classList.remove('is-invalid');
+                            startTimeInput.classList.remove('is-invalid');
+                        }
+
+                        if (!end) {
+                            isValid = false;
+                            endDateInput.classList.add('is-invalid');
+                            endTimeInput.classList.add('is-invalid');
+                        } else {
+                            endDateInput.classList.remove('is-invalid');
+                            endTimeInput.classList.remove('is-invalid');
+                        }
+                        if (facilityTypeName == 'Kendaraan') {
+                            var tujuanInput = document.getElementById('tujuan');
+                            var tujuan = tujuanInput.value.trim();
+                            if (!tujuan) {
+                                isValid = false;
+                                tujuanInput.classList.add('is-invalid');
+                            } else {
+                                tujuanInput.classList.remove('is-invalid');
+                            }
+                            var sppdGroup = document.getElementsByName('sppd');
+                            if (![...sppdGroup].some(input => input.checked)) {
+                                isValid = false;
+                                sppdGroup.forEach(input => input.parentElement.classList.add('is-invalid'));
+                            } else {
+                                sppdGroup.forEach(input => input.parentElement.classList.remove(
+                                    'is-invalid'));
+                            }
+                            var bbmGroup = document.getElementsByName('bbm');
+                            if (![...bbmGroup].some(input => input.checked)) {
+                                isValid = false;
+                                bbmGroup.forEach(input => input.parentElement.classList.add('is-invalid'));
+                            } else {
+                                bbmGroup.forEach(input => input.parentElement.classList.remove(
+                                    'is-invalid'));
+                            }
+                        }
+                        if (surat === 0) {
+                            isValid = false;
+                            suratInput.classList.add('is-invalid');
+                        } else {
+                            suratInput.classList.remove('is-invalid');
+                        }
+                        if (facilityPembayaran == 'ya' && pembayaran === 0) {
+                            isValid = false;
+                            pembayaranInput.classList.add('is-invalid');
+                        } else {
+                            if (pembayaranInput) {
+                                pembayaranInput.classList.remove('is-invalid');
+                            }
+                        }
+                        if (!isValid) {
                             Swal.fire({
                                 icon: 'error',
-                                title: 'Peminjaman Gagal',
-                                text: data.message,
+                                title: 'Kesalahan Validasi',
+                                text: 'Harap isi semua kolom yang wajib diisi.',
                             });
+                            return;
                         }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: error.message,
+                    }
+                    formData.append('start', start);
+                    formData.append('end', end);
+                    fetch('/book-facility', {
+                            method: 'POST',
+                            body: formData,
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                    .getAttribute('content')
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            Swal.fire({
+                                icon: data.success ? 'success' : 'error',
+                                title: data.success ? 'Success' : 'Error',
+                                text: data.message,
+                            }).then(() => {
+                                if (data.success) {
+                                    var bookingModal = bootstrap.Modal.getInstance(document
+                                        .getElementById('bookingModal'));
+                                    bookingModal.hide();
+                                    window.location.reload();
+                                }
+                            });
+                        })
+                        .catch(error => {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Terjadi Kesalahan Saat Menyimpan Peminjaman.',
+                            });
                         });
-                    });
-            });
+                });
+            }
         });
     </script>
 

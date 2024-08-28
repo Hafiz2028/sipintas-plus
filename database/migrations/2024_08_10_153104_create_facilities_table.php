@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('size');
             $table->string('kapasitas');
             $table->string('information');
+            $table->string('map_link')->nullable();
             $table->enum('pembayaran',['tidak','ya'])->default('tidak');
             $table->foreign('facility_type_id')->references('id')->on('facility_types')->onUpdate('cascade')->onDelete('cascade');
             $table->timestamps();

@@ -28,27 +28,44 @@
                     class="form-input text-white-dark" readonly>
             </div>
         </div>
-        <div>
-            <label for="facility">Fasilitas Yang Dipinjam</label>
-            <input id="facility" type="text" placeholder="Enter Facility"
-                value="{{ $rent->facility->name }} | Kategori {{ $rent->facility->facilityType->name }}"
-                class="form-input text-white-dark" readonly>
+        <div class="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 gap-3">
+            <div>
+                <label for="facility">Fasilitas Yang Dipinjam</label>
+                <input id="facility" type="text" placeholder="Enter Facility"
+                    value="{{ $rent->facility->name }} | Kategori {{ $rent->facility->facilityType->name }}"
+                    class="form-input text-white-dark" readonly>
+            </div>
+            <div>
+                <label for="agenda">Agenda Kegiatan</label>
+                <input id="agenda" type="text" placeholder="Enter Agenda" value="{{ $rent->agenda }}"
+                    class="form-input text-white-dark" readonly>
+            </div>
+            @if ($rent->facility->facilityType->name == 'Kendaraan')
+                <div>
+                    <label for="tujuan">Tujuan Kegiatan</label>
+                    <input id="tujuan" type="text" placeholder="Enter Tujuan" value="{{ $rent->rentDetail->tujuan }}"
+                        class="form-input text-white-dark" readonly>
+                </div>
+            @endif
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-3">
             <div>
                 <label for="rent_date">Tanggal Peminjaman</label>
-                <input id="rent_date" value="{{ $rent->created_at }}" type="text" placeholder="Enter Date"
-                    class="form-input text-white-dark" readonly>
+                <input id="rent_date"
+                    value="{{ \Carbon\Carbon::parse($rent->created_at)->locale('id')->translatedFormat('H:i | d F Y') }}"
+                    type="text" placeholder="Enter Date" class="form-input text-white-dark" readonly>
             </div>
             <div>
                 <label for="start">Tanggal Pakai</label>
-                <input id="start" value="{{ $rent->start }}" type="text" placeholder="Enter Start"
-                    class="form-input text-white-dark" readonly>
+                <input id="start"
+                    value="{{ \Carbon\Carbon::parse($rent->start)->locale('id')->translatedFormat('d F Y') }}"
+                    type="text" placeholder="Enter Start" class="form-input text-white-dark" readonly>
             </div>
             <div>
                 <label for="hour">Jam Pakai</label>
-                <input id="hour" value="{{ $rent->start }}" type="text" placeholder="Enter Hour"
-                    class="form-input text-white-dark" readonly>
+                <input id="hour"
+                    value="{{ \Carbon\Carbon::parse($rent->start)->locale('id')->translatedFormat('H:i') }}" type="text"
+                    placeholder="Enter Hour" class="form-input text-white-dark" readonly>
             </div>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-3">
@@ -62,6 +79,47 @@
                 <input id="no_hp" type="Text" value="{{ $rent->user->no_hp }}" class="form-input text-white-dark"
                     readonly />
             </div>
+        </div>
+
+        @if (
+            $rent->facility->facilityType->name == 'Kendaraan' &&
+                $rent->rentDetail &&
+                ($rent->rentDetail->sppd == 'ya' || $rent->rentDetail->bbm == 'ya'))
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
+                @if ($rent->rentDetail->sppd == 'ya')
+                    <div>
+                        <label for="sppd_agreement">
+                            Perizinan SPPD<span style="color: red;font-weight: bold; font-size: 1rem;">*</span>
+                        </label>
+                        <select id="sppd_agreement" name="sppd_agreement" class="form-select" required
+                            style="border: 1px solid #ced4da; padding: 0.375rem 0.75rem; border-radius: 0.25rem;">
+                            <option value="" disabled selected>Pembebanan SPPD oleh Biro Umum?</option>
+                            <option value="diterima"
+                                {{ $rent->rentDetail->sppd_agreement == 'diterima' ? 'selected' : '' }}>Izinkan</option>
+                            <option value="ditolak" {{ $rent->rentDetail->sppd_agreement == 'ditolak' ? 'selected' : '' }}>
+                                Ditolak</option>
+                        </select>
+                    </div>
+                @endif
+                @if ($rent->rentDetail->bbm == 'ya')
+                    <div>
+                        <label for="bbm_agreement">
+                            Perizinan BBM<span style="color: red;font-weight: bold; font-size: 1rem;">*</span>
+                        </label>
+                        <select id="bbm_agreement" name="bbm_agreement" class="form-select" required
+                            style="border: 1px solid #ced4da; padding: 0.375rem 0.75rem; border-radius: 0.25rem;">
+                            <option value="" disabled selected>Pembebanan BBM oleh Biro Umum?</option>
+                            <option value="diterima"
+                                {{ $rent->rentDetail->bbm_agreement == 'diterima' ? 'selected' : '' }}>Izinkan</option>
+                            <option value="ditolak" {{ $rent->rentDetail->bbm_agreement == 'ditolak' ? 'selected' : '' }}>
+                                Ditolak</option>
+                        </select>
+                    </div>
+                @endif
+            </div>
+        @endif
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
             <div>
                 <label for="status">
                     Perizinan<span style="color: red;font-weight: bold; font-size: 1rem;">*</span>
@@ -73,12 +131,11 @@
                     <option value="ditolak" {{ $rent->status == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
                 </select>
             </div>
-        </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
             <div id="reject-note-container" style="display: none;">
-                <label for="reject_note">Alasan Penolakan<span
+                <label id="reject-note-label" for="reject_note">Alasan Penolakan<span
                         style="color: red;font-weight: bold; font-size: 1rem;">*</span></label>
                 <input id="reject_note" type="text" name="reject_note" class="form-input"
+                    placeholder="Tambahkan Alasan Peminjaman Ditolak" value="{{ $rent->reject_note }}"
                     style="border: 1px solid #ced4da; padding: 0.375rem 0.75rem; border-radius: 0.25rem;" />
             </div>
         </div>
@@ -110,7 +167,13 @@
         </div>
 
         <div class="flex items-center justify-center gap-4">
-            <button type="button" class="btn btn-warning"><a href="">Back</a></button>
+            @if (auth()->check() && auth()->user()->role === 'admin')
+                <button type="button" class="btn btn-warning"><a
+                        href="{{ route('admin.disposisi.index') }}">Back</a></button>
+            @elseif (auth()->check() && auth()->user()->role === 'kabag')
+                <button type="button" class="btn btn-warning"><a
+                        href="{{ route('kabag.disposisi.index') }}">Back</a></button>
+            @endif
             <button type="submit" class="btn btn-success">Save</button>
         </div>
         </form>
@@ -122,14 +185,25 @@
             var statusSelect = document.getElementById('status');
             var rejectNoteContainer = document.getElementById('reject-note-container');
             var rejectNoteInput = document.getElementById('reject_note');
+            var rejectNoteLabel = document.getElementById('reject-note-label');
 
             function toggleRejectNote() {
                 if (statusSelect.value === 'ditolak') {
                     rejectNoteContainer.style.display = 'block';
+                    rejectNoteLabel.innerHTML =
+                        'Alasan Penolakan<span style="color: red;font-weight: bold; font-size: 1rem;">*</span>';
                     rejectNoteInput.setAttribute('required', 'required');
+                    rejectNoteInput.placeholder = 'Berikan Alasan Peminjaman ditolak';
+                } else if (statusSelect.value === 'diterima') {
+                    rejectNoteContainer.style.display = 'block';
+                    rejectNoteLabel.innerHTML =
+                        'Keterangan Tambahan<span style="color: red;font-weight: bold; font-size: 1rem;">*</span>';
+                    rejectNoteInput.setAttribute('required', 'required');
+                    rejectNoteInput.placeholder = 'Berikan Keterangan Tambahan jika diperlukan';
                 } else {
                     rejectNoteContainer.style.display = 'none';
                     rejectNoteInput.removeAttribute('required');
+                    rejectNoteInput.placeholder = '';
                 }
             }
             toggleRejectNote();

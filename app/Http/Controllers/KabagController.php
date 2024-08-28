@@ -15,7 +15,7 @@ class KabagController extends Controller
         $user = auth()->user();
         $rents = Rent::with('facility', 'user', 'rentPayment')
             ->where('status', 'proses')
-            ->get();
+            ->get(); 
         $rentsCount = $rents->count();
         $facilitiesCount = Facility::count();
         $usersCount = User::count();

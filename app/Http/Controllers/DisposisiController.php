@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Rent;
 
+use App\Models\RentDetail;
 use Illuminate\Http\Request;
 
 class DisposisiController extends Controller
@@ -13,7 +14,7 @@ class DisposisiController extends Controller
      */
     public function index()
     {
-        $rents = Rent::with('facility', 'rentPayment', 'user')->get();
+        $rents = Rent::with('facility', 'rentPayment', 'user', 'rentDetail')->get();
         $data = [
             'rents' => $rents
         ];
@@ -22,7 +23,7 @@ class DisposisiController extends Controller
 
     public function getDisposisi()
     {
-        $rents = Rent::with(['facility', 'rentPayment', 'user'])->get();
+        $rents = Rent::with(['facility', 'rentPayment', 'user', 'rentDetail'])->get();
         $data = [
             'rents' => $rents
         ];
@@ -30,7 +31,7 @@ class DisposisiController extends Controller
     }
     public function edit(string $id)
     {
-        $rent = Rent::with('rentPayment')->findOrFail($id);
+        $rent = Rent::with('rentPayment', 'rentDetail')->findOrFail($id);
 
         $data = [
             'rent' => $rent
@@ -42,15 +43,21 @@ class DisposisiController extends Controller
         $validatedData = $request->validate([
             'status' => 'required|in:diterima,ditolak',
             'reject_note' => 'nullable|string|max:255',
+            'sppd_agreement' => 'nullable|in:diterima,ditolak',
+            'bbm_agreement' => 'nullable|in:diterima,ditolak',
         ]);
         $rent = Rent::findOrFail($id);
         $rent->status = $validatedData['status'];
-        if ($rent->status === 'ditolak') {
-            $rent->reject_note = $validatedData['reject_note'];
-        } else {
-            $rent->reject_note = null;
-        }
+        $rent->reject_note = $validatedData['reject_note'];
         $rent->save();
+        if ($rent->facility->facilityType->name == 'Kendaraan') {
+            $rentDetail = RentDetail::where('rent_id', $rent->id)->first();
+            if ($rentDetail) {
+                $rentDetail->sppd_agreement = $validatedData['sppd_agreement'] ?? $rentDetail->sppd_agreement;
+                $rentDetail->bbm_agreement = $validatedData['bbm_agreement'] ?? $rentDetail->bbm_agreement;
+                $rentDetail->save();
+            }
+        }
         if (auth()->check()) {
             $userRole = auth()->user()->role;
             if ($userRole === 'admin') {

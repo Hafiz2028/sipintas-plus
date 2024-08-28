@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('status',['proses','diterima','ditolak'])->default('proses');
             $table->dateTime('start');
             $table->dateTime('end');
+            $table->string('agenda')->nullable();
             $table->text('reject_note')->nullable();
             $table->foreign('facility_id')->references('id')->on('facilities')->onUpdate('cascade')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onUpdate('cascade')->onDelete('cascade');

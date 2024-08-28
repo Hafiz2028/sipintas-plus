@@ -14,9 +14,10 @@ class Facility extends Model
         'size',
         'kapasitas',
         'information',
+        'map_link',
         'pembayaran'
     ];
-    
+
     public function rents()
     {
         return $this->hasMany(Rent::class, 'facility_id');

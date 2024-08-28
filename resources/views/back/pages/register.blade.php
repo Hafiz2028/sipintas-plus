@@ -225,7 +225,29 @@
     <script defer="" src="back/assets/js/alpine.min.js"></script>
 
     <script src="back/assets/js/custom.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            @if (session('success'))
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success',
+                    html: '{!! session('success') !!}',
+                    confirmButtonText: 'OK'
+                });
+            @endif
 
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: '{{ $error }}',
+                        confirmButtonText: 'OK'
+                    });
+                @endforeach
+            @endif
+        });
+    </script>
     <script>
         // main section
         document.addEventListener('alpine:init', () => {

@@ -22,8 +22,43 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 
     <style>
+        .flatpickr-input {
+            border: 1px solid #ced4da;
+            border-radius: .375rem;
+            padding: .375rem .75rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            color: #495057;
+            background-color: #fff;
+            background-clip: padding-box;
+            display: block;
+            width: 100%;
+        }
+
+        .flatpickr-input:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 .2rem rgba(38, 143, 255, .25);
+        }
+
+        .aksi-btn {
+            width: 70px;
+            height: 38px;
+        }
+
+        .header-bg {
+            position: relative;
+            z-index: 5;
+            background-position: bottom center;
+            background-size: cover;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+        }
+
         .modal-backdrop {
             background-color: rgba(0, 0, 0, 0.5) !important;
         }
@@ -92,25 +127,24 @@
 
                             <div class="collapse navbar-collapse sub-menu-bar" id="navbarSupportedContent">
                                 <ul id="nav" class="navbar-nav ms-auto">
-                                    <li class="nav-item">
-                                        <a href="{{ route('homepage') }}">Beranda</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="page-scroll" href="#kategori">Fasilitas</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="page-scroll" href="#about">Cara Peminjaman</a>
-                                    </li>
                                     @if (!Auth::check())
+                                        <li class="nav-item">
+                                            <a href="{{ route('landing') }}">Beranda</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a href="javascript:;" id="riwayatPeminjamanLink">Riwayat Peminjaman</a>
+                                        </li>
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
                                             Masuk / Daftar
                                         </a>
                                     @else
+                                        <li class="nav-item">
+                                            <a href="{{ route('homepage') }}">Beranda</a>
+                                        </li>
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('logout') }}">
                                             Logout
                                         </a>
                                     @endif
-                                    </li>
                                 </ul>
                             </div>
                             <!-- navbar collapse -->
@@ -125,7 +159,7 @@
         <!-- navbar area -->
 
         <!-- Slider View -->
-        <div id="home" class="header-hero bg_cover pb-50"
+        <div id="home" class="header-bg pb-50"
             style="background-image: url(landing/assets/images/header/banner-bg.svg)">
             <div class="container">
                 <div class="row justify-content-center">
@@ -160,8 +194,19 @@
                                                 {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('d F Y') }}
                                             </td>
                                             <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($rent->start)->diffInDays(\Carbon\Carbon::parse($rent->end)) }}
-                                                Hari</td>
+                                                @php
+                                                    $start = \Carbon\Carbon::parse($rent->start);
+                                                    $end = \Carbon\Carbon::parse($rent->end);
+                                                    $diffInDays = $start->diffInDays($end);
+                                                    $diffInHours = $start->diffInHours($end);
+                                                @endphp
+
+                                                @if ($diffInDays > 0)
+                                                    {{ $diffInDays }} Hari
+                                                @else
+                                                    {{ $diffInHours }} Jam
+                                                @endif
+                                            </td>
                                             <td class="text-center fs-5">
                                                 @if ($rent->status == 'proses')
                                                     <span class="badge bg-warning">Proses</span>
@@ -171,20 +216,65 @@
                                                     <span class="badge bg-danger">Ditolak</span>
                                                 @endif
                                             </td>
-                                            <td class="text-center">{{ $rent->reject_note ?? '-' }}</td>
                                             <td class="text-center">
-                                                <a class="btn btn-success print-btn" id="printButton"
-                                                    href="{{ route('printSurat', $rent->id) }}" target="_blank" role="button"
-                                                    data-rent-id="{{ $rent->id }}"><i
-                                                        class="bi bi-printer"></i></a>
+                                                @if ($rent->status == 'proses')
+                                                    <span class="badge bg-secondary">Peminjaman Sedang dalam Proses
+                                                        Disposisi</span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ $rent->reject_note }}</span>
+                                                @endif
+                                                @if ($rent->facility && $rent->facility->facilityType && $rent->facility->facilityType->name == 'Kendaraan')
+                                                    @if ($rent->rentDetail)
+                                                        @if ($rent->rentDetail->sppd_agreement == 'diterima')
+                                                            <span class="badge bg-success">Pembebanan SPPD
+                                                                Diizinkan</span><br>
+                                                        @elseif($rent->rentDetail->sppd_agreement == 'ditolak')
+                                                            <span class="badge bg-danger">Pembebanan SPPD
+                                                                Ditolak</span><br>
+                                                        @elseif($rent->rentDetail->sppd_agreement == 'proses' || $rent->rentDetail->sppd_agreement == '')
+                                                            <span class="badge bg-warning">Pengajuan Pembebanan SPPD
+                                                                dalam Proses</span><br>
+                                                        @else
+                                                            <span class="badge bg-danger">Data Tidak Valid</span><br>
+                                                        @endif
+                                                        @if ($rent->rentDetail->bbm_agreement == 'diterima')
+                                                            <span class="badge bg-success">Pembebanan BBM
+                                                                Diizinkan</span><br>
+                                                        @elseif($rent->rentDetail->bbm_agreement == 'ditolak')
+                                                            <span class="badge bg-danger">Pembebanan BBM Ditolak</span><br>
+                                                        @elseif($rent->rentDetail->bbm_agreement == 'proses' || $rent->rentDetail->bbm_agreement == 'proses')
+                                                            <span class="badge bg-warning">Pengajuan Pembebanan BBM
+                                                                dalam Proses</span><br>
+                                                        @else
+                                                            <span class="badge bg-danger">Data Tidak Valid</span>
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-danger">Data SPPD atau BBM Tidak
+                                                            Valid</span>
+                                                    @endif
+                                                @endif
+                                            </td>
+                                            <td class="text-center">
+                                                @if ($rent->status == 'diterima')
+                                                    <a class="btn btn-success print-btn" id="printButton"
+                                                        href="{{ route('printSurat', $rent->id) }}" target="_blank"
+                                                        role="button" data-rent-id="{{ $rent->id }}"><i
+                                                            class="bi bi-printer"></i></a>
+                                                @elseif ($rent->status == 'proses' || $rent->status == 'ditolak')
+                                                    <a class="btn btn-warning text-white tolak-print" href="#"
+                                                        role="button" data-rent-id="{{ $rent->id }}"
+                                                        data-status="{{ $rent->status }}">
+                                                        <i class="bi bi-printer"></i>
+                                                    </a>
+                                                @endif
                                             </td>
                                             <td class="text-center">
                                                 @if ($rent->status == 'proses')
-                                                    <a type="button"class="btn btn-primary edit-btn"
-                                                        href="javascript:;"
-                                                        data-rent-id="{{ $rent->id }}">Edit</a>
+                                                    <a type="button"class="btn btn-primary aksi-btn edit-btn"
+                                                        href="javascript:;" data-rent-id="{{ $rent->id }}">Edit
+                                                    </a>
                                                 @endif
-                                                <a class="btn btn-danger delete-btn"
+                                                <a class="btn btn-danger delete-btn mt-1"
                                                     data-rent-id="{{ $rent->id }}" href="javascript:;"
                                                     type="button">Hapus</a>
                                             </td>
@@ -323,7 +413,7 @@
     <!--====== BACK TOP TOP PART START ======-->
     <a href="#" class="back-to-top"> <i class="lni lni-chevron-up"> </i> </a>
     <!--====== BACK TOP TOP PART ENDS ======-->
-
+    {{-- 488 --}}
     <!--====== Javascript Files ======-->
     <script src="landing/assets/js/bootstrap.bundle.min.js"></script>
     <script src="landing/assets/js/wow.min.js"></script>
@@ -332,9 +422,71 @@
     <script src="landing/assets/js/particles.min.js"></script>
     <script src="landing/assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const startDateInput = document.getElementById('start_date');
+            const startTimeInput = document.getElementById('start_time');
+            const endDateInput = document.getElementById('end_date');
+            const endTimeInput = document.getElementById('end_time');
+
+            const startDatePicker = flatpickr(startDateInput, {
+                dateFormat: "Y-m-d",
+            });
+
+            const endDatePicker = flatpickr(endDateInput, {
+                dateFormat: "Y-m-d",
+            });
+            const startTimePicker = flatpickr(startTimeInput, {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                minuteIncrement: 60,
+
+            });
+
+            const endTimePicker = flatpickr(endTimeInput, {
+                enableTime: true,
+                noCalendar: true,
+                dateFormat: "H:i",
+                time_24hr: true,
+                minuteIncrement: 60,
+            });
+
+            function parseDateTime(dateTimeString) {
+                const date = dateTimeString.split(' ')[0]; // Get date part
+                const time = dateTimeString.split(' ')[1]; // Get time part
+                return {
+                    date: date,
+                    time: time.slice(0, 5) // Format time to HH:mm
+                };
+            }
+
+            function add60Minutes(date) {
+                date.setMinutes(date.getMinutes() + 60);
+                return date;
+            }
+
+            function subtract60Minutes(date) {
+                date.setMinutes(date.getMinutes() - 60);
+                return date;
+            }
+
+            function setDateTimePickers(datePicker, timePicker, dateTimeString) {
+                const {
+                    date,
+                    time
+                } = parseDateTime(dateTimeString);
+                datePicker.setDate(date);
+                timePicker.setDate(time);
+            }
+
+            function getFormattedDateTime(datePicker, timePicker) {
+                const date = datePicker.input.value;
+                const time = timePicker.input.value;
+                return `${date}T${time}`;
+            }
             const csrfTokenMeta = document.querySelector('meta[name="csrf-token"]');
             if (!csrfTokenMeta) {
                 console.error('Meta tag for CSRF token not found!');
@@ -342,14 +494,15 @@
             }
             const csrfToken = csrfTokenMeta.getAttribute('content');
 
-            function formatDateForInput(date) {
-                const d = new Date(date);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, '0');
-                const day = String(d.getDate()).padStart(2, '0');
-                const hours = String(d.getHours()).padStart(2, '0');
-                const minutes = String(d.getMinutes()).padStart(2, '0');
-                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            function prepareRequestData() {
+                const startDateTime = getFormattedDateTime(startDatePicker, startTimePicker);
+                const endDateTime = getFormattedDateTime(endDatePicker, endTimePicker);
+                const requestData = {
+                    start: startDateTime,
+                    end: endDateTime,
+                };
+                console.log('Prepared Request Data:', requestData);
+                return requestData;
             }
             document.querySelectorAll('.edit-btn').forEach(function(button) {
                 button.addEventListener('click', function() {
@@ -357,20 +510,106 @@
                     const form = document.getElementById('editBookingForm');
                     form.action = `/update-peminjaman/${rentId}`;
                     console.log('Rent ID:', rentId);
-                    fetch(`/api/rent/${rentId}`)
-                        .then(response => response.json())
+                    fetch(`/api/rent/${rentId}`, {
+                            method: 'GET',
+                            headers: {
+                                'Accept': 'application/json',
+                                'X-CSRF-TOKEN': csrfToken
+                            }
+                        })
+                        .then(response => {
+                            console.log('Response Status:', response.status);
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.json();
+                        })
                         .then(data => {
+                            console.log('Rent Data:', data);
                             if (data.error) {
+                                console.error('Error in rent data response:', data
+                                    .error); // Log specific error
                                 alert('Error fetching rent data.');
                                 return;
                             }
-                            document.getElementById('facility').value = data.facility.name;
-                            document.getElementById('name').value = data.user.name;
-                            document.getElementById('start').value = formatDateForInput(data
-                                .start);
-                            document.getElementById('end').value = formatDateForInput(data.end);
-                            // Check form action URL
-                            const form = document.getElementById('editBookingForm');
+                            if (data.facility && data.facility.name) {
+                                document.getElementById('facility').value = data.facility.name;
+                            } else {
+                                console.warn('Facility data is missing');
+                            }
+                            if (data.user && data.user.name) {
+                                document.getElementById('name').value = data.user.name;
+                            } else {
+                                console.warn('User data is missing');
+                            }
+                            const startDateTime = data.start ? String(data.start) : '';
+                            const endDateTime = data.end ? String(data.end) : '';
+                            console.log('Start DateTime String:', startDateTime);
+                            console.log('End DateTime String:', endDateTime);
+
+                            if (startDateTime) {
+                                setDateTimePickers(startDatePicker, startTimePicker,
+                                    startDateTime);
+                            }
+                            if (endDateTime) {
+                                setDateTimePickers(endDatePicker, endTimePicker, endDateTime);
+                            }
+                            if (data.agenda) {
+                                document.getElementById('agenda').value = data.agenda;
+                            } else {
+                                console.warn('Agenda data is missing');
+                            }
+                            // Surat Peminjaman
+                            const existingSuratLink = document.getElementById(
+                                'existingSuratLink');
+                            if (data.surat) {
+                                existingSuratLink.href = `/surat_peminjaman/${data.surat}`;
+                                existingSuratLink.style.display = 'inline';
+                            } else {
+                                existingSuratLink.style.display = 'none';
+                            }
+                            // Bukti Pembayaran
+                            const paymentSection = document.getElementById('paymentSection');
+                            if (data.facility.pembayaran === 'ya') {
+                                paymentSection.style.display = 'block';
+                                const existingPaymentLink = document.getElementById(
+                                    'existingPaymentLink');
+                                if (data.rent_payment && data.rent_payment.bukti_pembayaran) {
+                                    existingPaymentLink.href =
+                                        `/bukti_pembayaran/${data.rent_payment.bukti_pembayaran}`;
+                                    existingPaymentLink.style.display = 'inline';
+                                } else {
+                                    existingPaymentLink.style.display = 'none';
+                                }
+                            } else {
+                                paymentSection.style.display = 'none';
+                            }
+                            const kendaraanSection = document.getElementById(
+                                'kendaraaanSection');
+                            if (kendaraanSection && data.facility.facility_type && data.facility
+                                .facility_type.name === 'Kendaraan' && data.rent_detail) {
+                                kendaraanSection.style.display = 'block';
+                                document.getElementById('tujuan').value = data.rent_detail
+                                    .tujuan || '';
+
+                                // Set radio buttons for sppd
+                                const sppdYa = document.getElementById('sppd_ya');
+                                const sppdTidak = document.getElementById('sppd_tidak');
+                                if (sppdYa && sppdTidak) {
+                                    sppdYa.checked = data.rent_detail.sppd === 'ya';
+                                    sppdTidak.checked = data.rent_detail.sppd === 'tidak';
+                                }
+
+                                // Set radio buttons for bbm
+                                const bbmYa = document.getElementById('bbm_ya');
+                                const bbmTidak = document.getElementById('bbm_tidak');
+                                if (bbmYa && bbmTidak) {
+                                    bbmYa.checked = data.rent_detail.bbm === 'ya';
+                                    bbmTidak.checked = data.rent_detail.bbm === 'tidak';
+                                }
+                            } else if (kendaraanSection) {
+                                kendaraanSection.style.display = 'none';
+                            }
                             console.log('Form Action URL:', form.action);
                             const editBookingModal = new bootstrap.Modal(document
                                 .getElementById('editBookingModal'));
@@ -456,108 +695,37 @@
             @endif
         });
     </script>
+
+
     <script>
-        document.querySelectorAll('.print-btn').forEach(button => {
-            button.addEventListener('click', function() {
-                var rentId = this.getAttribute('data-rent-id');
-                fetch(`/print-surat/${rentId}`)
-                    .then(response => response.text())
-                    .then(data => {
-                        var printTab = window.open('', '_blank');
-                        printTab.document.open();
-                        printTab.document.write('<html><head>');
-                        printTab.document.write('</head><body>');
-                        printTab.document.write(data);
-                        printTab.document.write('</body></html>');
-                        printTab.document.close();
-                        printTab.onbeforeunload = function() {
-                            window.history.replaceState(null, document.title, window.location.href);
-                        };
-                        printTab.focus();
-                        printTab.print();
-                        printTab.onafterprint = function() {
-                            printTab.close();
-                        };
-                        printTab.addEventListener('load', function() {
-                            setTimeout(() => {
-                                if (printTab.document.body.innerHTML.trim() === '') {
-                                    printTab.close();
-                                }
-                            }, 1000);
+        document.addEventListener('DOMContentLoaded', function() {
+            var printButtons = document.querySelectorAll('.tolak-print');
+
+            printButtons.forEach(button => {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+
+                    var status = button.getAttribute('data-status');
+
+                    if (status === 'proses') {
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Tidak Bisa Cetak Surat Izin',
+                            text: 'Tidak Bisa Cetak Surat Izin karena peminjaman dalam status Proses.',
+                            confirmButtonText: 'OK'
                         });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching print content:', error);
-                    });
+                    } else if (status === 'ditolak') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Tidak Bisa Cetak Surat Izin',
+                            text: 'Tidak Bisa Cetak Surat Izin karena status Peminjaman Ditolak.',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
             });
         });
     </script>
-
-
-
-
-
-    {{-- <script>
-        var swiper = new Swiper(".mySwiper", {
-            effect: "coverflow",
-            grabCursor: false,
-            centeredSlides: true,
-            slidesPerView: "auto",
-            coverflowEffect: {
-                rotate: 50,
-                stretch: 0,
-                depth: 100,
-                modifier: 1,
-                slideShadows: true,
-            },
-            grabCursor: true,
-            loop: true,
-            autoplay: {
-                delay: 2500,
-                disableOnInteraction: false,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
-
-        var swiper = new Swiper(".slider-penyewaan", {
-
-            breakpoints: {
-                "@0.00": {
-                    slidesPerView: 3,
-                    spaceBetween: 10,
-                },
-                "@0.75": {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
-                "@1.00": {
-                    slidesPerView: 3,
-                    spaceBetween: 20,
-                },
-                "@1.50": {
-                    slidesPerView: 5,
-                    spaceBetween: 20,
-                },
-                "@2.00": {
-                    slidesPerView: 5,
-                    spaceBetween: 20,
-                },
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-                dynamicBullets: true,
-            },
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-        });
-    </script> --}}
-
 </body>
 
 </html>

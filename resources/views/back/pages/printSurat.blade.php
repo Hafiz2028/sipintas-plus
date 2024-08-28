@@ -97,11 +97,11 @@
                 <td class="value">: {{ $rent->user->name }} </td>
             </tr>
             <tr>
-                <td class="title">Nomor Induk Pegawai (NIP) &nbsp;</td>
+                <td class="title">NIK/NIP &nbsp;</td>
                 <td class="value">: {{ $rent->user->nip }}</td>
             </tr>
             <tr>
-                <td class="title">Organisasi Pemerintah <br> Daerah (OPD)</td>
+                <td class="title">Organisasi/Komunitas</td>
                 <td class="value">: {{ $rent->user->opd }}</td>
             </tr>
             <tr>
@@ -109,20 +109,32 @@
                 <td class="value">: {{ $rent->facility->name }}</td>
             </tr>
             <tr>
+                <td class="title">Agenda</td>
+                <td class="value">: {{ $rent->agenda }}</td>
+            </tr>
+            @if ($rent->facility->facilityType->name == 'Kendaraan')
+                <tr>
+                    <td class="title">Tujuan</td>
+                    <td class="value">: {{ $rent->rentDetail->tujuan }}</td>
+                </tr>
+            @endif
+            <tr>
                 <td class="title">Tanggal Pemakaian</td>
-                <td class="value">: {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('d F Y') }}</td>
+                <td class="value">: {{ \Carbon\Carbon::parse($rent->start)->locale('id')->translatedFormat('d F Y') }}
+                </td>
             </tr>
             <tr>
                 <td class="title">Jam Mulai</td>
-                <td class="value">: {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('h : m') }} WIB</td>
+                <td class="value">: {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('H : i') }} WIB</td>
             </tr>
             <tr>
                 <td class="title">Tanggal Selesai</td>
-                <td class="value">: {{ \Carbon\Carbon::parse($rent->end)->translatedFormat('d F Y') }}</td>
+                <td class="value">: {{ \Carbon\Carbon::parse($rent->end)->locale('id')->translatedFormat('d F Y') }}
+                </td>
             </tr>
             <tr>
                 <td class="title">Jam Selesai</td>
-                <td class="value">: {{ \Carbon\Carbon::parse($rent->end)->translatedFormat('h : m') }} WIB</td>
+                <td class="value">: {{ \Carbon\Carbon::parse($rent->end)->translatedFormat('H : i') }} WIB</td>
             </tr>
             <tr>
                 <td class="title">No Hp / WA</td>
@@ -132,6 +144,17 @@
                 <td class="title">Status Peminjaman</td>
                 <td class="value">: {{ ucfirst($rent->status) }}</td>
             </tr>
+            @if ($rent->facility->facilityType->name == 'Kendaraan')
+                <tr>
+                    <td class="title">Biaya SPPD</td>
+                    <td class="value">: {{ ucfirst($rent->rentDetail->sppd_agreement) }} Biro Umum</td>
+                </tr>
+                <tr>
+                    <td class="title">Biaya BBM</td>
+                    <td class="value">: {{ ucfirst($rent->rentDetail->bbm_agreement) }} Biro Umum</td>
+                </tr>
+            @endif
+
         </table>
         <br>
         <span style="font-size: 14; text-align: justify; padding-top: 16px;">

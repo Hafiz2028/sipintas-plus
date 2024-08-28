@@ -176,7 +176,7 @@
                         data: {
                             headings: ['No', 'Nama Peminjam', 'OPD',
                                 'Fasilitas Yang Dipinjam',
-                                'Jadwal Peminjaman', 'Phone', 'Status',
+                                'Jadwal Pakai', 'Phone', 'Status',
                                 "<div class='text-center'>Action</div>"
                             ],
                             data: this.rents.map((rent, index) => [
