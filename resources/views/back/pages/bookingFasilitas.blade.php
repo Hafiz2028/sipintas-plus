@@ -37,7 +37,8 @@
             font-size: 16px;
             text-align: center;
             max-width: 500px;
-            margin: 20px 0; /* Hanya margin atas dan bawah, tidak ada margin kiri-kanan */
+            margin: 20px 0;
+            /* Hanya margin atas dan bawah, tidak ada margin kiri-kanan */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
@@ -799,12 +800,10 @@
                     <h3 class="judul-dua wow fadeInUp" data-wow-duration="1.0s" data-wow-delay="0.5s">
                         {{ $facility->name }}
                     </h3>
-                    <p style="text-align: justify;" class="text wow fadeInUp"
-                        data-wow-duration="1.0s" data-wow-delay="0.8s">
+                    <p style="text-align: justify;" class="text wow fadeInUp" data-wow-duration="1.0s"
+                        data-wow-delay="0.8s">
                         {{ $facility->name }} | {{ $facility->size }}m2 | {{ $facility->kapasitas }} Orang |
-                        Fasilitas
-                        :
-                        {{ $facility->information }} | Pembayaran : {{ $facility->pembayaran }}
+                        {{ $facility->information }}, Pembayaran : {{ $facility->pembayaran }}
                     </p>
                     <div class="alert-card">
                         <h3>Informasi Penting!!!</h3>

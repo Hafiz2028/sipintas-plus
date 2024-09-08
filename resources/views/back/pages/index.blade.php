@@ -21,6 +21,8 @@
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+
 
 
     <style>
@@ -37,6 +39,7 @@
             background-size: cover;
             width: 450px;
         }
+
         .swiper-slide .gambar {
             height: 300px;
         }
@@ -496,9 +499,16 @@
                                     <li class="nav-item">
                                         <a href="{{ route('file.download') }}" class="">SOP Peminjaman</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('history') }}">Riwayat Peminjaman</a>
-                                    </li>
+                                    @if (!Auth::check())
+                                        <li class="nav-item">
+                                            <a href="javascript:;" id="riwayatPeminjamanLink">Riwayat Peminjaman</a>
+                                        </li>
+                                    @else
+                                        <li class="nav-item">
+                                            <a href="{{ route('history') }}">Riwayat Peminjaman</a>
+                                        </li>
+                                    @endif
+
                                     @if (!Auth::check())
                                         <a class="main-btn" data-scroll-nav="0" href="{{ route('login') }}">
                                             Masuk / Daftar
@@ -816,6 +826,37 @@
         <!-- container -->
     </section>
     <!--====== Fasilitas Bangunan ENDS ======-->
+    <!--====== Fasilitas Peralatan ======-->
+    <section id="features-tools" class="services-area pt-20">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-11 wow fadeInLeft" data-wow-duration="1s" data-wow-delay="1.4s">
+                    <div class="section-title">
+                        <h4 class="judul-dua">
+                            Fasilitas Peralatan
+                        </h4>
+                    </div>
+                    <!-- section title -->
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row justify-content-center wow fadeInRight" data-wow-duration="1.2s" data-wow-delay="1.4s">
+                <div class="col-lg-12 swiper" style="padding-top: 15px; padding-bottom: 35px;">
+                    <div class="slider-penyewaan swiper-container">
+                        <div class="swiper-wrapper" id="facility-results-tools">
+
+                        </div>
+                        <div class="swiper-pagination"></div>
+                        <div class="swiper-slide-button swiper-button-next"></div>
+                        <div class="swiper-slide-button swiper-button-prev"></div>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+        </div>
+        <!-- container -->
+    </section>
+    <!--====== Fasilitas Peralatan ENDS ======-->
 
     <div class="container pt-70" id="about">
         <div class="area-satu wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s"
@@ -909,7 +950,8 @@
                         <div class="subscribe-form mt-50">
                             <form action="">
                                 <input type="text" placeholder="https://biroumum.sumbarprov.go.id/" readonly />
-                                <button type="button" class="main-btn" onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
+                                <button type="button" class="main-btn"
+                                    onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
                             </form>
                         </div>
                     </div>
@@ -925,7 +967,8 @@
                                 <img src="/landing/assets/images/logo/logo2.png" alt="logo" />
                             </a>
                             <p class="text">
-                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
+                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan
+                                operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
                             </p>
                             <ul class="social">
                                 <li>
@@ -1038,6 +1081,33 @@
     <script src="/landing/assets/js/main.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var riwayatLink = document.getElementById('riwayatPeminjamanLink');
+            if (riwayatLink) {
+                riwayatLink.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Tidak Login',
+                        text: 'Silahkan melakukan Login terlebih dahulu',
+                        showCancelButton: true,
+                        confirmButtonText: 'Login',
+                        cancelButtonText: 'Cancel'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/login';
+                        }
+                    });
+                });
+            }
+        });
+    </script>
+
+
 
     <script>
         $(document).ready(function() {
@@ -1115,14 +1185,49 @@
                     prevEl: ".swiper-button-prev",
                 },
             });
+            var swiperTools = new Swiper('#features-tools .swiper-container', {
+                breakpoints: {
+                    "@0.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 10,
+                    },
+                    "@0.75": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.00": {
+                        slidesPerView: 3,
+                        spaceBetween: 20,
+                    },
+                    "@1.50": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                    "@2.00": {
+                        slidesPerView: 5,
+                        spaceBetween: 20,
+                    },
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+            });
 
             // Function to update the facility results based on filter
             function updateFacilityResults(facilities) {
                 $('#facility-results-vehicles').empty();
                 $('#facility-results-buildings').empty();
+                $('#facility-results-tools').empty();
 
                 let showVehicles = false;
                 let showBuildings = false;
+                let showTools = false;
 
                 facilities.forEach(function(facility) {
                     console.log('Facility data:', facility); // Check the data structure
@@ -1131,25 +1236,28 @@
                     var imageAlt = facility.image_alt || 'No Image Available';
 
                     var facilityHtml = `
-                <div class="penyewaan swiper-slide">
-                    <picture>
-                        <a href="${facility.detail_url}">
-                            <img src="${imageUrl}" alt="${imageAlt}">
-                        </a>
-                    </picture>
-                    <div class="detail">
-                        <p>
-                            <b>${facility.name}</b><br>
-                            <small>${facility.facilityTypeName}</small>
-                        </p>
-                    </div>
-                </div>
-            `;
+                        <div class="penyewaan swiper-slide">
+                            <picture>
+                                <a href="${facility.detail_url}">
+                                    <img src="${imageUrl}" alt="${imageAlt}">
+                                </a>
+                            </picture>
+                            <div class="detail">
+                                <p>
+                                    <b>${facility.name}</b><br>
+                                    <small>${facility.facilityTypeName}</small>
+                                </p>
+                            </div>
+                        </div>
+                    `;
 
                     if (facility.facilityTypeName === 'Kendaraan Dinas' || facility.facilityTypeName ===
                         'Kendaraan') {
                         $('#facility-results-vehicles').append(facilityHtml);
                         showVehicles = true;
+                    } else if (facility.facilityTypeName === 'Peralatan') {
+                        $('#facility-results-tools').append(facilityHtml);
+                        showTools = true;
                     } else {
                         $('#facility-results-buildings').append(facilityHtml);
                         showBuildings = true;
@@ -1158,16 +1266,22 @@
 
                 if (showVehicles) {
                     $('#features-vehicles').fadeIn();
-                    swiperVehicles.update(); // Update Swiper after adding new slides
+                    swiperVehicles.update();
                 } else {
                     $('#features-vehicles').fadeOut();
                 }
 
                 if (showBuildings) {
                     $('#features-buildings').fadeIn();
-                    swiperBuildings.update(); // Update Swiper after adding new slides
+                    swiperBuildings.update();
                 } else {
                     $('#features-buildings').fadeOut();
+                }
+                if (showTools) {
+                    $('#features-tools').fadeIn();
+                    swiperTools.update();
+                } else {
+                    $('#features-tools').fadeOut();
                 }
             }
 
@@ -1265,41 +1379,6 @@
                 prevEl: ".swiper-button-prev",
             },
         });
-
-        // var swiper = new Swiper(".slider-penyewaan", {
-
-        //     breakpoints: {
-        //         "@0.00": {
-        //             slidesPerView: 3,
-        //             spaceBetween: 10,
-        //         },
-        //         "@0.75": {
-        //             slidesPerView: 3,
-        //             spaceBetween: 20,
-        //         },
-        //         "@1.00": {
-        //             slidesPerView: 3,
-        //             spaceBetween: 20,
-        //         },
-        //         "@1.50": {
-        //             slidesPerView: 5,
-        //             spaceBetween: 20,
-        //         },
-        //         "@2.00": {
-        //             slidesPerView: 5,
-        //             spaceBetween: 20,
-        //         },
-        //     },
-        //     pagination: {
-        //         el: ".swiper-pagination",
-        //         clickable: true,
-        //         dynamicBullets: true,
-        //     },
-        //     navigation: {
-        //         nextEl: ".swiper-button-next",
-        //         prevEl: ".swiper-button-prev",
-        //     },
-        // });
     </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {

@@ -496,6 +496,14 @@
                         this.showMessage('Detail Fasilitas harus diisi.', 'error');
                         return true;
                     }
+                    if (this.params.images) {
+                        for (const image of this.params.images) {
+                            if (image.size > 5000000) { // 5000 KB in bytes
+                                this.showMessage('Ukuran Foto tidak boleh lebih dari 5000 KB.', 'error');
+                                return true;
+                            }
+                        }
+                    }
                     try {
                         let response;
                         const formData = new FormData();

@@ -183,103 +183,118 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($user->rents as $rent)
-                                        <tr class="align-middle">
-                                            <td class="text-center">{{ $loop->iteration }}</td>
-                                            <td>{{ $rent->facility->name }}</td>
-                                            <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($rent->created_at)->translatedFormat('d F Y') }}
-                                            </td>
-                                            <td class="text-center">
-                                                {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('d F Y') }}
-                                            </td>
-                                            <td class="text-center">
-                                                @php
-                                                    $start = \Carbon\Carbon::parse($rent->start);
-                                                    $end = \Carbon\Carbon::parse($rent->end);
-                                                    $diffInDays = $start->diffInDays($end);
-                                                    $diffInHours = $start->diffInHours($end);
-                                                @endphp
-
-                                                @if ($diffInDays > 0)
-                                                    {{ $diffInDays }} Hari
-                                                @else
-                                                    {{ $diffInHours }} Jam
-                                                @endif
-                                            </td>
-                                            <td class="text-center fs-5">
-                                                @if ($rent->status == 'proses')
-                                                    <span class="badge bg-warning">Proses</span>
-                                                @elseif($rent->status == 'diterima')
-                                                    <span class="badge bg-success">Diterima</span>
-                                                @elseif($rent->status == 'ditolak')
-                                                    <span class="badge bg-danger">Ditolak</span>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($rent->status == 'proses')
-                                                    <span class="badge bg-secondary">Peminjaman Sedang dalam Proses
-                                                        Disposisi</span>
-                                                @else
-                                                    <span class="badge bg-secondary">{{ $rent->reject_note }}</span>
-                                                @endif
-                                                @if ($rent->facility && $rent->facility->facilityType && $rent->facility->facilityType->name == 'Kendaraan')
-                                                    @if ($rent->rentDetail)
-                                                        @if ($rent->rentDetail->sppd_agreement == 'diterima')
-                                                            <span class="badge bg-success">Pembebanan SPPD
-                                                                Diizinkan</span><br>
-                                                        @elseif($rent->rentDetail->sppd_agreement == 'ditolak')
-                                                            <span class="badge bg-danger">Pembebanan SPPD
-                                                                Ditolak</span><br>
-                                                        @elseif($rent->rentDetail->sppd_agreement == 'proses' || $rent->rentDetail->sppd_agreement == '')
-                                                            <span class="badge bg-warning">Pengajuan Pembebanan SPPD
-                                                                dalam Proses</span><br>
-                                                        @else
-                                                            <span class="badge bg-danger">Data Tidak Valid</span><br>
-                                                        @endif
-                                                        @if ($rent->rentDetail->bbm_agreement == 'diterima')
-                                                            <span class="badge bg-success">Pembebanan BBM
-                                                                Diizinkan</span><br>
-                                                        @elseif($rent->rentDetail->bbm_agreement == 'ditolak')
-                                                            <span class="badge bg-danger">Pembebanan BBM Ditolak</span><br>
-                                                        @elseif($rent->rentDetail->bbm_agreement == 'proses' || $rent->rentDetail->bbm_agreement == 'proses')
-                                                            <span class="badge bg-warning">Pengajuan Pembebanan BBM
-                                                                dalam Proses</span><br>
-                                                        @else
-                                                            <span class="badge bg-danger">Data Tidak Valid</span>
-                                                        @endif
-                                                    @else
-                                                        <span class="badge bg-danger">Data SPPD atau BBM Tidak
-                                                            Valid</span>
-                                                    @endif
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($rent->status == 'diterima')
-                                                    <a class="btn btn-success print-btn" id="printButton"
-                                                        href="{{ route('printSurat', $rent->id) }}" target="_blank"
-                                                        role="button" data-rent-id="{{ $rent->id }}"><i
-                                                            class="bi bi-printer"></i></a>
-                                                @elseif ($rent->status == 'proses' || $rent->status == 'ditolak')
-                                                    <a class="btn btn-warning text-white tolak-print" href="#"
-                                                        role="button" data-rent-id="{{ $rent->id }}"
-                                                        data-status="{{ $rent->status }}">
-                                                        <i class="bi bi-printer"></i>
-                                                    </a>
-                                                @endif
-                                            </td>
-                                            <td class="text-center">
-                                                @if ($rent->status == 'proses')
-                                                    <a type="button"class="btn btn-primary aksi-btn edit-btn"
-                                                        href="javascript:;" data-rent-id="{{ $rent->id }}">Edit
-                                                    </a>
-                                                @endif
-                                                <a class="btn btn-danger delete-btn mt-1"
-                                                    data-rent-id="{{ $rent->id }}" href="javascript:;"
-                                                    type="button">Hapus</a>
+                                    @if ($user->rents->isEmpty())
+                                        <tr>
+                                            <td colspan="9" class="text-center">
+                                                <div class="alert alert-danger">Tidak ada peminjaman oleh User ini
+                                                </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    @else
+                                        @foreach ($user->rents as $rent)
+                                            <tr class="align-middle">
+                                                <td class="text-center">{{ $loop->iteration }}</td>
+                                                <td>{{ $rent->facility->name }}</td>
+                                                <td class="text-center">
+                                                    {{ \Carbon\Carbon::parse($rent->created_at)->translatedFormat('d F Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    {{ \Carbon\Carbon::parse($rent->start)->translatedFormat('d F Y') }}
+                                                </td>
+                                                <td class="text-center">
+                                                    @php
+                                                        $start = \Carbon\Carbon::parse($rent->start);
+                                                        $end = \Carbon\Carbon::parse($rent->end);
+                                                        $diffInDays = $start->diffInDays($end);
+                                                        $diffInHours = $start->diffInHours($end);
+                                                    @endphp
+                                                    @if ($diffInDays > 0)
+                                                        {{ $diffInDays }} Hari
+                                                    @else
+                                                        {{ $diffInHours }} Jam
+                                                    @endif
+                                                </td>
+                                                <td class="text-center fs-5">
+                                                    @if ($rent->status == 'proses')
+                                                        <span class="badge bg-warning">Proses</span>
+                                                    @elseif($rent->status == 'diterima')
+                                                        <span class="badge bg-success">Diterima</span>
+                                                    @elseif($rent->status == 'ditolak')
+                                                        <span class="badge bg-danger">Ditolak</span>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($rent->status == 'proses')
+                                                        <span class="badge bg-secondary">Peminjaman Sedang dalam Proses
+                                                            Disposisi</span>
+                                                    @else
+                                                        <span
+                                                            class="badge bg-secondary">{{ $rent->reject_note }}</span>
+                                                    @endif
+                                                    @if ($rent->facility && $rent->facility->facilityType && $rent->facility->facilityType->name == 'Kendaraan')
+                                                        @if ($rent->rentDetail)
+                                                            @if ($rent->rentDetail->sppd_agreement == 'diterima')
+                                                                <span class="badge bg-success">Pembebanan SPPD
+                                                                    Diizinkan</span><br>
+                                                            @elseif($rent->rentDetail->sppd_agreement == 'ditolak')
+                                                                <span class="badge bg-danger">Pembebanan SPPD
+                                                                    Ditolak</span><br>
+                                                            @elseif($rent->rentDetail->sppd_agreement == 'proses' || $rent->rentDetail->sppd_agreement == '')
+                                                                <span class="badge bg-warning">Pengajuan Pembebanan
+                                                                    SPPD
+                                                                    dalam Proses</span><br>
+                                                            @else
+                                                                <span class="badge bg-danger">Data Tidak
+                                                                    Valid</span><br>
+                                                            @endif
+                                                            @if ($rent->rentDetail->bbm_agreement == 'diterima')
+                                                                <span class="badge bg-success">Pembebanan BBM
+                                                                    Diizinkan</span><br>
+                                                            @elseif($rent->rentDetail->bbm_agreement == 'ditolak')
+                                                                <span class="badge bg-danger">Pembebanan BBM
+                                                                    Ditolak</span><br>
+                                                            @elseif($rent->rentDetail->bbm_agreement == 'proses' || $rent->rentDetail->bbm_agreement == 'proses')
+                                                                <span class="badge bg-warning">Pengajuan Pembebanan BBM
+                                                                    dalam Proses</span><br>
+                                                            @else
+                                                                <span class="badge bg-danger">Data Tidak Valid</span>
+                                                            @endif
+                                                        @else
+                                                            <span class="badge bg-danger">Data SPPD atau BBM Tidak
+                                                                Valid</span>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($rent->status == 'diterima')
+                                                        <a class="btn btn-success print-btn" id="printButton"
+                                                            href="{{ route('printSurat', $rent->id) }}"
+                                                            target="_blank" role="button"
+                                                            data-rent-id="{{ $rent->id }}"><i
+                                                                class="bi bi-printer"></i></a>
+                                                    @elseif ($rent->status == 'proses' || $rent->status == 'ditolak')
+                                                        <a class="btn btn-warning text-white tolak-print"
+                                                            href="#" role="button"
+                                                            data-rent-id="{{ $rent->id }}"
+                                                            data-status="{{ $rent->status }}">
+                                                            <i class="bi bi-printer"></i>
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                                <td class="text-center">
+                                                    @if ($rent->status == 'proses')
+                                                        <a type="button"class="btn btn-primary aksi-btn edit-btn"
+                                                            href="javascript:;"
+                                                            data-rent-id="{{ $rent->id }}">Edit
+                                                        </a>
+                                                    @endif
+                                                    <a class="btn btn-danger delete-btn mt-1"
+                                                        data-rent-id="{{ $rent->id }}" href="javascript:;"
+                                                        type="button">Hapus</a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>
@@ -308,7 +323,8 @@
                                 <img src="/landing/assets/images/logo/logo2.png" alt="logo" />
                             </a>
                             <p class="text">
-                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
+                                Sipintas Plus adalah sebuah sistem informasi yang dibuat oleh Biro Umum untuk memudahkan
+                                operasional peminjaman agar dapat terkelola dengan baik, sistematis dan otomatis.
                             </p>
                             <ul class="social">
                                 <li>
