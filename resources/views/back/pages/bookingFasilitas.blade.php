@@ -843,20 +843,24 @@
         <div class="container">
             <div class="subscribe-area wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="subscribe-content mt-45">
-                            <h2 class="subscribe-title">
-                                <h2 class="subscribe-title">
-                                    Dapatkan informasi lainnya <span>pada web utama kami</span>
-                                </h2>
+                    <div class="col-lg-4">
+                        <div class="subscribe-content mt-50">
+                            <h4 class="subscribe-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                    fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> &nbsp; Kotak Saran <i class="fas fa-arrow-right"></i>
+                            </h4>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="subscribe-form mt-50">
-                            <form action="">
-                                <input type="text" placeholder="https://biroumum.sumbarprov.go.id/" readonly />
-                                <button type="button" class="main-btn"
-                                    onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
+                    <div class="col-lg-8">
+                        <div class="subscribe-form mt-45">
+                            <form action="{{ route('upload-feedback') }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <input type="text" placeholder="Berikan masukan atau saran" name="feed">
+                                <button type="submit" class="main-btn">Kirim</button>
                             </form>
                         </div>
                     </div>
@@ -1228,7 +1232,15 @@
 
             var events = rents.map(function(rent) {
                 let className = '';
-                if (rent.status === 'proses') {
+                if (rent.status === 'proses kabag') {
+                    className = 'fc-event-warning';
+                } else if (rent.status === 'proses kabiro') {
+                    className = 'fc-event-warning';
+                } else if (rent.status === 'proses kasubag kdh') {
+                    className = 'fc-event-warning';
+                } else if (rent.status === 'proses kasubag wkdh') {
+                    className = 'fc-event-warning';
+                } else if (rent.status === 'proses kasubag dalam') {
                     className = 'fc-event-warning';
                 } else if (rent.status === 'diterima') {
                     className = 'fc-event-success';

@@ -30,8 +30,26 @@ class AuthController extends Controller
             'password' => $request->password,
         ];
         if (Auth::attempt($credentials)) {
-            if (Auth::user()->role == 'admin' || Auth::user()->role == 'kabag') {
+            if (Auth::user()->role == 'admin') {
                 return redirect()->route('admin.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'superadmin') {
+                return redirect()->route('superadmin.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'kabag') {
+                return redirect()->route('kabag.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'kabiro') {
+                return redirect()->route('kabiro.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'kasubag kdh') {
+                return redirect()->route('kasubagkdh.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'kasubag wkdh') {
+                return redirect()->route('kasubagwkdh.home')->with('success', 'Selamat Datang di Beranda');
+            }
+            if (Auth::user()->role == 'kasubag dalam') {
+                return redirect()->route('kasubagdalam.home')->with('success', 'Selamat Datang di Beranda');
             }
             if (Auth::user()->role == 'peminjam') {
                 return redirect()->route('homepage')->with('success', 'Selamat Datang di SIPINTAS PLUS');

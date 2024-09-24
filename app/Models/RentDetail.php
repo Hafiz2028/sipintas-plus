@@ -15,6 +15,7 @@ class RentDetail extends Model
         'bbm',
         'sppd_agreement',
         'bbm_agreement',
+        'sopir',
     ];
 
     public function rent()

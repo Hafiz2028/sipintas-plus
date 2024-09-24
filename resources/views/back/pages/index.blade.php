@@ -16,16 +16,28 @@
     <!--====== CSS Files LinkUp ======-->
     <link rel="stylesheet" href="/landing/assets/css/animate.css" />
     <link rel="stylesheet" href="/landing/assets/css/glightbox.min.css" />
-    <link rel="stylesheet" href="/landing/assets/css/lineIcons.css" />
     <link rel="stylesheet" href="/landing/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/landing/assets/css/style.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
 
 
     <style>
+        .dropdown-menu .nav-sub {
+            color: #000000;
+            position: absolute;
+            list-style-type: none;
+            padding: 2;
+            margin: 0;
+
+        }
+
+        .nav-sub {
+            padding: 8px 12px;
+        }
+
         /* Swiper */
 
         .swiper {
@@ -496,8 +508,19 @@
                                     <li class="nav-item">
                                         <a class="page-scroll" href="#about">Cara Peminjaman</a>
                                     </li>
-                                    <li class="nav-item">
-                                        <a href="{{ route('file.download') }}" class="">SOP Peminjaman</a>
+                                    <li class="nav-item dropdown">
+                                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+                                            role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            SOP Peminjaman
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            <li><a class="dropdown-item" href="{{ route('file.download') }}" target="_blank"
+                                                    style="color:#000000; padding: 0 10px 0 10px">SOP Peminjaman
+                                                    Kendaraan</a></li>
+                                            <li><a class="dropdown-item" href="{{ route('file.download2') }}" target="_blank"
+                                                    style="color:#000000; padding: 10px 10px 0 10px">SOP Peminjaman
+                                                    Tempat</a></li>
+                                        </ul>
                                     </li>
                                     @if (!Auth::check())
                                         <li class="nav-item">
@@ -543,7 +566,7 @@
                             </h1>
                             <h5 style="font-weight:lighter;" class="text wow fadeInUp" data-wow-duration="1.0s"
                                 data-wow-delay="0.8s">
-                                Layanan Peminjaman Fasilitas Online Provinsi Sumatera Barat
+                                Sistem Peminjaman Fasilitas Pelayanan Untuk Semua
                             </h5>
                         </div>
                         <!-- header hero content -->
@@ -939,19 +962,24 @@
         <div class="container">
             <div class="subscribe-area wow fadeIn" data-wow-duration="1s" data-wow-delay="0.5s">
                 <div class="row">
-                    <div class="col-lg-6">
-                        <div class="subscribe-content mt-45">
-                            <h2 class="subscribe-title">
-                                Dapatkan informasi lainnya <span>pada web utama kami</span>
-                            </h2>
+                    <div class="col-lg-4">
+                        <div class="subscribe-content mt-50">
+                            <h4 class="subscribe-title">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="50" height="50"
+                                    fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+                                </svg> &nbsp; Kotak Saran <i class="fas fa-arrow-right"></i>
+                            </h4>
                         </div>
                     </div>
-                    <div class="col-lg-6">
-                        <div class="subscribe-form mt-50">
-                            <form action="">
-                                <input type="text" placeholder="https://biroumum.sumbarprov.go.id/" readonly />
-                                <button type="button" class="main-btn"
-                                    onclick="window.location.href='https://biroumum.sumbarprov.go.id/'">Pergi</button>
+                    <div class="col-lg-8">
+                        <div class="subscribe-form mt-45">
+                            <form action="{{ route('upload-feedback') }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <input type="text" placeholder="Berikan masukan atau saran" name="feed">
+                                <button type="submit" class="main-btn">Kirim</button>
                             </form>
                         </div>
                     </div>
@@ -1069,7 +1097,11 @@
     <!--====== FOOTER PART ENDS ======-->
 
     <!--====== BACK TOP TOP PART START ======-->
-    <a href="#" class="back-to-top"> <i class="lni lni-chevron-up"> </i> </a>
+    <a href="#" class="back-to-top"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+            fill="currentColor" class="bi bi-arrow-up" viewBox="0 0 16 16">
+            <path fill-rule="evenodd"
+                d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5" />
+        </svg></a>
     <!--====== BACK TOP TOP PART ENDS ======-->
 
     <!--====== Javascript Files ======-->

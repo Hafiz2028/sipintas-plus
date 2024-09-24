@@ -83,9 +83,18 @@
 @push('scripts')
     <script>
         var userRole = '{{ auth()->user()->role }}';
-        var processUrl = userRole === 'kabag' ?
-            '{{ route('kabag.change-profile-picture') }}' :
-            '{{ route('admin.change-profile-picture') }}';
+        var processUrl;
+        if (userRole === 'kabag') {
+            processUrl = '{{ route('kabag.change-profile-picture') }}';
+        } else if (userRole === 'kabiro') {
+            processUrl = '{{ route('kabiro.change-profile-picture') }}';
+        } else if (userRole === 'admin') {
+            processUrl = '{{ route('admin.change-profile-picture') }}';
+        } else if (userRole === 'superadmin') {
+            processUrl = '{{ route('superadmin.change-profile-picture') }}';
+        } else {
+            console.error('Invalid role: ' + userRole);
+        }
 
         $('input[type="file"][name="adminProfilePictureFile"][id="adminProfilePictureFile"]').ijaboCropTool({
             preview: '#adminProfilePicture',

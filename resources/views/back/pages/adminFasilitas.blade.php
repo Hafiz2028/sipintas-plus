@@ -526,7 +526,7 @@
                         console.log('data update :', formData);
 
                         if (this.params.id) {
-                            response = await fetch(`/admin/fasilitas-update/${this.params.id}`, {
+                            response = await fetch(`/superadmin/fasilitas-update/${this.params.id}`, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector(
@@ -536,7 +536,7 @@
                                 body: formData,
                             });
                         } else {
-                            response = await fetch('/admin/fasilitas', {
+                            response = await fetch('/superadmin/fasilitas', {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRF-TOKEN': document.querySelector(
@@ -556,7 +556,7 @@
                         this.showMessage('Facility has been update successfully.');
                         this.addFacilityModal = false;
                         setTimeout(() => {
-                            window.location.href = '/admin/fasilitas';
+                            window.location.href = '/superadmin/fasilitas';
                         }, 1000);
                     } catch (error) {
                         console.log('Error in saveFacility:', error);
@@ -566,7 +566,7 @@
 
                 async deleteFacility(facility) {
                     try {
-                        const response = await fetch(`/admin/fasilitas/${facility.id}`, {
+                        const response = await fetch(`/superadmin/fasilitas/${facility.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
@@ -577,7 +577,7 @@
                         if (!response.ok) throw new Error('Failed to delete facility');
                         this.showMessage('Facility has been deleted successfully.');
                         setTimeout(() => {
-                            window.location.href = '/admin/fasilitas';
+                            window.location.href = '/superadmin/fasilitas';
                         }, 1000);
                     } catch (error) {
                         this.showMessage('Failed to delete facility.', 'error');

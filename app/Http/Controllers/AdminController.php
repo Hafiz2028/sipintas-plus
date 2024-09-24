@@ -6,6 +6,7 @@ use App\Models\Facility;
 use App\Models\FacilityType;
 use App\Models\Rent;
 use App\Models\User;
+use App\Models\FeedBack;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
@@ -15,9 +16,32 @@ class AdminController extends Controller
     public function home()
     {
         $user = auth()->user();
-        $rents = Rent::with('facility', 'user', 'rentPayment')
-            ->where('status', 'proses')
-            ->get();
+        if ($user->role == 'superadmin' || $user->role == 'admin') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kabag', 'proses kabiro', 'proses kasubag kdh', 'proses kasubag wkdh', 'proses kasubag dalam'])
+                ->get();
+        } else if ($user->role == 'kabiro') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kabiro'])
+                ->get();
+        } else if ($user->role == 'kabag') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kabag'])
+                ->get();
+        } else if ($user->role == 'kasubag kdh') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kasubag kdh'])
+                ->get();
+        } else if ($user->role == 'kasubag wkdh') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kasubag wkdh'])
+                ->get();
+        } else if ($user->role == 'kasubag dalam') {
+            $rents = Rent::with('facility', 'user', 'rentPayment')
+                ->whereIn('status', ['proses kasubag dalam'])
+                ->get();
+        }
+        $feedback = Feedback::all();
         $rentsCount = $rents->count();
         $facilitiesCount = Facility::count();
         $usersCount = User::count();
@@ -25,6 +49,7 @@ class AdminController extends Controller
 
         $data = [
             'user' => $user,
+            'feedback' => $feedback,
             'rents' => $rents,
             'rentsCount' => $rentsCount,
             'facilitiesCount' => $facilitiesCount,

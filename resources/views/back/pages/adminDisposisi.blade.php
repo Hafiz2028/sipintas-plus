@@ -6,10 +6,16 @@
                 Disposisi Peminjaman</h5>
             <table id="myTable" class="table-hover whitespace-nowrap">
             </table>
-
         </div>
     </div>
 @endsection
+@push('stylesheets')
+    <style>
+        [x-cloak] {
+            display: none !important;
+        }
+    </style>
+@endpush
 @push('scripts')
     <script>
         document.addEventListener('alpine:init', () => {
@@ -170,23 +176,40 @@
                 datatable: null,
                 rents: [],
                 addContactModal: false,
+                driverName: '',
+                selectedRentId: null,
                 async init() {
                     await this.fetchData();
+                    this.initializeDataTable();
+                },
+                async fetchData() {
+                    const response = await fetch('{{ route('admin.disposisi.api') }}');
+                    const data = await response.json();
+                    this.rents = data.rents;
+                },
+                initializeDataTable() {
                     this.datatable = new simpleDatatables.DataTable('#myTable', {
                         data: {
-                            headings: ['No', 'Nama Peminjam', 'OPD',
+                            headings: ['No', 'Tanggal Pinjam', 'Nama Peminjam', 'OPD',
                                 'Fasilitas Yang Dipinjam',
-                                'Jadwal Pakai', 'Phone', 'Status',
+                                'Jadwal Pakai', 'Phone', 'Status', 'Keterangan',
                                 "<div class='text-center'>Action</div>"
                             ],
                             data: this.rents.map((rent, index) => [
                                 index + 1,
+                                new Date(rent.created_at).toLocaleDateString(
+                                    'id-ID', {
+                                        day: '2-digit',
+                                        month: '2-digit',
+                                        year: 'numeric'
+                                    }),
                                 rent.user.name,
                                 rent.user.opd,
                                 rent.facility.name,
                                 this.formatDate(rent.start),
                                 rent.user.no_hp,
                                 rent.status,
+                                rent.reject_note,
                                 rent.id
                             ]),
                         },
@@ -198,11 +221,23 @@
                                 sort: 'asc',
                             },
                             {
-                                select: 6,
+                                select: 7,
                                 render: (data, cell, row) => {
                                     let color;
                                     switch (data) {
-                                        case 'proses':
+                                        case 'proses kabiro':
+                                            color = 'bg-warning';
+                                            break;
+                                        case 'proses kabag':
+                                            color = 'bg-warning';
+                                            break;
+                                        case 'proses kasubag kdh':
+                                            color = 'bg-warning';
+                                            break;
+                                        case 'proses kasubag wkdh':
+                                            color = 'bg-warning';
+                                            break;
+                                        case 'proses kasubag dalam':
                                             color = 'bg-warning';
                                             break;
                                         case 'diterima':
@@ -216,37 +251,116 @@
                                     }
                                     return `<span class="badge whitespace-nowrap ${color}">${data}</span>`;
                                 },
-                                sortable: false,
+                                sortable: true,
                             },
-
                             {
-                                select: 7,
+                                select: 9,
                                 sortable: false,
                                 render: (data, cell, row) => {
                                     const rentId = data;
-                                    return `
-                                <div class="flex items-center justify-center">
-                                    <td>
-                                        @if (auth()->check() && auth()->user()->role === 'admin')
-                                            <a href="/admin/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
+                                    const rentData = this.rents.find(rent => rent
+                                        .id === parseInt(rentId));
+                                    if (!rentData) {
+                                        return ''; // Return empty if no rentData found
+                                    }
+                                    const rentStatus = rentData.status;
+                                    const rentFacilityType = rentData.facility
+                                        .facility_type.name;
+                                    const rentDriver = rentData.rent_detail && rentData
+                                        .rent_detail.sopir;
+                                    const driverName = rentData.rent_detail && rentData
+                                        .rent_detail.sopir ? rentData.rent_detail
+                                        .sopir :
+                                        '';
+                                    const userRole =
+                                        "{{ auth()->check() ? auth()->user()->role : '' }}";
+                                    let actions = '';
+                                    if ((userRole === 'admin' || userRole ===
+                                            'superadmin') && rentStatus ===
+                                        'diterima' && rentFacilityType ===
+                                        'Kendaraan') {
+                                        actions += `<a href="javascript:;" onclick="openEditDriverModal('/rent/${rentId}/update-driver', '${driverName}')" class="btn btn-warning ltr:mr-2 w-10 h-10 p-0 rounded-full">
                                             <span class="icon">
-                                                <i class="fas fa-edit"></i>
+                                                <i class="fas fa-user"></i>
                                             </span>
-                                        </a>
-                                        @elseif (auth()->check() && auth()->user()->role === 'kabag')
-                                            <a href="/kabag/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full" >
-                                            <span class="icon">
-                                                <i class="fas fa-edit"></i>
-                                            </span>
-                                        </a>
-                                        @endif
-                                        <a href="javascript:;" onclick="confirmDelete('/admin/disposisi/${rentId}')" class="btn btn-outline-danger ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                        </a>`;
+                                    }
+                                    if (rentStatus === 'diterima') {
+                                        if (rentFacilityType === 'Kendaraan' &&
+                                            rentDriver == null) {
+                                            const printUrl =
+                                                `{{ route('printSurat', ':rentId') }}`
+                                                .replace(':rentId', rentId);
+                                            actions += `<a href="javascript:;" onclick="confirmPrint('${printUrl}', '${rentId}')" class="btn btn-outline-warning ltr:mr-2 w-10 h-10 p-0 rounded-full" role="button">
+                                                        <span class="icon">
+                                                            <i class="fas fa-print"></i>
+                                                        </span>
+                                                    </a>`;
+                                        } else {
+                                            const printUrl =
+                                                `{{ route('printSurat', ':rentId') }}`
+                                                .replace(':rentId', rentId);
+                                            actions += `<a class="btn btn-outline-success print-btn ltr:mr-2 w-10 h-10 p-0 rounded-full" id="printButton"
+                                                href="${printUrl}"
+                                                target="_blank" role="button"
+                                                data-rent-id="${rentId}">
+                                                <span class="icon">
+                                                <i class="fas fa-print"></i>
+                                                </span>
+                                                </a>`;
+                                        }
+                                    }
+
+                                    if (userRole === 'superadmin') {
+                                        actions += `<a href="/superadmin/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                    }
+                                    if (rentStatus != 'diterima') {
+                                        if (userRole === 'kabag') {
+                                            actions += `<a href="/kabag/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                        }
+                                        if (userRole === 'kabiro') {
+                                            actions += `<a href="/kabiro/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                        }
+                                        if (userRole === 'kasubag kdh') {
+                                            actions += `<a href="/kasubagkdh/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                        }
+                                        if (userRole === 'kasubag wkdh') {
+                                            actions += `<a href="/kasubagwkdh/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                        }
+                                        if (userRole === 'kasubag dalam') {
+                                            actions += `<a href="/kasubagdalam/disposisi/${rentId}/edit" class="btn btn-outline-primary ltr:mr-2 w-10 h-10 p-0 rounded-full">
+                                    <span class="icon">
+                                        <i class="fas fa-edit"></i>
+                                    </span>
+                                    </a>`;
+                                        }
+                                    }
+                                    actions += `<a href="javascript:;" onclick="confirmDelete('/admin/disposisi/${rentId}')" class="btn btn-outline-danger ltr:mr-2 w-10 h-10 p-0 rounded-full">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-trash"></i>
                                         </span>
-                                        </a>
-                                    </td>
-                                </di>`;
+                                    </a>`;
+                                    return `<div class="flex items-center justify-center">${actions}</div>`;
                                 },
                             },
                         ],
@@ -263,11 +377,9 @@
                             bottom: '{info}{select}{pager}',
                         },
                     });
-                },
-                async fetchData() {
-                    const response = await fetch('{{ route('admin.disposisi.api') }}');
-                    const data = await response.json();
-                    this.rents = data.rents;
+                    document.addEventListener('edit-driver', (event) => {
+                        this.openEditDriverModal(event.detail.rentId);
+                    });
                 },
                 formatDate(dateString) {
                     const date = new Date(dateString);
@@ -282,12 +394,74 @@
                         year: 'numeric'
                     };
                     const formattedDate = date.toLocaleDateString('id-ID', options);
-                    const formattedDateTime = `${time} | ${formattedDate}`;
+                    const formattedDateTime = `${formattedDate} | ${time}`;
                     return `${formattedDateTime}`;
-                }
+                },
             }));
         });
 
+        async function confirmPrint(url, rentId) {
+            Swal.fire({
+                title: 'Tidak bisa Cetak Surat',
+                text: 'Nama Sopir belum ditambahkan, Silahkan Menunggu Admin menambahkan nama Sopir',
+                icon: 'warning',
+                cancelButtonColor: '#d33',
+            });
+        }
+
+
+        async function openEditDriverModal(updateUrl, initialDriverName) {
+            console.log('openEditDriverModal triggered', updateUrl);
+            const driverName = initialDriverName || '';
+            console.log('nama sopir skrg : ', driverName);
+
+            Swal.fire({
+                title: 'Edit Nama Sopir',
+                html: `
+                        <input type="text" id="driverNameInput" class="swal2-input" placeholder="Nama Sopir" value="${driverName}">
+                    `,
+                showCancelButton: true,
+                confirmButtonText: 'Update',
+                preConfirm: () => {
+                    const input = Swal.getPopup().querySelector(
+                        '#driverNameInput');
+                    return input.value;
+                }
+            }).then(async (result) => {
+                if (result.isConfirmed) {
+                    const updatedDriverName = result.value;
+                    await this.updateDriverName(updateUrl, updatedDriverName);
+                }
+            });
+        }
+        async function updateDriverName(updateUrl, updatedDriverName) {
+            try {
+                const response = await fetch(updateUrl, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content')
+                    },
+                    body: JSON.stringify({
+                        sopir: updatedDriverName
+                    })
+                });
+
+                if (response.ok) {
+                    Swal.fire('Success', 'Nama Sopir updated successfully!', 'success')
+                        .then(() => {
+                            window.location.reload();
+                        });
+                    // Optionally, refresh the data or close the modal
+                    // Example: this.fetchData();
+                } else {
+                    throw new Error('Failed to update driver name');
+                }
+            } catch (error) {
+                Swal.fire('Error', error.message, 'error');
+            }
+        }
         async function confirmDelete(deleteUrl) {
             Swal.fire({
                 icon: 'warning',
@@ -305,7 +479,8 @@
                             method: 'DELETE',
                             headers: {
                                 'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                'X-CSRF-TOKEN': document.querySelector(
+                                        'meta[name="csrf-token"]')
                                     .getAttribute('content')
                             },
                         });

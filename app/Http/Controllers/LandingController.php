@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Facility;
+use App\Models\FeedBack;
 use App\Models\Rent;
 use App\Models\RentDetail;
 use App\Models\RentPayment;
@@ -35,6 +36,20 @@ class LandingController extends Controller
         });
 
         return view('back.pages.index', ['facilities' => $facilities]);
+    }
+    public function uploadFeedback(Request $request)
+    {
+        $validated = $request->validate([
+            'feed' => 'nullable|string',
+        ]);
+        $feed = FeedBack::create([
+            'feed' => $validated['feed'],
+        ]);
+        if ($feed) {
+            return redirect()->back()->with('success', 'Saran berhasil ditambahkan');
+        } else {
+            return redirect()->back()->with('fail', 'Saran gagal ditambahkan, coba lagi');
+        }
     }
     public function detailBooking($facilityId)
     {
@@ -133,7 +148,7 @@ class LandingController extends Controller
                 'start' => $validated['start'],
                 'end' => $validated['end'],
                 'agenda' => $validated['agenda'],
-                'status' => 'proses',
+                'status' => 'proses kabiro',
                 'surat' => $suratPath,
             ]);
 
@@ -319,38 +334,6 @@ class LandingController extends Controller
         }
     }
 
-    public function downloadFile()
-    {
-        // Tentukan path file relatif terhadap folder public
-        $filePath = public_path('sop/SOP_PEMINJAMAN.pdf');
-
-        try {
-            // Log info untuk memulai proses
-            Log::info('Memulai proses download file.', ['file_path' => $filePath]);
-
-            // Cek apakah file ada
-            if (file_exists($filePath)) {
-                Log::info('File ditemukan, memulai proses pengunduhan.', ['file_path' => $filePath]);
-
-                // Mengembalikan response untuk mendownload file
-                return response()->download($filePath);
-            } else {
-                Log::warning('File tidak ditemukan.', ['file_path' => $filePath]);
-
-                // Mengarahkan kembali dengan pesan error jika file tidak ditemukan
-                return redirect()->back()->with('error', 'File tidak ditemukan.');
-            }
-        } catch (\Exception $e) {
-            // Log error jika terjadi exception
-            Log::error('Terjadi kesalahan saat mencoba mendownload file.', [
-                'file_path' => $filePath,
-                'exception' => $e->getMessage(),
-            ]);
-
-            // Mengarahkan kembali dengan pesan error
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mencoba mendownload file.');
-        }
-    }
     public function filter(Request $request)
     {
         try {

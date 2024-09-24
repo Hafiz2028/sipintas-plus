@@ -15,6 +15,7 @@ return new class extends Migration
             $table->unsignedInteger('id')->autoIncrement();
             $table->unsignedInteger('rent_id');
             $table->string('tujuan');
+            $table->string('sopir')->nullable();
             $table->enum('sppd',['ya','tidak'])->default('tidak');
             $table->enum('bbm',['ya','tidak'])->default('tidak');
             $table->enum('sppd_agreement',['diterima','ditolak','proses'])->default('proses');

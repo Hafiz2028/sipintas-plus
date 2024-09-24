@@ -17,7 +17,7 @@ class RentController extends Controller
     public function index()
     {
         $rents = Rent::with(['facility.facilityType', 'rentPayment', 'rentDetail'])
-            ->whereIn('status', ['proses', 'diterima'])
+            ->whereIn('status', ['proses kabag', 'proses kabiro', 'diterima'])
             ->get();
         $facilityTypes = FacilityType::all();
         $facilities = Facility::with('facilityType')->get();
@@ -31,7 +31,7 @@ class RentController extends Controller
     public function getRents()
     {
         $rents = Rent::with(['facility.facilityType', 'rentPayment', 'rentDetail'])
-            ->whereIn('status', ['proses', 'diterima'])
+            ->whereIn('status', ['proses kabag', 'proses kabiro', 'diterima'])
             ->get();
         $events = $rents->map(function ($rent) {
             $rentDetail = $rent->rentDetail;
@@ -110,7 +110,7 @@ class RentController extends Controller
                 'facility_id' => $validated['facility_id'],
                 'user_id' => Auth::id(),
                 'surat' => $suratPath,
-                'status' => 'proses',
+                'status' => 'proses kabiro',
                 'agenda' => $validated['agenda'],
                 'start' => $validated['start'],
                 'end' => $validated['end'],

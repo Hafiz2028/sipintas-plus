@@ -26,8 +26,18 @@ class RedirectIfAuthenticated
                     return redirect()->route('admin.home');
                 } elseif ($role === 'peminjam') {
                     return redirect()->route('homepage');
-                }elseif ($role === 'kabag'){
+                } elseif ($role === 'kabag') {
                     return redirect()->route('kabag.home');
+                } elseif ($role === 'kabiro') {
+                    return redirect()->route('kabiro.home');
+                } elseif ($role === 'kasubag kdh') {
+                    return redirect()->route('kasubagkdh.home');
+                } elseif ($role === 'kasubag wkdh') {
+                    return redirect()->route('kasubagwkdh.home');
+                } elseif ($role === 'kasubag dalam') {
+                    return redirect()->route('kasubagdalam.home');
+                } elseif ($role === 'superadmin') {
+                    return redirect()->route('superadmin.home');
                 }
             }
         }

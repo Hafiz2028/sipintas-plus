@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('opd');
             $table->string('picture')->nullable();
             $table->string('password');
-            $table->enum('role',['admin','kabag','peminjam'])->default('admin');
+            $table->enum('role',['admin','kabag','peminjam','kabiro','superadmin','kasubag kdh','kasubag wkdh','kasubag dalam'])->default('admin');
             $table->rememberToken();
             $table->timestamps();
         });

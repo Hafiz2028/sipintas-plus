@@ -16,7 +16,7 @@ return new class extends Migration
             $table->unsignedInteger('facility_id');
             $table->unsignedInteger('user_id');
             $table->string('surat');
-            $table->enum('status',['proses','diterima','ditolak'])->default('proses');
+            $table->enum('status',['proses kabiro','diterima','ditolak','proses kabag','proses kasubag kdh', 'proses kasubag wkdh', 'proses kasubag dalam'])->default('proses kabiro');
             $table->dateTime('start');
             $table->dateTime('end');
             $table->string('agenda')->nullable();

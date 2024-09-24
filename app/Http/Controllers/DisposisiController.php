@@ -6,6 +6,7 @@ use App\Models\Rent;
 
 use App\Models\RentDetail;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class DisposisiController extends Controller
 {
@@ -14,7 +15,33 @@ class DisposisiController extends Controller
      */
     public function index()
     {
-        $rents = Rent::with('facility', 'rentPayment', 'user', 'rentDetail')->get();
+        if (auth()->check()) {
+            $userRole = auth()->user()->role;
+            if ($userRole === 'superadmin' || $userRole === 'admin') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')->get();
+            } elseif ($userRole === 'kabag') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kabag', 'diterima', 'ditolak'])
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            } elseif ($userRole === 'kabiro') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kabiro', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag kdh') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag kdh', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag wkdh') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag wkdh', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag dalam') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag dalam', 'diterima', 'ditolak'])
+                    ->get();
+            }
+        }
         $data = [
             'rents' => $rents
         ];
@@ -23,11 +50,48 @@ class DisposisiController extends Controller
 
     public function getDisposisi()
     {
-        $rents = Rent::with(['facility', 'rentPayment', 'user', 'rentDetail'])->get();
+        if (auth()->check()) {
+            $userRole = auth()->user()->role;
+            if ($userRole === 'superadmin' || $userRole === 'admin') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')->get();
+            } elseif ($userRole === 'kabag') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kabag', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kabiro') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kabiro', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag kdh') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag kdh', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag wkdh') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag wkdh', 'diterima', 'ditolak'])
+                    ->get();
+            } elseif ($userRole === 'kasubag dalam') {
+                $rents = Rent::with('facility.facilityType', 'rentPayment', 'user', 'rentDetail')
+                    ->whereIn('status', ['proses kasubag dalam', 'diterima', 'ditolak'])
+                    ->get();
+            }
+        }
         $data = [
             'rents' => $rents
         ];
         return response()->json($data);
+    }
+    public function updateDriver(Request $request, $id)
+    {
+        $request->validate([
+            'sopir' => 'required|string|max:255',
+        ]);
+        $rent = Rent::findOrFail($id);
+        $oldDriverName = $rent->rentDetail->sopir;
+        $rent->rentDetail->sopir = $request->input('sopir');
+        $rent->rentDetail->save();
+        Log::info("Updated driver name for Rent ID $id: Old Name: $oldDriverName, New Name: " . $request->input('sopir'));
+        return response()->json(['message' => 'Driver name updated successfully']);
     }
     public function edit(string $id)
     {
@@ -41,7 +105,7 @@ class DisposisiController extends Controller
     public function update(Request $request, string $id)
     {
         $validatedData = $request->validate([
-            'status' => 'required|in:diterima,ditolak',
+            'status' => 'required|in:diterima,ditolak,proses kabag,proses kabiro,proses kasubag kdh,proses kasubag wkdh,proses kasubag dalam',
             'reject_note' => 'nullable|string|max:255',
             'sppd_agreement' => 'nullable|in:diterima,ditolak',
             'bbm_agreement' => 'nullable|in:diterima,ditolak',
@@ -64,6 +128,16 @@ class DisposisiController extends Controller
                 return redirect()->route('admin.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
             } elseif ($userRole === 'kabag') {
                 return redirect()->route('kabag.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'kabiro') {
+                return redirect()->route('kabiro.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'superadmin') {
+                return redirect()->route('superadmin.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'kasubag kdh') {
+                return redirect()->route('kasubagkdh.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'kasubag wkdh') {
+                return redirect()->route('kasubagwkdh.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
+            } elseif ($userRole === 'kasubag dalam') {
+                return redirect()->route('kasubagdalam.disposisi.index')->with('success', 'Peminjaman berhasil didisposisi.');
             }
         }
         return redirect()->route('landing')->with('error', 'Anda tidak memiliki akses untuk melakukan tindakan ini.');

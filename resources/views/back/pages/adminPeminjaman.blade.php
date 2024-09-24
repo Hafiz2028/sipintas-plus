@@ -592,7 +592,19 @@
                 getStatusClass(status) {
                     let statusClass = '';
                     switch (status) {
-                        case 'proses':
+                        case 'proses kabiro':
+                            statusClass = 'bg-primary';
+                            break;
+                        case 'proses kabag':
+                            statusClass = 'bg-primary';
+                            break;
+                        case 'proses kasubag kdh':
+                            statusClass = 'bg-primary';
+                            break;
+                        case 'proses kasubag wkdh':
+                            statusClass = 'bg-primary';
+                            break;
+                        case 'proses kasubag dalam':
                             statusClass = 'bg-primary';
                             break;
                         case 'diterima':
@@ -795,7 +807,9 @@
                     for (let pair of formData.entries()) {
                         console.log(`${pair[0]}: ${pair[1]}`);
                     }
-                    const url = this.params.id ? `/admin/rent-update/${this.params.id}` : '/admin/rent';
+                    var userRole = '{{ auth()->user()->role }}';
+                    let baseUrl = userRole === 'superadmin' ? '/superadmin/rent' : '/admin/rent';
+                    const url = this.params.id ? `${baseUrl}-update/${this.params.id}` : baseUrl;
                     const method = this.params.id ? 'POST' : 'POST';
                     fetch(url, {
                             method: method,
@@ -858,7 +872,23 @@
                                 // console.log('Original Event Data:', event);
                                 let statusClass = '';
                                 switch (event.status) {
-                                    case 'proses':
+                                    case 'proses kabiro':
+                                        statusClass =
+                                            'bg-warning';
+                                        break;
+                                    case 'proses kabag':
+                                        statusClass =
+                                            'bg-warning';
+                                        break;
+                                    case 'proses kasubag kdh':
+                                        statusClass =
+                                            'bg-warning';
+                                        break;
+                                    case 'proses kasubag wkdh':
+                                        statusClass =
+                                            'bg-warning';
+                                        break;
+                                    case 'proses kasubag dalam':
                                         statusClass =
                                             'bg-warning';
                                         break;

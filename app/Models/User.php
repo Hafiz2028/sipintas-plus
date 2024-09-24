@@ -56,4 +56,67 @@ class User extends Authenticatable
     {
         return $this->hasMany(Rent::class, 'user_id', 'id');
     }
+    public function getHomeRoute()
+    {
+        switch ($this->role) {
+            case 'superadmin':
+                return route('superadmin.home');
+            case 'kabag':
+                return route('kabag.home');
+            case 'kabiro':
+                return route('kabiro.home');
+            case 'admin':
+                return route('admin.home');
+            case 'kasubag kdh':
+                return route('kasubagkdh.home');
+            case 'kasubag wkdh':
+                return route('kasubagwkdh.home');
+            case 'kasubag dalam':
+                return route('kasubagdalam.home');
+            default:
+                return route('');
+        }
+    }
+    public function getDisposisiRoute()
+    {
+        switch ($this->role) {
+            case 'superadmin':
+                return route('superadmin.disposisi.index');
+            case 'kabag':
+                return route('kabag.disposisi.index');
+            case 'kabiro':
+                return route('kabiro.disposisi.index');
+            case 'admin':
+                return route('admin.disposisi.index');
+            case 'kasubag kdh':
+                return route('kasubagkdh.disposisi.index');
+            case 'kasubag wkdh':
+                return route('kasubagwkdh.disposisi.index');
+            case 'kasubag dalam':
+                return route('kasubagdalam.disposisi.index');
+            default:
+                return route('');
+        }
+    }
+    public function profileRoute()
+    {
+        switch ($this->role) {
+            case 'admin':
+                return route('admin.profile');
+            case 'superadmin':
+                return route('superadmin.profile');
+            case 'kabag':
+                return route('kabag.profile');
+            case 'kabiro':
+                return route('kabiro.profile');
+            case 'kasubag kdh':
+                return route('kasubagkdh.profile');
+            case 'kasubag wkdh':
+                return route('kasubagwkdh.profile');
+            case 'kasubag dalam':
+                return route('kasubagdalam.profile');
+            default:
+                return route('');
+        }
+    }
 }

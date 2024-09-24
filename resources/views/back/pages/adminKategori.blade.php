@@ -326,7 +326,7 @@
                     try {
                         let response;
                         if (this.params.id) {
-                            response = await fetch(`/admin/tipe-fasilitas/${this.params.id}`, {
+                            response = await fetch(`/superadmin/tipe-fasilitas/${this.params.id}`, {
                                 method: 'PUT',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -337,7 +337,7 @@
                                 body: JSON.stringify(this.params),
                             });
                         } else {
-                            response = await fetch('/admin/tipe-fasilitas', {
+                            response = await fetch('/superadmin/tipe-fasilitas', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -361,7 +361,7 @@
                         this.showMessage('Facility type has been saved successfully.');
                         this.addFacilityModal = false;
                         setTimeout(() => {
-                            window.location.href = '/admin/tipe-fasilitas';
+                            window.location.href = '/superadmin/tipe-fasilitas';
                         }, 1000);
                     } catch (error) {
                         console.log('Error in saveFacilityType:', error);
@@ -371,7 +371,7 @@
 
                 async deleteFacilityType(facilityType) {
                     try {
-                        const response = await fetch(`/admin/tipe-fasilitas/${facilityType.id}`, {
+                        const response = await fetch(`/superadmin/tipe-fasilitas/${facilityType.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
@@ -382,7 +382,7 @@
                         if (!response.ok) throw new Error('Failed to delete facility type');
                         this.showMessage('Facility type has been deleted successfully.');
                         setTimeout(() => {
-                            window.location.href = '/admin/tipe-fasilitas';
+                            window.location.href = '/superadmin/tipe-fasilitas';
                         }, 1000);
                     } catch (error) {
                         this.showMessage('Failed to delete facility type.', 'error');

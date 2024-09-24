@@ -82,6 +82,27 @@
                         </table>
                     </div>
                 </div>
+                <div class="panel mt-6">
+                    <div class="text-lg font-bold pb-4">Daftar Saran</div>
+                    <div class="table-responsive ">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="ltr:rounded-l-md rtl:rounded-r-md">No</th>
+                                    <th>Saran</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($feedback as $rent)
+                                    <tr>
+                                        <td class="font-semibold">{{ $loop->iteration }}</td>
+                                        <td class="whitespace-nowrap">{{ $rent->feed }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

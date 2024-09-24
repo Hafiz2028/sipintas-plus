@@ -215,7 +215,12 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center fs-5">
-                                                    @if ($rent->status == 'proses')
+                                                    @if (
+                                                        $rent->status == 'proses kabag' ||
+                                                            $rent->status == 'proses kabiro' ||
+                                                            $rent->status == 'proses kasubag kdh' ||
+                                                            $rent->status == 'proses kasubag wkdh' ||
+                                                            $rent->status == 'proses kasubag dalam')
                                                         <span class="badge bg-warning">Proses</span>
                                                     @elseif($rent->status == 'diterima')
                                                         <span class="badge bg-success">Diterima</span>
@@ -224,7 +229,12 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($rent->status == 'proses')
+                                                    @if (
+                                                        $rent->status == 'proses kabag' ||
+                                                            $rent->status == 'proses kabiro' ||
+                                                            $rent->status == 'proses kasubag kdh' ||
+                                                            $rent->status == 'proses kasubag wkdh' ||
+                                                            $rent->status == 'proses kasubag dalam')
                                                         <span class="badge bg-secondary">Peminjaman Sedang dalam Proses
                                                             Disposisi</span>
                                                     @else
@@ -267,12 +277,28 @@
                                                 </td>
                                                 <td class="text-center">
                                                     @if ($rent->status == 'diterima')
-                                                        <a class="btn btn-success print-btn" id="printButton"
-                                                            href="{{ route('printSurat', $rent->id) }}"
-                                                            target="_blank" role="button"
-                                                            data-rent-id="{{ $rent->id }}"><i
-                                                                class="bi bi-printer"></i></a>
-                                                    @elseif ($rent->status == 'proses' || $rent->status == 'ditolak')
+                                                        @if ($rent->facility->facilityType->name == 'Kendaraan' && $rent->rentDetail->sopir == null)
+                                                            <a class="btn btn-warning text-white tolak-print"
+                                                                href="#" role="button"
+                                                                data-rent-id="{{ $rent->id }}"
+                                                                data-status="{{ $rent->status }}"
+                                                                data-driver="{{ $rent->rentDetail->sopir }}">
+                                                                <i class="bi bi-printer"></i>
+                                                            </a>
+                                                        @else
+                                                            <a class="btn btn-success print-btn" id="printButton"
+                                                                href="{{ route('printSurat', $rent->id) }}"
+                                                                target="_blank" role="button"
+                                                                data-rent-id="{{ $rent->id }}"><i
+                                                                    class="bi bi-printer"></i></a>
+                                                        @endif
+                                                    @elseif (
+                                                        $rent->status == 'proses kabag' ||
+                                                            $rent->status == 'proses kabiro' ||
+                                                            $rent->status == 'ditolak' ||
+                                                            $rent->status == 'proses kasubag kdh' ||
+                                                            $rent->status == 'proses kasubag wkdh' ||
+                                                            $rent->status == 'proses kasubag dalam')
                                                         <a class="btn btn-warning text-white tolak-print"
                                                             href="#" role="button"
                                                             data-rent-id="{{ $rent->id }}"
@@ -282,7 +308,7 @@
                                                     @endif
                                                 </td>
                                                 <td class="text-center">
-                                                    @if ($rent->status == 'proses')
+                                                    @if ($rent->status == 'proses kabiro')
                                                         <a type="button"class="btn btn-primary aksi-btn edit-btn"
                                                             href="javascript:;"
                                                             data-rent-id="{{ $rent->id }}">Edit
@@ -720,8 +746,11 @@
                     event.preventDefault();
 
                     var status = button.getAttribute('data-status');
+                    var driverName = button.getAttribute('data-driver');
 
-                    if (status === 'proses') {
+                    if (status === 'proses kabiro' || status === 'proses kabag' || status ===
+                        'proses kasubag kdh' || status === 'proses kasubag wkdh' || status ===
+                        'proses kasubag dalam') {
                         Swal.fire({
                             icon: 'warning',
                             title: 'Tidak Bisa Cetak Surat Izin',
@@ -733,6 +762,13 @@
                             icon: 'error',
                             title: 'Tidak Bisa Cetak Surat Izin',
                             text: 'Tidak Bisa Cetak Surat Izin karena status Peminjaman Ditolak.',
+                            confirmButtonText: 'OK'
+                        });
+                    } else if (status === 'diterima' && !driverName) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Tidak Bisa Cetak Surat Izin',
+                            text: 'Nama Sopir belum ditambahkan, Silahkan Menunggu Admin menambahkan nama Sopir.',
                             confirmButtonText: 'OK'
                         });
                     }

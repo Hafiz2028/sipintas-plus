@@ -72,6 +72,13 @@
                                                 <div>
                                                     <label class="inline-flex items-center">
                                                         <input type="radio" class="form-radio" name="role"
+                                                            value="superadmin" x-model="params.role">
+                                                        <span class="ml-2">Super Admin</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
                                                             value="admin" x-model="params.role">
                                                         <span class="ml-2">Admin</span>
                                                     </label>
@@ -81,6 +88,34 @@
                                                         <input type="radio" class="form-radio" name="role"
                                                             value="kabag" x-model="params.role">
                                                         <span class="ml-2">Kepala Bagian</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="kabiro" x-model="params.role">
+                                                        <span class="ml-2">Kepala Biro</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="kasubag kdh" x-model="params.role">
+                                                        <span class="ml-2">Sub Koordinator urusan KDH</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="kasubag wkdh" x-model="params.role">
+                                                        <span class="ml-2">Sub Koordinator urusan WKDH</span>
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <label class="inline-flex items-center">
+                                                        <input type="radio" class="form-radio" name="role"
+                                                            value="kasubag dalam" x-model="params.role">
+                                                        <span class="ml-2">Sub Koordinator urusan Dalam</span>
                                                     </label>
                                                 </div>
                                                 <div>
@@ -421,7 +456,7 @@
                     try {
                         let response;
                         if (this.params.id) {
-                            response = await fetch(`/admin/user/${this.params.id}`, {
+                            response = await fetch(`/superadmin/user/${this.params.id}`, {
                                 method: 'PUT',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -432,7 +467,7 @@
                                 body: JSON.stringify(this.params),
                             });
                         } else {
-                            response = await fetch('/admin/user', {
+                            response = await fetch('/superadmin/user', {
                                 method: 'POST',
                                 headers: {
                                     'Content-Type': 'application/json',
@@ -453,7 +488,7 @@
                         this.showMessage('User has been saved successfully.');
                         this.addUserModal = false;
                         setTimeout(() => {
-                            window.location.href = '/admin/user';
+                            window.location.href = '/superadmin/user';
                         }, 1000);
                     } catch (error) {
                         console.log('Error in save User:', error);
@@ -463,7 +498,7 @@
 
                 async deleteUser(user) {
                     try {
-                        const response = await fetch(`/admin/user/${user.id}`, {
+                        const response = await fetch(`/superadmin/user/${user.id}`, {
                             method: 'DELETE',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector(
@@ -474,7 +509,7 @@
                         if (!response.ok) throw new Error('Failed to delete user');
                         this.showMessage('User has been deleted successfully.');
                         setTimeout(() => {
-                            window.location.href = '/admin/user';
+                            window.location.href = '/superadmin/user';
                         }, 1000);
                     } catch (error) {
                         this.showMessage('Failed to delete User.', 'error');

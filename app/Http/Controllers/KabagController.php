@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Facility;
 use App\Models\FacilityType;
 use App\Models\Rent;
+use App\Models\FeedBack;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -14,8 +15,9 @@ class KabagController extends Controller
     {
         $user = auth()->user();
         $rents = Rent::with('facility', 'user', 'rentPayment')
-            ->where('status', 'proses')
-            ->get(); 
+            ->whereIn('status', ['proses kabag'])
+            ->get();
+        $feedback = Feedback::all();
         $rentsCount = $rents->count();
         $facilitiesCount = Facility::count();
         $usersCount = User::count();
@@ -23,6 +25,7 @@ class KabagController extends Controller
 
         $data = [
             'user' => $user,
+            'feedback' => $feedback,
             'rents' => $rents,
             'rentsCount' => $rentsCount,
             'facilitiesCount' => $facilitiesCount,
